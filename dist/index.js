@@ -15,6 +15,7 @@ const api_1 = require("@bull-board/api");
 const bullMQAdapter_js_1 = require("@bull-board/api/bullMQAdapter.js");
 const express_2 = require("@bull-board/express");
 dotenv_1.default.config();
+logger_1.logger.level = 'debug';
 // Default job options
 const defaultOptions = { removeOnComplete: { count: 3 }, removeOnFail: { count: 5 } }; // retain info on last 3/5 completed/failures
 // Repeat every 2000ms
@@ -68,12 +69,47 @@ const queueEvents = new bullmq_1.QueueEvents('jobQueue', { connection: redisOpti
 bullBoard.addQueue(new bullMQAdapter_js_1.BullMQAdapter(jobQueue));
 // Set up Bull Board routes
 app.use('/admin', serverAdapter.getRouter());
+/**
+ * Validates if the provided options is a valid JSON object
+ * @param options - The options to validate
+ * @returns boolean indicating if the options are valid
+ */
+function isValidOptions(options) {
+    // Check if options is an object and not null
+    if (typeof options !== 'object' || options === null) {
+        return false;
+    }
+    try {
+        // Try to stringify and parse to ensure it's a valid JSON object
+        JSON.parse(JSON.stringify(options));
+        logger_1.logger.debug(`options : ${JSON.stringify(options)}`);
+        return true;
+    }
+    catch (error) {
+        logger_1.logger.error("Invalid options", options);
+        return false;
+    }
+}
 app.post('/submit-job', authenticateToken, async (req, res) => {
-    const requestedJob = await req.body;
+    const requestedJob = req.body;
     logger_1.logger.info("submit-job requestedJob.data: ", JSON.stringify(requestedJob));
-    const job = await jobQueue.add(requestedJob.name, requestedJob, defaultOptions);
+    // Check if options are provided in the request
+    let jobOptions = defaultOptions;
+    if (requestedJob.options) {
+        // Validate the provided options
+        if (isValidOptions(requestedJob.options)) {
+            jobOptions = requestedJob.options;
+            logger_1.logger.info("Using custom options provided in the request");
+        }
+        else {
+            logger_1.logger.warn("Invalid options provided, using default options");
+        }
+    }
+    else {
+        logger_1.logger.info("No options provided, using default options");
+    }
+    const job = await jobQueue.add(requestedJob.name, requestedJob, jobOptions);
     logger_1.logger.info(`/submit-job: Job: ${requestedJob.name} added, id: ${job.id}`);
-    //const job = await jobQueue.add('job', { data: req.body.data as string });
     res.json({ jobId: job.id });
 });
 // queueEvents.on('progress', ({ jobId, data }: { jobId: string; data: any }) => {

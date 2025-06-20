@@ -132,9 +132,17 @@ Submits a job to the queue for processing.
     "key1": "value1",
     "key2": "value2"
     // Any job-specific data
+  },
+  "options": {
+    // Optional job options
+    "removeOnComplete": {"count": 5},
+    "removeOnFail": {"count": 10}
+    // Any valid BullMQ job options
   }
 }
 ```
+
+The `options` field is optional. If not provided, default options will be used. If provided, it must be a valid JSON object.
 
 **Response:**
 ```json

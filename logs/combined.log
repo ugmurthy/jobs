@@ -20,3 +20,54 @@
 {"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 13:31:24"}
 {"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 13:32:44"}
 {"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 13:32:44"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 15:01:58"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 15:01:58"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:03:15"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 15:03:15"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 147","timestamp":"2025-06-20 15:03:15"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:03:29"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 15:03:29"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 148","timestamp":"2025-06-20 15:03:29"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:03:39"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 15:03:39"}
+{"level":"info","message":"/submit-job: Job: welcomeMessage added, id: 149","timestamp":"2025-06-20 15:03:39"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:05:20"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 15:05:20"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 150","timestamp":"2025-06-20 15:05:20"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:07:14"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 15:07:14"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 151","timestamp":"2025-06-20 15:07:14"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 15:09:47"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 15:09:47"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:09:57"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 15:09:57"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 152","timestamp":"2025-06-20 15:09:57"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:10:01"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 15:10:01"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 153","timestamp":"2025-06-20 15:10:01"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 15:11:03"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 15:11:03"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:11:09"}
+{"level":"debug","message":"options : [object Object]","timestamp":"2025-06-20 15:11:09"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 15:11:09"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 154","timestamp":"2025-06-20 15:11:09"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 15:11:34"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 15:11:34"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:11:41"}
+{"level":"debug","message":"options : {\"removeOnComplete\":{\"count\":3},\"removeOnFail\":true}","timestamp":"2025-06-20 15:11:41"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 15:11:41"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 155","timestamp":"2025-06-20 15:11:41"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:12:33"}
+{"level":"debug","message":"options : {\"removeOnComplete\":{\"count\":5},\"removeOnFail\":true}","timestamp":"2025-06-20 15:12:33"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 15:12:33"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 156","timestamp":"2025-06-20 15:12:33"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:12:42"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 15:12:42"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 157","timestamp":"2025-06-20 15:12:42"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:12:47"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 15:12:47"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 158","timestamp":"2025-06-20 15:12:47"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 15:14:52"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 15:14:52"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 15:14:52"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 159","timestamp":"2025-06-20 15:14:52"}

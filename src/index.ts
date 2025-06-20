@@ -10,7 +10,7 @@ import { createBullBoard } from "@bull-board/api";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter.js";
 import { ExpressAdapter } from "@bull-board/express";
 dotenv.config();
-
+logger.level='debug'
 interface User {
     username : string;
 }
@@ -87,14 +87,49 @@ bullBoard.addQueue(new BullMQAdapter(jobQueue));
 // Set up Bull Board routes
 app.use('/admin', serverAdapter.getRouter());
 
-app.post('/submit-job', authenticateToken, async (req: Request, res: Response) => {
-  const requestedJob= await req.body;
-  logger.info("submit-job requestedJob.data: ",JSON.stringify(requestedJob));
+/**
+ * Validates if the provided options is a valid JSON object
+ * @param options - The options to validate
+ * @returns boolean indicating if the options are valid
+ */
+function isValidOptions(options: unknown): boolean {
+  // Check if options is an object and not null
+  if (typeof options !== 'object' || options === null) {
+    return false;
+  }
+  
+  try {
+    // Try to stringify and parse to ensure it's a valid JSON object
+    JSON.parse(JSON.stringify(options));
+    logger.debug(`options : ${JSON.stringify(options)}`)
+    return true;
+  } catch (error) {
+    logger.error("Invalid options",options)
+    return false;
+  }
+}
 
-  const job = await jobQueue.add(requestedJob.name,requestedJob,defaultOptions)
+app.post('/submit-job', authenticateToken, async (req: Request, res: Response) => {
+  const requestedJob = req.body;
+  logger.info("submit-job requestedJob.data: ", JSON.stringify(requestedJob));
+
+  // Check if options are provided in the request
+  let jobOptions = defaultOptions;
+  if (requestedJob.options) {
+    // Validate the provided options
+    if (isValidOptions(requestedJob.options)) {
+      jobOptions = requestedJob.options;
+      logger.info("Using custom options provided in the request");
+    } else {
+      logger.warn("Invalid options provided, using default options");
+    }
+  } else {
+    logger.info("No options provided, using default options");
+  }
+
+  const job = await jobQueue.add(requestedJob.name, requestedJob, jobOptions);
   logger.info(`/submit-job: Job: ${requestedJob.name} added, id: ${job.id}`);
   
-  //const job = await jobQueue.add('job', { data: req.body.data as string });
   res.json({ jobId: job.id });
 });
 
