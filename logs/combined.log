@@ -1,0 +1,7 @@
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 11:31:11"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 11:31:23"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 139","timestamp":"2025-06-20 11:31:23"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 11:31:31"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 140","timestamp":"2025-06-20 11:31:31"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 11:31:38"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 141","timestamp":"2025-06-20 11:31:38"}
