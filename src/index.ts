@@ -11,54 +11,6 @@ interface User {
     username : string;
 }
 
-
-// const delay = (duration:number, ...args:any) => new Promise(resolve => {
-//   // Convert duration from seconds to milliseconds and set the timeout
-//   setTimeout(resolve, duration * 1000, ...args);
-// });
-
-// const welcomeMessage = (job:any) => {
-//   logger.info("welcome message : ", job.data);
-//   return {status:'done',jobid: job.id};
-// }
-
-
-// const  dataExport = async (job:any) => {
-//   const {name,path} = job.data.jobData;
-//   // Simulate data export
-//   await delay(0.5);
-//   job.updateProgress(50);
-//   // Simulate some delay
-//   await delay(1);
-//   job.updateProgress(100);
-//   // Simulate data export completion
-//   logger.info("1. Data export completed");
-//   logger.info(`2. Exporting ${name} data to ${path}`);
-//   const tstamp = new Date().toLocaleTimeString();
-//   return {status: 'done' ,duration: 1000, name,path,completedAt: tstamp};
-// };
-// const jobHandlers = {
-//   welcomeMessage: welcomeMessage,
-//   dataExport: dataExport,
-// };
-
-// const processJob = async (job: Record<string,unknown>) => {
-//   const name = job.name as string ? job.name as string : ""
-//   const handler = jobHandlers[name as string];
-
-//   if (handler) {
-//     logger.info(`Processing job: ${job.name}`);
-//      const retval = await handler(job);
-//      if (retval) {
-//       logger.info(`Job ${job.name} returned:`, retval);
-//       return retval;
-//      }
-//   }
-  
-// };
-
-
-
 // Default job options
 const defaultOptions = {removeOnComplete:{count:3}, removeOnFail:{count:5}} // retain info on last 3/5 completed/failures
 // Repeat every 2000ms
