@@ -13,6 +13,7 @@ Runner is a Node.js/TypeScript service that provides a simple API for submitting
 - Job queue processing with BullMQ
 - Redis-backed persistence
 - WebSocket support for real-time updates
+- Bull Board UI for monitoring and managing job queues
 - TypeScript for type safety
 
 ## Prerequisites
@@ -150,6 +151,24 @@ The system uses BullMQ to manage job queues. Jobs are submitted via the API and 
 
 The application includes Socket.io for real-time updates. This can be used to receive job progress and completion events.
 
+## Bull Board UI
+
+The application includes Bull Board, a UI dashboard for monitoring and managing BullMQ job queues. The dashboard provides the following features:
+
+- View all queues and their jobs
+- Monitor job statuses (completed, failed, delayed, etc.)
+- View job details and data
+- Retry failed jobs
+- Promote delayed jobs
+- Clean queues
+
+Access the Bull Board UI at:
+```
+http://localhost:4000/admin
+```
+
+The UI is accessible without authentication, so be careful when deploying to production environments.
+
 ## Project Structure
 
 - `src/index.ts` - Main application entry point
@@ -164,6 +183,8 @@ The application includes Socket.io for real-time updates. This can be used to re
 ## Dependencies
 
 - `@ugm/logger` - Logging utility
+- `@bull-board/api` - Bull Board API for queue monitoring
+- `@bull-board/express` - Express adapter for Bull Board
 - `bullmq` - Job queue management
 - `dotenv` - Environment variable management
 - `express` - Web server framework

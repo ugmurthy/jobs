@@ -5,3 +5,18 @@
 {"level":"info","message":"/submit-job: Job: dataExport added, id: 140","timestamp":"2025-06-20 11:31:31"}
 {"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 11:31:38"}
 {"level":"info","message":"/submit-job: Job: paint added, id: 141","timestamp":"2025-06-20 11:31:38"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 12:26:05"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 13:17:57"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 142","timestamp":"2025-06-20 13:17:57"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 13:18:29"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 143","timestamp":"2025-06-20 13:18:29"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 13:25:36"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 144","timestamp":"2025-06-20 13:25:36"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 13:26:29"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 145","timestamp":"2025-06-20 13:26:29"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 13:26:31"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 146","timestamp":"2025-06-20 13:26:31"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 13:31:24"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 13:31:24"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 13:32:44"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 13:32:44"}

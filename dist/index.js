@@ -10,45 +10,11 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const bullmq_1 = require("bullmq");
 const logger_1 = require("@ugm/logger");
+// Bull Board imports
+const api_1 = require("@bull-board/api");
+const bullMQAdapter_js_1 = require("@bull-board/api/bullMQAdapter.js");
+const express_2 = require("@bull-board/express");
 dotenv_1.default.config();
-// const delay = (duration:number, ...args:any) => new Promise(resolve => {
-//   // Convert duration from seconds to milliseconds and set the timeout
-//   setTimeout(resolve, duration * 1000, ...args);
-// });
-// const welcomeMessage = (job:any) => {
-//   logger.info("welcome message : ", job.data);
-//   return {status:'done',jobid: job.id};
-// }
-// const  dataExport = async (job:any) => {
-//   const {name,path} = job.data.jobData;
-//   // Simulate data export
-//   await delay(0.5);
-//   job.updateProgress(50);
-//   // Simulate some delay
-//   await delay(1);
-//   job.updateProgress(100);
-//   // Simulate data export completion
-//   logger.info("1. Data export completed");
-//   logger.info(`2. Exporting ${name} data to ${path}`);
-//   const tstamp = new Date().toLocaleTimeString();
-//   return {status: 'done' ,duration: 1000, name,path,completedAt: tstamp};
-// };
-// const jobHandlers = {
-//   welcomeMessage: welcomeMessage,
-//   dataExport: dataExport,
-// };
-// const processJob = async (job: Record<string,unknown>) => {
-//   const name = job.name as string ? job.name as string : ""
-//   const handler = jobHandlers[name as string];
-//   if (handler) {
-//     logger.info(`Processing job: ${job.name}`);
-//      const retval = await handler(job);
-//      if (retval) {
-//       logger.info(`Job ${job.name} returned:`, retval);
-//       return retval;
-//      }
-//   }
-// };
 // Default job options
 const defaultOptions = { removeOnComplete: { count: 3 }, removeOnFail: { count: 5 } }; // retain info on last 3/5 completed/failures
 // Repeat every 2000ms
@@ -57,6 +23,13 @@ const app = (0, express_1.default)();
 const httpServer = http_1.default.createServer(app);
 const io = new socket_io_1.Server(httpServer);
 app.use(express_1.default.json());
+// Set up Bull Board
+const serverAdapter = new express_2.ExpressAdapter();
+const bullBoard = (0, api_1.createBullBoard)({
+    queues: [], // We'll add the queue after it's created
+    serverAdapter: serverAdapter,
+});
+serverAdapter.setBasePath('/admin');
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -91,6 +64,10 @@ app.get('/protected', authenticateToken, (req, res) => {
 const redisOptions = { host: 'localhost', port: 6379 };
 const jobQueue = new bullmq_1.Queue('jobQueue', { connection: redisOptions });
 const queueEvents = new bullmq_1.QueueEvents('jobQueue', { connection: redisOptions });
+// Add the queue to Bull Board
+bullBoard.addQueue(new bullMQAdapter_js_1.BullMQAdapter(jobQueue));
+// Set up Bull Board routes
+app.use('/admin', serverAdapter.getRouter());
 app.post('/submit-job', authenticateToken, async (req, res) => {
     const requestedJob = await req.body;
     logger_1.logger.info("submit-job requestedJob.data: ", JSON.stringify(requestedJob));
@@ -128,4 +105,5 @@ app.post('/submit-job', authenticateToken, async (req, res) => {
 const PORT = process.env.PORT || 4000;
 httpServer.listen(PORT, () => {
     logger_1.logger.info(`Server running on port ${PORT}`);
+    logger_1.logger.info(`Bull Board UI available at http://localhost:${PORT}/admin`);
 });

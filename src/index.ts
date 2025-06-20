@@ -3,8 +3,12 @@ import http from 'http';
 import {Server} from 'socket.io';
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import { Queue, QueueEvents ,Worker} from 'bullmq';
+import { Queue, QueueEvents, Worker } from 'bullmq';
 import {logger} from '@ugm/logger';
+// Bull Board imports
+import { createBullBoard } from "@bull-board/api";
+import { BullMQAdapter } from "@bull-board/api/bullMQAdapter.js";
+import { ExpressAdapter } from "@bull-board/express";
 dotenv.config();
 
 interface User {
@@ -27,6 +31,14 @@ const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 
 app.use(express.json());
+
+// Set up Bull Board
+const serverAdapter = new ExpressAdapter();
+const bullBoard = createBullBoard({
+  queues: [],  // We'll add the queue after it's created
+  serverAdapter: serverAdapter,
+});
+serverAdapter.setBasePath('/admin');
 
 function authenticateToken(req: Request, res: Response, next: NextFunction):void {
   const authHeader = req.headers['authorization'] as string;
@@ -68,6 +80,12 @@ const redisOptions = {host:'localhost', port: 6379}
 
 const jobQueue = new Queue('jobQueue', { connection:redisOptions });
 const queueEvents = new QueueEvents('jobQueue', { connection:redisOptions });
+
+// Add the queue to Bull Board
+bullBoard.addQueue(new BullMQAdapter(jobQueue));
+
+// Set up Bull Board routes
+app.use('/admin', serverAdapter.getRouter());
 
 app.post('/submit-job', authenticateToken, async (req: Request, res: Response) => {
   const requestedJob= await req.body;
@@ -115,4 +133,5 @@ app.post('/submit-job', authenticateToken, async (req: Request, res: Response) =
 const PORT = process.env.PORT || 4000;
 httpServer.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
+  logger.info(`Bull Board UI available at http://localhost:${PORT}/admin`);
 });
