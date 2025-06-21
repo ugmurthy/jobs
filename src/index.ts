@@ -1,6 +1,7 @@
 import express, {Request,Response,NextFunction} from 'express';
 import http from 'http';
 import {Server} from 'socket.io';
+import got from 'got'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { Queue, QueueEvents, Worker } from 'bullmq';
@@ -11,10 +12,46 @@ import { BullMQAdapter } from "@bull-board/api/bullMQAdapter.js";
 import { ExpressAdapter } from "@bull-board/express";
 dotenv.config();
 logger.level='debug'
+const redisOptions = {host:'localhost', port: 6379}
+const PORT = process.env.PORT || 4000;
+
+/////
+const webHooksWorker = new Worker(
+    "webhooks",
+    async (job)=>{
+        logger.info(`webhooks ${job.name}/${job.id} - of request job id: ${job.data.id} for ${job.data.user}`);
+        const {id, jobname,user,result}=job.data;
+        logger.info(`id:${id},jobname:${jobname},user:${user}`)
+        try {
+            await got.post(`http://localhost:${PORT}/${user}`,{json: {id,jobname,user,result}})
+        } catch(e) {
+            logger.error("got.post failed ....");
+        }
+    },
+    {connection:redisOptions}
+)
+
+logger.info("webhooks worker started...")
+// Event listeners for the worker
+webHooksWorker.on("completed", (job,returnvalue) => {
+  logger.info(`${job.id} : ${job.name} : completed!`);
+});
+
+webHooksWorker.on("progress", (job, progress) => {
+  logger.info(`\t ${job.name} : progress ${progress}%`);
+});
+// Event listener for failed jobs
+webHooksWorker.on("failed", (job, err) => {
+  logger.error(`${job?.id} has failed with ${err.message}`);
+});
+
+/////
+
+
+
 interface User {
     username : string;
 }
-
 // Default job options
 const defaultOptions = {removeOnComplete:{count:3}, removeOnFail:{count:5}} // retain info on last 3/5 completed/failures
 // Repeat every 2000ms
@@ -40,6 +77,8 @@ const bullBoard = createBullBoard({
 });
 serverAdapter.setBasePath('/admin');
 
+
+
 function authenticateToken(req: Request, res: Response, next: NextFunction):void {
   const authHeader = req.headers['authorization'] as string;
   const token = authHeader && authHeader.split(' ')[1];
@@ -57,6 +96,7 @@ function authenticateToken(req: Request, res: Response, next: NextFunction):void
     next();
   });
 }
+
 
 app.get('/',(req:Request,res:Response)=>{
     res.json({message:"Hello World"})
@@ -76,14 +116,14 @@ app.get('/protected', authenticateToken , (req: Request, res: Response):void => 
   res.json({ message: 'This is a protected route', user: req.user });
 });
 
-const redisOptions = {host:'localhost', port: 6379}
 
 const jobQueue = new Queue('jobQueue', { connection:redisOptions });
+const webHookQueue = new Queue('webhooks',{connection:redisOptions})
 const queueEvents = new QueueEvents('jobQueue', { connection:redisOptions });
 
 // Add the queue to Bull Board
 bullBoard.addQueue(new BullMQAdapter(jobQueue));
-
+bullBoard.addQueue(new BullMQAdapter(webHookQueue));
 // Set up Bull Board routes
 app.use('/admin', serverAdapter.getRouter());
 
@@ -109,10 +149,13 @@ function isValidOptions(options: unknown): boolean {
   }
 }
 
+
+
 app.post('/submit-job', authenticateToken, async (req: Request, res: Response) => {
   const requestedJob = req.body;
-  logger.info("submit-job requestedJob.data: ", JSON.stringify(requestedJob));
-
+  logger.warn(req.body)
+  logger.info(`submit-job requestedJob: ${JSON.stringify(requestedJob)}`);
+  logger.debug(`submit-job  requested by :, ${JSON.stringify(req.user)}`);
   // Check if options are provided in the request
   let jobOptions = defaultOptions;
   if (requestedJob.options) {
@@ -126,14 +169,18 @@ app.post('/submit-job', authenticateToken, async (req: Request, res: Response) =
   } else {
     logger.info("No options provided, using default options");
   }
-
-  const job = await jobQueue.add(requestedJob.name, requestedJob, jobOptions);
+  const jobData = {...requestedJob, ...req.user}
+  logger.debug(`submit-job : jobData : ${JSON.stringify(jobData)}`)
+  const job = await jobQueue.add(requestedJob.name, jobData, jobOptions);
   logger.info(`/submit-job: Job: ${requestedJob.name} added, id: ${job.id}`);
   
   res.json({ jobId: job.id });
 });
 
-
+app.post("/:id", express.json(), (req, res) => {
+  logger.info(`Received notification with", ${JSON.stringify(req.body)}`);
+  res.status(200).end();
+});
 
 // queueEvents.on('progress', ({ jobId, data }: { jobId: string; data: any }) => {
 //   io.emit(`job:${jobId}:progress`, data);
@@ -165,7 +212,6 @@ app.post('/submit-job', authenticateToken, async (req: Request, res: Response) =
 // });
 
 
-const PORT = process.env.PORT || 4000;
 httpServer.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
   logger.info(`Bull Board UI available at http://localhost:${PORT}/admin`);

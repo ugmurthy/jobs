@@ -5,7 +5,7 @@
 	"main": "index.ts",
 	"scripts": {
 		"start": "node dist/index.js",
-		"test": "exec echo 'Testing....'",
+		"clearlogs": "rm logs/*",
 		"redis-start": "exec brew services start redis",
 		"redis-info": "exec brew services info redis",
 		"redis-stop": "exec brew services stop redis"
@@ -17,6 +17,7 @@
 		"bullmq": "^5.54.0",
 		"dotenv": "^16.5.0",
 		"express": "^5.1.0",
+		"got": "^14.4.7",
 		"ioredis": "^5.6.1",
 		"jsonwebtoken": "^9.0.2",
 		"socket.io": "^4.8.1"

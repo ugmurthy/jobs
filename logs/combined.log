@@ -71,3 +71,255 @@
 {"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 15:14:52"}
 {"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 15:14:52"}
 {"level":"info","message":"/submit-job: Job: paint added, id: 159","timestamp":"2025-06-20 15:14:52"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 15:22:39"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 15:22:39"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 17:08:00"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 17:08:00"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 17:09:01"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 17:09:01"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 160","timestamp":"2025-06-20 17:09:01"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 17:10:12"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 17:10:12"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 161","timestamp":"2025-06-20 17:10:12"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 19:19:45"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 19:19:45"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 19:20:22"}
+{"exp":1750474206,"iat":1750472406,"level":"debug","message":"submit-job  requested by :","timestamp":"2025-06-20 19:20:22","username":"ugm-bull"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:20:22"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:20:22"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 162","timestamp":"2025-06-20 19:20:22"}
+{"level":"info","message":"submit-job requestedJob.data: ","timestamp":"2025-06-20 19:26:46"}
+{"exp":1750474206,"iat":1750472406,"level":"debug","message":"submit-job  requested by :","timestamp":"2025-06-20 19:26:46","username":"ugm-bull"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:26:46"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:26:46"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 163","timestamp":"2025-06-20 19:26:46"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 19:28:03"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 19:28:03"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:28:08"}
+{"level":"info","message":"submit-job requestedJob: ","timestamp":"2025-06-20 19:28:08"}
+{"exp":1750474206,"iat":1750472406,"level":"debug","message":"submit-job  requested by :","timestamp":"2025-06-20 19:28:08","username":"ugm-bull"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:28:08"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:28:08"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 164","timestamp":"2025-06-20 19:28:08"}
+{"jobData":{"name":"Sales Report","path":"/downloads/"},"level":"warn","message":"DeepDownload...","name":"dataExport","time":"2025 06 16 20:20TZ","timestamp":"2025-06-20 19:29:35"}
+{"level":"info","message":"submit-job requestedJob: ","timestamp":"2025-06-20 19:29:35"}
+{"exp":1750474206,"iat":1750472406,"level":"debug","message":"submit-job  requested by :","timestamp":"2025-06-20 19:29:35","username":"ugm-bull"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:29:35"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 165","timestamp":"2025-06-20 19:29:35"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 19:30:45"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 19:30:45"}
+{"jobData":{"name":"Sales Report","path":"/downloads/"},"level":"warn","message":"DeepDownload...","name":"dataExport","time":"2025 06 16 20:20TZ","timestamp":"2025-06-20 19:30:49"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:30:49\"}","timestamp":"2025-06-20 19:30:49"}
+{"level":"debug","message":"submit-job  requested by :, [object Object]","timestamp":"2025-06-20 19:30:49"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:30:49"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 166","timestamp":"2025-06-20 19:30:49"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 19:31:37"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 19:31:37"}
+{"jobData":{"name":"Sales Report","path":"/downloads/"},"level":"warn","message":"DeepDownload...","name":"dataExport","time":"2025 06 16 20:20TZ","timestamp":"2025-06-20 19:31:40"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:31:40\"}","timestamp":"2025-06-20 19:31:40"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:31:40"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:31:40"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 167","timestamp":"2025-06-20 19:31:40"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:32:50"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:32:50\"}","timestamp":"2025-06-20 19:32:50"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:32:50"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:32:50"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:32:50"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 168","timestamp":"2025-06-20 19:32:50"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 19:35:07"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 19:35:07"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:35:18"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:35:18\"}","timestamp":"2025-06-20 19:35:18"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:35:18"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:35:18"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:35:18"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 169","timestamp":"2025-06-20 19:35:18"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 19:37:48"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 19:37:48"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:37:53"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:37:53\"}","timestamp":"2025-06-20 19:37:53"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:37:53"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:37:53"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:37:53"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 170","timestamp":"2025-06-20 19:37:53"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-20 19:38:22"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-20 19:38:22"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:38:25"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:38:25\"}","timestamp":"2025-06-20 19:38:25"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:38:25"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:38:25"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:38:25"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:38:25\",\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:38:25"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 171","timestamp":"2025-06-20 19:38:25"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:40:56"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:40:56\"}","timestamp":"2025-06-20 19:40:56"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:40:56"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:40:56"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:40:56"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:40:56\",\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:40:56"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 172","timestamp":"2025-06-20 19:40:56"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:40:58"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:40:58\"}","timestamp":"2025-06-20 19:40:58"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:40:58"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:40:58"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:40:58"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:40:58\",\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:40:58"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 173","timestamp":"2025-06-20 19:40:58"}
+{"jobData":{"name":"Sales Report","path":"/downloads/"},"level":"warn","message":"DeepDownload...","name":"dataExport","time":"2025 06 16 20:20TZ","timestamp":"2025-06-20 19:41:16"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:41:16\"}","timestamp":"2025-06-20 19:41:16"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:41:16"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:41:16"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:41:16\",\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:41:16"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 174","timestamp":"2025-06-20 19:41:16"}
+{"jobData":{"name":"Sales Report","path":"/downloads/"},"level":"warn","message":"DeepDownload...","name":"dataExport","time":"2025 06 16 20:20TZ","timestamp":"2025-06-20 19:42:41"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:42:41\"}","timestamp":"2025-06-20 19:42:41"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:42:41"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:42:41"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:42:41\",\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:42:41"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 175","timestamp":"2025-06-20 19:42:41"}
+{"jobData":{"name":"Sales Report","path":"/downloads/"},"level":"warn","message":"DeepDownload...","name":"dataExport","time":"2025 06 16 20:20TZ","timestamp":"2025-06-20 19:43:03"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:43:03\"}","timestamp":"2025-06-20 19:43:03"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:43:03"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:43:03"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:43:03\",\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:43:03"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 176","timestamp":"2025-06-20 19:43:03"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:43:11"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:43:11\"}","timestamp":"2025-06-20 19:43:11"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:43:11"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:43:11"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:43:11"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:43:11\",\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:43:11"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 177","timestamp":"2025-06-20 19:43:11"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What is life?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-20 19:44:21"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What is life?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-20 19:44:21"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:44:21"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:44:21"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What is life?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:44:21"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 178","timestamp":"2025-06-20 19:44:21"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What is life?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-20 19:47:37"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What is life?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-20 19:47:37"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:47:37"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:47:37"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What is life?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750472406,\"exp\":1750474206}","timestamp":"2025-06-20 19:47:37"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 179","timestamp":"2025-06-20 19:47:37"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Edison's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-20 19:51:55"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-20 19:51:55"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:51:55"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:51:55"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:51:55"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 180","timestamp":"2025-06-20 19:51:55"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Edison's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-20 19:53:27"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-20 19:53:27"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:53:27"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:53:27"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:53:27"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 181","timestamp":"2025-06-20 19:53:27"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Edison's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-20 19:55:30"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-20 19:55:30"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:55:30"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:55:30"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:55:30"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 182","timestamp":"2025-06-20 19:55:30"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Edison's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-20 19:58:20"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-20 19:58:20"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:58:20"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:58:20"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:58:20"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 183","timestamp":"2025-06-20 19:58:20"}
+{"level":"warn","message":"Paint House...","name":"paint","options":{"delay":20000},"time":"2025 06 17 20:20TZ","timestamp":"2025-06-20 19:58:35"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:58:35\"}","timestamp":"2025-06-20 19:58:35"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:58:35"}
+{"level":"debug","message":"options : {\"delay\":20000}","timestamp":"2025-06-20 19:58:35"}
+{"level":"info","message":"Using custom options provided in the request","timestamp":"2025-06-20 19:58:35"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"paint\",\"message\":\"Paint House...\",\"time\":\"2025 06 17 20:20TZ\",\"options\":{\"delay\":20000},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:58:35\",\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:58:35"}
+{"level":"info","message":"/submit-job: Job: paint added, id: 184","timestamp":"2025-06-20 19:58:35"}
+{"jobData":{"name":"Sales Report","path":"/downloads/"},"level":"warn","message":"DeepDownload...","name":"dataExport","time":"2025 06 16 20:20TZ","timestamp":"2025-06-20 19:58:41"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:58:41\"}","timestamp":"2025-06-20 19:58:41"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:58:41"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:58:41"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:58:41\",\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:58:41"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 185","timestamp":"2025-06-20 19:58:41"}
+{"jobData":{"name":"Sales Report","path":"/downloads/"},"level":"warn","message":"DeepDownload...","name":"dataExport","time":"2025 06 16 20:20TZ","timestamp":"2025-06-20 19:59:51"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:59:51\"}","timestamp":"2025-06-20 19:59:51"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:59:51"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-20 19:59:51"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"dataExport\",\"message\":\"DeepDownload...\",\"time\":\"2025 06 16 20:20TZ\",\"jobData\":{\"name\":\"Sales Report\",\"path\":\"/downloads/\"},\"level\":\"warn\",\"timestamp\":\"2025-06-20 19:59:51\",\"username\":\"ugm-bull\",\"iat\":1750474290,\"exp\":1750476090}","timestamp":"2025-06-20 19:59:51"}
+{"level":"info","message":"/submit-job: Job: dataExport added, id: 186","timestamp":"2025-06-20 19:59:51"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Edison's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 10:50:44"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 10:50:44"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750528223,\"exp\":1750530023}","timestamp":"2025-06-21 10:50:44"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 10:50:44"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750528223,\"exp\":1750530023}","timestamp":"2025-06-21 10:50:44"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 187","timestamp":"2025-06-21 10:50:44"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Edison's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 10:58:53"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 10:58:53"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750528223,\"exp\":1750530023}","timestamp":"2025-06-21 10:58:53"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 10:58:53"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750528223,\"exp\":1750530023}","timestamp":"2025-06-21 10:58:53"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 188","timestamp":"2025-06-21 10:58:53"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Edison's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 11:17:59"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 11:17:59"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750528223,\"exp\":1750530023}","timestamp":"2025-06-21 11:17:59"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 11:17:59"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Edison's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750528223,\"exp\":1750530023}","timestamp":"2025-06-21 11:17:59"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 189","timestamp":"2025-06-21 11:17:59"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Newtons's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 11:21:30"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Newtons's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 11:21:30"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750530077,\"exp\":1750531877}","timestamp":"2025-06-21 11:21:30"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 11:21:30"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Newtons's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750530077,\"exp\":1750531877}","timestamp":"2025-06-21 11:21:30"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 190","timestamp":"2025-06-21 11:21:30"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Newtons's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 11:22:44"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Newtons's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 11:22:44"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750530077,\"exp\":1750531877}","timestamp":"2025-06-21 11:22:44"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 11:22:44"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Newtons's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750530077,\"exp\":1750531877}","timestamp":"2025-06-21 11:22:44"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 191","timestamp":"2025-06-21 11:22:44"}
+{"level":"info","message":"webhooks worker started...","timestamp":"2025-06-21 11:37:57"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-21 11:37:57"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-21 11:37:57"}
+{"level":"info","message":"Received notification with\", {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Madame Curies's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 11:38:23"}
+{"level":"info","message":"Received notification with\", {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Madame Curies's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 11:40:45"}
+{"level":"info","message":"Received notification with\", {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Madame Curies's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 11:40:45"}
+{"level":"info","message":"webhooks worker started...","timestamp":"2025-06-21 11:40:54"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-21 11:40:54"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-21 11:40:54"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What was Madame Curies's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 11:40:57"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Madame Curies's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 11:40:57"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750530077,\"exp\":1750531877}","timestamp":"2025-06-21 11:40:57"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 11:40:57"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What was Madame Curies's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750530077,\"exp\":1750531877}","timestamp":"2025-06-21 11:40:57"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 192","timestamp":"2025-06-21 11:40:57"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What Dr C V Raman's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 11:45:15"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What Dr C V Raman's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 11:45:15"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750530077,\"exp\":1750531877}","timestamp":"2025-06-21 11:45:15"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 11:45:15"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What Dr C V Raman's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750530077,\"exp\":1750531877}","timestamp":"2025-06-21 11:45:15"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 193","timestamp":"2025-06-21 11:45:15"}
+{"level":"info","message":"webhooks ollama/14 - of request job id: 193 for ugm-bull","timestamp":"2025-06-21 11:45:21"}
+{"level":"info","message":"id:193,jobname:ollama,user:ugm-bull","timestamp":"2025-06-21 11:45:21"}
+{"level":"info","message":"Received notification with\", {\"result\":\"Dr. C.V. Raman was an Indian physicist and scientist who made significant contributions to the field of physics. His most notable achievement is the discovery of the phenomenon of \\\"Prism spectroscopy\\\" or the observation that light can be split into its constituent colors by a prism, which he demonstrated in 1928.\\n\\nSpecifically, Dr. Raman discovered that when white light passes through a crystal lattice, it splits into its individual colors, producing a spectrum. This was a groundbreaking discovery because it provided evidence for the wave-particle duality of light, which is still an essential concept in physics today.\\n\\nThis achievement earned Dr. C.V. Raman the Nobel Prize in Physics in 1930, along with Sir Chandrasekhara Venkata Raman (also known as CV Raman), a British Indian physicist who made similar discoveries independently of him.\"}","timestamp":"2025-06-21 11:45:21"}
+{"level":"info","message":"14 : ollama : completed!","timestamp":"2025-06-21 11:45:21"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What is the Mathematician Ramanujans's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 12:59:51"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What is the Mathematician Ramanujans's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 12:59:51"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750535952,\"exp\":1750537752}","timestamp":"2025-06-21 12:59:51"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 12:59:51"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What is the Mathematician Ramanujans's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750535952,\"exp\":1750537752}","timestamp":"2025-06-21 12:59:51"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 194","timestamp":"2025-06-21 12:59:51"}
+{"level":"info","message":"webhooks ollama/15 - of request job id: 194 for ugm-bull","timestamp":"2025-06-21 13:00:01"}
+{"level":"info","message":"id:194,jobname:ollama,user:ugm-bull","timestamp":"2025-06-21 13:00:01"}
+{"level":"info","message":"Received notification with\", {\"result\":\"Srinivasa Ramanujan (also spelled Ramaniah) was an Indian mathematician who made groundbreaking contributions to mathematics, particularly in the field of number theory. Despite his humble beginnings and lack of formal education, he achieved immense success and recognition in the mathematical community.\\n\\nRamanujan's achievements include:\\n\\n1. **Theorems on Diophantine Equations**: Ramanujan proved several important theorems related to Diophantine equations, which are equations involving integers or rational numbers. His work in this area was a significant contribution to number theory.\\n2. **Modular Forms and Elliptic Curves**: He discovered new modular forms and elliptic curves, which have far-reaching implications in number theory and algebraic geometry.\\n3. **Approximations for Pi and Euler's Gamma Function**: Ramanujan provided remarkable approximations for the values of pi (π) and Euler's gamma function, Γ(z), which were considered unattainable by other mathematicians at that time.\\n4. **Ramanujan's Conjecture on Modular Forms**: He proposed a conjecture related to modular forms, which was later proved by Andrew Odlyzko in 1979.\\n\\nSome of his notable results include:\\n\\n* Theorems about the distribution of prime numbers\\n* Approximations for pi (π) and Euler's gamma function (Γ(z))\\n* Conjectures related to modular forms\\n\\nRamanujan's work had a significant impact on mathematics, particularly in the areas of number theory and algebraic geometry. Despite his untimely death at the age of 33, Ramanujan's legacy continues to inspire mathematicians around the world.\\n\\nWould you like to know more about his life or contributions?\"}","timestamp":"2025-06-21 13:00:01"}
+{"level":"info","message":"15 : ollama : completed!","timestamp":"2025-06-21 13:00:01"}
+{"level":"info","message":"webhooks worker started...","timestamp":"2025-06-21 13:00:30"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-06-21 13:00:30"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-06-21 13:00:30"}
+{"level":"warn","message":{"max_tokens":2048,"model":"llama3.2","name":"ollama","prompt":"What is the Mathematician Ramanujans's achievement?","systemPrompt":"You are a helpful assistant"},"timestamp":"2025-06-21 13:00:35"}
+{"level":"info","message":"submit-job requestedJob: {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What is the Mathematician Ramanujans's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048}","timestamp":"2025-06-21 13:00:35"}
+{"level":"debug","message":"submit-job  requested by :, {\"username\":\"ugm-bull\",\"iat\":1750535952,\"exp\":1750537752}","timestamp":"2025-06-21 13:00:35"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-06-21 13:00:35"}
+{"level":"debug","message":"submit-job : jobData : {\"name\":\"ollama\",\"model\":\"llama3.2\",\"prompt\":\"What is the Mathematician Ramanujans's achievement?\",\"systemPrompt\":\"You are a helpful assistant\",\"max_tokens\":2048,\"username\":\"ugm-bull\",\"iat\":1750535952,\"exp\":1750537752}","timestamp":"2025-06-21 13:00:35"}
+{"level":"info","message":"/submit-job: Job: ollama added, id: 195","timestamp":"2025-06-21 13:00:35"}
+{"level":"info","message":"webhooks ollama/16 - of request job id: 195 for ugm-bull","timestamp":"2025-06-21 13:00:45"}
+{"level":"info","message":"id:195,jobname:ollama,user:ugm-bull","timestamp":"2025-06-21 13:00:45"}
+{"level":"info","message":"Received notification with\", {\"id\":\"195\",\"jobname\":\"ollama\",\"user\":\"ugm-bull\",\"result\":\"Srinivasa Ramanus (not Ramanujan) was an Indian mathematician who made groundbreaking contributions to mathematics, particularly in the field of number theory.\\n\\nRamanujan's achievements are numerous and remarkable:\\n\\n1. **Groundbreaking formulas**: He developed numerous mathematical formulas, many of which were discovered independently by other mathematicians years later. Some examples include:\\n\\t* The formula for π (pi) in terms of a summation.\\n\\t* A series expansion for e^x that was ahead of its time.\\n\\t* A method to calculate the sum of reciprocals of integers using modular forms, which is still widely used today.\\n2. **Number theory**: Ramanujan's work on number theory led to many important results, including:\\n\\t* The calculation of prime numbers and their distribution.\\n\\t* The study of elliptic curves and their properties.\\n3. **Mathematical genius**: Ramanujan's mathematical abilities were exceptional, even by today's standards. He was a self-taught mathematician who spent little time in formal education but produced an impressive body of work.\\n\\nHowever, if you're referring to Srinivasa Ramanujan (not Ramanujan), he is actually the correct name. The Indian mathematician Srinivasa Ramanujan (1887-1920) was a polymath who made significant contributions to mathematics, particularly in number theory and algebra.\\n\\nRamanujan's achievements include:\\n\\n1. **Collaborations with G.H. Hardy**: Ramanujan worked closely with the British mathematician G.H. Hardy, who helped him publish his work.\\n2. **Advanced mathematical results**: Ramanujan made significant contributions to mathematics, including:\\n\\t* Theorems about prime numbers and modular forms.\\n\\t* Results on elliptic curves and their properties.\\n\\nRamanujan's life was cut short due to health issues, but his legacy continues to inspire mathematicians today.\\n\\nI hope this clears up any confusion!\"}","timestamp":"2025-06-21 13:00:45"}
+{"level":"info","message":"16 : ollama : completed!","timestamp":"2025-06-21 13:00:45"}
