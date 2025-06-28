@@ -120,7 +120,7 @@ const queueEvents = new QueueEvents('jobQueue', { connection: redisOptions });
 // Connect queue events to Socket.IO and webhook processing
 queueEvents.on('progress', async ({ jobId, data }) => {
     const progress = data;
-    logger.info(`Job ${jobId} progress: ${progress}%`);
+    logger.info(`Job ${jobId} progress: ${JSON.stringify(progress)}%`);
     try {
         const job = await jobQueue.getJob(jobId);
         if (job) {
@@ -200,9 +200,43 @@ queueEvents.on('failed', async ({ jobId, failedReason }) => {
         logger.error(`Error processing failed event for job ${jobId}:`, error);
     }
 });
+// Add event listener for custom 'delta' event
+// Using 'as any' to bypass type checking since 'delta' is a custom event not in the QueueEventsListener type
+queueEvents.on('delta', async ({ jobId, data }) => {
+    logger.info(`Job ${jobId} delta event received: ${JSON.stringify(data)}`);
+    try {
+        const job = await jobQueue.getJob(jobId);
+        if (job) {
+            const userId = job.data.userId;
+            const content = data.content;
+            // Emit to job-specific room
+            io.to(`job:${jobId}`).emit(`job:${jobId}:delta`, {
+                jobId,
+                content
+            });
+            // Emit to user-specific room
+            io.to(`user:${userId}`).emit('job:delta', {
+                jobId,
+                jobName: job.name,
+                userId: job.data.userId,
+                content
+            });
+            // Add delta update to webhook queue
+            await webHookQueue.add('delta', {
+                id: jobId,
+                jobname: job.name,
+                userId: userId,
+                content: content
+            });
+        }
+    }
+    catch (error) {
+        logger.error(`Error processing delta event for job ${jobId}:`, error);
+    }
+});
 // Enhanced webhook worker
 const webHooksWorker = new Worker("webhooks", async (job) => {
-    const { id, jobname, userId, result, progress, error } = job.data;
+    const { id, jobname, userId, result, progress, error, content } = job.data;
     const eventType = job.name; // 'progress', 'completed', or 'failed'
     logger.info(`WORKER: webhooks ${job.id}/${job.name} active for ${userId}/${id}/${jobname}`);
     try {
@@ -251,6 +285,9 @@ const webHooksWorker = new Worker("webhooks", async (job) => {
                 break;
             case 'failed':
                 payload = { id, jobname, userId, error, eventType };
+                break;
+            case 'delta':
+                payload = { id, jobname, userId, content, eventType };
                 break;
             default:
                 payload = { id, jobname, userId, eventType };
@@ -494,7 +531,7 @@ app.post('/webhooks', authenticateToken, async (req, res) => {
             return;
         }
         // Validate event type
-        const validEventTypes = ['progress', 'completed', 'failed', 'all'];
+        const validEventTypes = ['progress', 'completed', 'failed', 'delta', 'all'];
         if (!validEventTypes.includes(eventType)) {
             res.status(400).json({
                 message: `Invalid event type. Must be one of: ${validEventTypes.join(', ')}`
@@ -552,7 +589,7 @@ app.put('/webhooks/:id', authenticateToken, async (req, res) => {
         const { url, eventType, description, active } = req.body;
         // Validate event type if provided
         if (eventType) {
-            const validEventTypes = ['progress', 'completed', 'failed', 'all'];
+            const validEventTypes = ['progress', 'completed', 'failed', 'delta', 'all'];
             if (!validEventTypes.includes(eventType)) {
                 res.status(400).json({
                     message: `Invalid event type. Must be one of: ${validEventTypes.join(', ')}`
@@ -745,7 +782,7 @@ function isValidOptions(options) {
 // Updated job submission route
 app.post('/submit-job', authenticateToken, async (req, res) => {
     const requestedJob = req.body;
-    logger.info(`submit-job requested by: ${JSON.stringify(req.user)} requestedJob: ${JSON.stringify(requestedJob)}`);
+    logger.info(`/submit-job REQUESTED BY: ${JSON.stringify(req.user)}`);
     logger.debug(`/submit-job name: ${requestedJob.name}`);
     logger.debug(`/submit-job data: ${JSON.stringify(requestedJob.data)}`);
     // Check if options are provided in the request
@@ -768,8 +805,8 @@ app.post('/submit-job', authenticateToken, async (req, res) => {
         userId: req.user?.userId // Use userId instead of username
     };
     const job = await jobQueue.add(requestedJob.name, jobData, jobOptions);
+    logger.debug(`/submit-job: jobData: ${JSON.stringify(jobData)}`);
     logger.info(`/submit-job: JOB SCHEDULED : ${job.id}/${requestedJob.name}`);
-    logger.debug(`submit-job: jobData: ${JSON.stringify(jobData)}`);
     res.json({ jobId: job.id });
 });
 // Protected webhook notification route

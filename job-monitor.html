@@ -359,6 +359,7 @@
                                 <option value="progress">Progress Updates</option>
                                 <option value="completed">Job Completion</option>
                                 <option value="failed">Job Failures</option>
+                                <option value="delta">Delta Updates</option>
                             </select>
                         </div>
                         
@@ -427,6 +428,7 @@
         let currentPage = 1;
         let totalPages = 1;
         const API_BASE = 'http://localhost:4000';
+        let deltaContentAccumulator = {}; // Object to accumulate delta content by jobId
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -600,7 +602,17 @@
             socket.on('job:progress', (data) => {
                 console.log('Job progress:', data);
                 updateJobInList(data.jobId, { progress: data.progress, state: 'active' });
-                showNotification(`Job ${data.jobName} progress: ${data.progress}%`, 'info');
+                
+                // Check if this is a delta event
+                if (data.progress && data.progress.event === 'delta') {
+                    // Accumulate delta content instead of showing notification
+                    if (data.progress.content && data.progress.content.content) {
+                        accumulateDeltaContent(data.jobId, data.jobName, data.progress.content.content);
+                    }
+                } else {
+                    // For non-delta progress events, show notification as usual
+                    showNotification(`Job ${data.jobName} progress: ${data.progress}%`, 'info');
+                }
             });
 
             socket.on('job:completed', (data) => {
@@ -608,6 +620,26 @@
                 updateJobInList(data.jobId, { state: 'completed', result: data.result });
                 showNotification(`Job ${data.jobName} completed!`, 'success');
                 updateStats();
+                
+                // Update the delta modal if it exists to show completion status
+                if (deltaContentAccumulator[data.jobId] && deltaContentAccumulator[data.jobId].modalOpen) {
+                    const modal = document.getElementById(`delta-modal-${data.jobId}`);
+                    if (modal) {
+                        const titleElement = modal.querySelector('h3');
+                        if (titleElement) {
+                            titleElement.innerHTML = `
+                                <i class="fas fa-check-circle text-success mr-2"></i>
+                                Job Output: ${data.jobName} <span class="badge badge-success ml-2">Completed</span>
+                            `;
+                        }
+                        
+                        const labelElement = modal.querySelector('.label-text-alt');
+                        if (labelElement) {
+                            labelElement.textContent = 'Job completed';
+                            labelElement.className = 'label-text-alt text-success';
+                        }
+                    }
+                }
             });
 
             socket.on('job:failed', (data) => {
@@ -615,6 +647,52 @@
                 updateJobInList(data.jobId, { state: 'failed', error: data.error });
                 showNotification(`Job ${data.jobName} failed: ${data.error}`, 'error');
                 updateStats();
+                
+                // Update the delta modal if it exists to show failure status
+                if (deltaContentAccumulator[data.jobId] && deltaContentAccumulator[data.jobId].modalOpen) {
+                    const modal = document.getElementById(`delta-modal-${data.jobId}`);
+                    if (modal) {
+                        const titleElement = modal.querySelector('h3');
+                        if (titleElement) {
+                            titleElement.innerHTML = `
+                                <i class="fas fa-exclamation-circle text-error mr-2"></i>
+                                Job Output: ${data.jobName} <span class="badge badge-error ml-2">Failed</span>
+                            `;
+                        }
+                        
+                        const labelElement = modal.querySelector('.label-text-alt');
+                        if (labelElement) {
+                            labelElement.textContent = `Job failed: ${data.error}`;
+                            labelElement.className = 'label-text-alt text-error';
+                        }
+                        
+                        // Add error message to the modal
+                        const contentContainer = modal.querySelector('.space-y-4');
+                        if (contentContainer) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'alert alert-error mt-4';
+                            errorDiv.innerHTML = `
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                <span>${data.error}</span>
+                            `;
+                            contentContainer.appendChild(errorDiv);
+                        }
+                    }
+                }
+            });
+
+            // Add listener for delta events
+            socket.on('job:delta', (data) => {
+                console.log('Job delta event:', data);
+                
+                // Handle the content appropriately without showing notification
+                if (data.content) {
+                    // Accumulate delta content
+                    accumulateDeltaContent(data.jobId, data.jobName, data.content);
+                    
+                    // Also update the job delta in UI for consistency
+                    updateJobDeltaInUI(data.jobId, data.content);
+                }
             });
         }
 
@@ -926,6 +1004,7 @@
         function showJobDetailsModal(job) {
             const modal = document.createElement('div');
             modal.className = 'modal modal-open';
+            modal.setAttribute('data-job-id', job.id);
             modal.innerHTML = `
                 <div class="modal-box max-w-2xl">
                     <h3 class="font-bold text-lg mb-4">Job Details</h3>
@@ -997,6 +1076,28 @@
                                 </div>
                             </div>
                         ` : ''}
+                        
+                        ${job.deltaUpdates && job.deltaUpdates.length > 0 ? `
+                            <div class="delta-updates">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Delta Updates</span>
+                                </label>
+                                <div class="bg-base-200 p-3 rounded-lg space-y-2 text-sm">
+                                    ${job.deltaUpdates.map(update => `
+                                        <div class="p-2 bg-base-100 rounded border">
+                                            <div class="text-xs text-base-content/70 mb-1">
+                                                ${new Date(update.timestamp).toLocaleString()}
+                                            </div>
+                                            <div class="font-mono text-sm">
+                                                ${typeof update.content === 'object' ?
+                                                    JSON.stringify(update.content, null, 2) :
+                                                    update.content.toString()}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                     
                     <div class="modal-action">
@@ -1019,6 +1120,237 @@
                 showNotification(`Subscribed to job ${jobId} updates`, 'success');
             } else {
                 showNotification('Not connected to real-time updates', 'error');
+            }
+        }
+
+        // Function to update job delta information in the UI
+        function updateJobDeltaInUI(jobId, content) {
+            // Store delta updates in the job object
+            const jobIndex = jobs.findIndex(job => job.id === jobId);
+            if (jobIndex !== -1) {
+                // Initialize deltaUpdates array if it doesn't exist
+                if (!jobs[jobIndex].deltaUpdates) {
+                    jobs[jobIndex].deltaUpdates = [];
+                }
+                
+                // Add the new delta update with timestamp
+                jobs[jobIndex].deltaUpdates.push({
+                    content: content,
+                    timestamp: new Date()
+                });
+                
+                // If the job details modal is currently open for this job, update it
+                const openModal = document.querySelector('.modal');
+                if (openModal && openModal.querySelector(`[data-job-id="${jobId}"]`)) {
+                    // Update the delta updates section in the modal
+                    const deltaSection = openModal.querySelector('.delta-updates');
+                    if (deltaSection) {
+                        renderDeltaUpdates(deltaSection, jobs[jobIndex].deltaUpdates);
+                    } else {
+                        // Create delta updates section if it doesn't exist
+                        const modalContent = openModal.querySelector('.modal-box > .space-y-4');
+                        if (modalContent) {
+                            const newDeltaSection = document.createElement('div');
+                            newDeltaSection.className = 'delta-updates';
+                            
+                            const label = document.createElement('label');
+                            label.className = 'label';
+                            label.innerHTML = '<span class="label-text font-semibold">Delta Updates</span>';
+                            
+                            newDeltaSection.appendChild(label);
+                            modalContent.appendChild(newDeltaSection);
+                            
+                            renderDeltaUpdates(newDeltaSection, jobs[jobIndex].deltaUpdates);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Helper function to render delta updates
+        function renderDeltaUpdates(container, updates) {
+            const updatesContainer = document.createElement('div');
+            updatesContainer.className = 'bg-base-200 p-3 rounded-lg space-y-2 text-sm';
+            
+            if (updates.length === 0) {
+                updatesContainer.innerHTML = '<p class="text-base-content/60">No delta updates</p>';
+            } else {
+                updates.forEach(update => {
+                    const updateElement = document.createElement('div');
+                    updateElement.className = 'p-2 bg-base-100 rounded border';
+                    
+                    // Format timestamp
+                    const timestamp = document.createElement('div');
+                    timestamp.className = 'text-xs text-base-content/70 mb-1';
+                    timestamp.textContent = new Date(update.timestamp).toLocaleString();
+                    
+                    // Format content
+                    const content = document.createElement('div');
+                    content.className = 'font-mono text-sm';
+                    content.textContent = typeof update.content === 'object' ?
+                        JSON.stringify(update.content, null, 2) : update.content.toString();
+                    
+                    updateElement.appendChild(timestamp);
+                    updateElement.appendChild(content);
+                    updatesContainer.appendChild(updateElement);
+                });
+            }
+            
+            // Clear and update the container
+            container.innerHTML = '';
+            if (container.querySelector('label')) {
+                container.appendChild(container.querySelector('label'));
+            }
+            container.appendChild(updatesContainer);
+        }
+        
+        // Function to accumulate delta content
+        function accumulateDeltaContent(jobId, jobName, content) {
+            // Initialize if not exists
+            if (!deltaContentAccumulator[jobId]) {
+                deltaContentAccumulator[jobId] = {
+                    jobName: jobName,
+                    content: '',
+                    updates: [],
+                    modalOpen: false
+                };
+                
+                // Show the modal immediately on first delta event
+                showDeltaContentModal(jobId, jobName);
+                deltaContentAccumulator[jobId].modalOpen = true;
+            }
+            
+            // Add the new content
+            deltaContentAccumulator[jobId].content += content;
+            
+            // Also store individual updates with timestamps for detailed view
+            deltaContentAccumulator[jobId].updates.push({
+                content: content,
+                timestamp: new Date()
+            });
+            
+            // Update the job object as well for consistency
+            const jobIndex = jobs.findIndex(job => job.id === jobId);
+            if (jobIndex !== -1) {
+                if (!jobs[jobIndex].deltaUpdates) {
+                    jobs[jobIndex].deltaUpdates = [];
+                }
+                jobs[jobIndex].deltaUpdates.push({
+                    content: content,
+                    timestamp: new Date()
+                });
+            }
+            
+            // Update the modal content if it's open
+            if (deltaContentAccumulator[jobId].modalOpen) {
+                updateDeltaContentModal(jobId);
+            }
+        }
+        
+        // Function to show accumulated delta content in a modal
+        function showDeltaContentModal(jobId, jobName) {
+            if (!deltaContentAccumulator[jobId]) return;
+            
+            // Check if modal already exists
+            const existingModal = document.querySelector(`.modal[data-delta-job-id="${jobId}"]`);
+            if (existingModal) {
+                // Modal already exists, just update it
+                updateDeltaContentModal(jobId);
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal modal-open';
+            modal.setAttribute('data-job-id', jobId);
+            modal.setAttribute('data-delta-job-id', jobId); // Special attribute for delta modals
+            modal.id = `delta-modal-${jobId}`;
+            modal.innerHTML = `
+                <div class="modal-box max-w-2xl">
+                    <h3 class="font-bold text-lg mb-4">
+                        <i class="fas fa-file-alt mr-2"></i>
+                        Job Output: ${jobName}
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="label">
+                                <span class="label-text font-semibold">Live Output</span>
+                                <span class="label-text-alt text-success">Updating in real-time</span>
+                            </label>
+                            <div class="bg-base-200 p-3 rounded-lg">
+                                <pre id="delta-content-${jobId}" class="whitespace-pre-wrap font-mono text-sm overflow-auto max-h-96">${deltaContentAccumulator[jobId].content}</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse collapse-arrow">
+                            <input type="checkbox" />
+                            <div class="collapse-title font-medium">
+                                <span id="delta-updates-count-${jobId}">View Individual Updates (${deltaContentAccumulator[jobId].updates.length})</span>
+                            </div>
+                            <div class="collapse-content">
+                                <div id="delta-updates-${jobId}" class="bg-base-200 p-3 rounded-lg space-y-2 text-sm">
+                                    ${deltaContentAccumulator[jobId].updates.map(update => `
+                                        <div class="p-2 bg-base-100 rounded border">
+                                            <div class="text-xs text-base-content/70 mb-1">
+                                                ${new Date(update.timestamp).toLocaleString()}
+                                            </div>
+                                            <div class="font-mono text-sm">
+                                                ${update.content}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-action">
+                        <button class="btn" onclick="closeDeltaModal('${jobId}')">Close</button>
+                    </div>
+                </div>
+                <div class="modal-backdrop" onclick="closeDeltaModal('${jobId}')"></div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        // Function to update the delta content modal
+        function updateDeltaContentModal(jobId) {
+            if (!deltaContentAccumulator[jobId]) return;
+            
+            const contentElement = document.getElementById(`delta-content-${jobId}`);
+            if (contentElement) {
+                contentElement.textContent = deltaContentAccumulator[jobId].content;
+            }
+            
+            const updatesCountElement = document.getElementById(`delta-updates-count-${jobId}`);
+            if (updatesCountElement) {
+                updatesCountElement.textContent = `View Individual Updates (${deltaContentAccumulator[jobId].updates.length})`;
+            }
+            
+            const updatesElement = document.getElementById(`delta-updates-${jobId}`);
+            if (updatesElement) {
+                updatesElement.innerHTML = deltaContentAccumulator[jobId].updates.map(update => `
+                    <div class="p-2 bg-base-100 rounded border">
+                        <div class="text-xs text-base-content/70 mb-1">
+                            ${new Date(update.timestamp).toLocaleString()}
+                        </div>
+                        <div class="font-mono text-sm">
+                            ${update.content}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // Function to close delta modal
+        function closeDeltaModal(jobId) {
+            const modal = document.getElementById(`delta-modal-${jobId}`);
+            if (modal) {
+                modal.remove();
+                if (deltaContentAccumulator[jobId]) {
+                    deltaContentAccumulator[jobId].modalOpen = false;
+                }
             }
         }
 
