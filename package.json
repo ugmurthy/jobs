@@ -4,6 +4,7 @@
 	"description": "backend module to run jobs",
 	"main": "index.ts",
 	"type": "module",
+	"license": "MIT",
 	"scripts": {
 		"start": "node dist/index.js",
 		"clearlogs": "rm logs/*",

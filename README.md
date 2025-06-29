@@ -1,104 +1,190 @@
-# Runner
+# 🚀 JobRunner
 
-A backend module to run jobs using a queue-based architecture with JWT authentication.
+<p align="center">
+  <img src="https://via.placeholder.com/200x200?text=JobRunner" alt="JobRunner Logo" width="200" height="200">
+</p>
 
-## Description
+A modern, modular backend service for job queue management with robust authentication, real-time updates, and comprehensive API.
 
-Runner is a Node.js/TypeScript service that provides a simple API for submitting and processing jobs. It implements JWT-based authentication for secure API access and uses BullMQ with Redis for reliable job queue management.
+## Overview
 
-## Features
+JobRunner is a powerful Node.js/TypeScript service designed to handle asynchronous job processing with a focus on reliability, scalability, and developer experience. It provides a comprehensive API for job submission, monitoring, and management, with real-time updates via WebSockets and a visual dashboard for queue monitoring.
 
-- RESTful API for job submission and management
-- JWT-based authentication
-- Job queue processing with BullMQ
-- Redis-backed persistence
-- WebSocket support for real-time updates
-- Bull Board UI for monitoring and managing job queues
-- TypeScript for type safety
+### Key Features
 
-## Prerequisites
-
-- Node.js (v18+)
-- Redis server
-- TypeScript
+- **Modular Architecture**: Clean separation of concerns for improved maintainability
+- **RESTful API**: Comprehensive endpoints for job and webhook management
+- **JWT Authentication**: Secure API access with token-based authentication
+- **Job Queue Processing**: Reliable job execution with BullMQ
+- **Redis-backed Persistence**: Durable storage for jobs and state
+- **WebSocket Support**: Real-time updates on job progress and completion
+- **Bull Board UI**: Visual dashboard for monitoring and managing job queues
+- **TypeScript**: Full type safety throughout the codebase
 
 ## Installation
 
-1. Clone the repository
-2. Install dependencies:
+### Prerequisites
+
+- Node.js (v18+)
+- Redis server (see [Redis Setup Guide](REDIS.md) for installation instructions)
+- TypeScript
+
+### Using pnpm (Recommended)
 
 ```bash
-npm install
-# or
+# Clone the repository
+git clone https://github.com/yourusername/jobrunner.git
+cd jobrunner
+
+# Install dependencies
 pnpm install
+
+# Create environment file
+cp .env.example .env
+# Edit .env with your configuration
+
+# Start Redis (if not already running)
+pnpm run redis-start
+
+# Build the TypeScript code
+pnpm run build
+
+# Start the server
+pnpm start
 ```
 
-3. Create a `.env` file in the root directory with the following variables:
-
-```
-TOKEN_SECRET=your_jwt_secret_key
-PORT=4000  # Optional, defaults to 4000
-```
-
-## Redis Setup
-
-The application requires a Redis server for job queue management. You can use the provided npm scripts to manage Redis:
+### Using npm
 
 ```bash
-# Start Redis server
+# Clone the repository
+git clone https://github.com/yourusername/jobrunner.git
+cd jobrunner
+
+# Install dependencies
+npm install
+
+# Create environment file
+cp .env.example .env
+# Edit .env with your configuration
+
+# Start Redis (if not already running)
 npm run redis-start
 
-# Check Redis server status
-npm run redis-info
-
-# Stop Redis server
-npm run redis-stop
-```
-
-## Building and Running
-
-```bash
 # Build the TypeScript code
-tsc
+npm run build
 
 # Start the server
 npm start
 ```
 
+## Environment Configuration
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+TOKEN_SECRET=your_jwt_secret_key
+PORT=4000  # Optional, defaults to 4000
+REDIS_HOST=localhost  # Optional, defaults to localhost
+REDIS_PORT=6379  # Optional, defaults to 6379
+```
+
+## Project Structure
+
+The codebase follows a modular architecture for better organization and maintainability:
+
+```
+src/
+├── config/           # Configuration modules
+│   ├── app.ts        # Express app setup
+│   ├── socket.ts     # Socket.IO configuration
+│   ├── bull.ts       # Bull/BullMQ configuration
+│   ├── redis.ts      # Redis configuration
+│   └── env.ts        # Environment variables
+│
+├── middleware/       # Express middleware
+│   ├── auth.ts       # Authentication middleware
+│   └── error.ts      # Error handling middleware
+│
+├── routes/           # API route handlers
+│   ├── index.ts      # Route registration
+│   ├── auth.ts       # Authentication routes
+│   ├── jobs.ts       # Job management routes
+│   ├── webhooks.ts   # Webhook management routes
+│   └── admin.ts      # Admin routes
+│
+├── services/         # Business logic
+│   ├── userService.ts    # User management
+│   ├── jobService.ts     # Job-related logic
+│   └── webhookService.ts # Webhook-related logic
+│
+├── workers/          # Background job workers
+│   ├── index.ts          # Worker registration
+│   └── webhookWorker.ts  # Webhook processing worker
+│
+├── events/           # Event handlers
+│   ├── index.ts          # Event registration
+│   ├── jobEvents.ts      # Job event handlers
+│   └── socketEvents.ts   # Socket event handlers
+│
+├── utils/            # Utility functions
+│   ├── validation.ts     # Input validation
+│   └── logger.ts         # Logging utilities
+│
+└── index.ts          # Application entry point
+```
+
+### Benefits of Modular Architecture
+
+- **Improved Maintainability**: Smaller, focused files are easier to understand and modify
+- **Better Separation of Concerns**: Each module has a clear responsibility
+- **Enhanced Testability**: Isolated components are easier to test
+- **Simplified Onboarding**: New developers can more easily understand the codebase
+- **More Scalable Architecture**: Adding new features is simpler with a modular structure
+
 ## API Endpoints
 
-### Public Endpoints
+### Authentication Routes
 
-#### `GET /`
+- `POST /auth/register` - User registration
+- `POST /auth/login` - User login
+- `POST /auth/logout` - User logout (requires authentication)
+- `POST /auth/refresh-token` - Refresh access token
+- `POST /auth/request-password-reset` - Request password reset
+- `POST /auth/reset-password` - Reset password
+- `GET /auth/protected` - Protected route example (requires authentication)
 
-Returns a simple "Hello World" message to verify the server is running.
+### Job Management Routes
 
-**Response:**
-```json
-{
-  "message": "Hello World"
-}
-```
+- `POST /jobs/submit` - Submit a job (requires authentication)
+- `GET /jobs/:jobId` - Get status of a specific job (requires authentication)
+- `GET /jobs` - Get all jobs for the authenticated user (requires authentication)
 
-#### `POST /login`
+### Webhook Routes
 
-Authenticates a user and returns a JWT token.
+- `GET /webhooks` - Get all webhooks for the authenticated user (requires authentication)
+- `POST /webhooks` - Add a new webhook (requires authentication)
+- `PUT /webhooks/:id` - Update a webhook (requires authentication)
+- `DELETE /webhooks/:id` - Delete a webhook (requires authentication)
+- `PUT /webhooks/url` - Update webhook URL (legacy) (requires authentication)
+- `POST /webhooks/:id` - Protected webhook notification route
 
-**Request Body:**
-```json
-{
-  "username": "your_username"
-}
-```
+### Admin Routes
 
-**Response:**
-```json
-{
-  "token": "jwt_token_here"
-}
-```
+- `GET /admin` - Bull Board UI
+- `GET /admin/dashboard` - Admin dashboard (requires authentication)
 
-### Protected Endpoints
+### Legacy Routes (for backward compatibility)
+
+- `GET /` - Root route that returns a simple message
+- `POST /register` - User registration
+- `POST /login` - User login
+- `POST /logout` - User logout (requires authentication)
+- `POST /refresh-token` - Refresh access token
+- `POST /request-password-reset` - Request password reset
+- `POST /reset-password` - Reset password
+- `POST /submit-job` - Submit a job (requires authentication)
+
+## Authentication
 
 All protected endpoints require a valid JWT token in the Authorization header:
 
@@ -106,87 +192,51 @@ All protected endpoints require a valid JWT token in the Authorization header:
 Authorization: Bearer your_jwt_token
 ```
 
-#### `GET /protected`
+## Job Submission Example
 
-A test endpoint to verify authentication is working.
-
-**Response:**
-```json
-{
-  "message": "This is a protected route",
-  "user": {
-    "username": "your_username"
-  }
-}
+```bash
+curl -X POST http://localhost:4000/jobs/submit \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer your_jwt_token" \
+  -d '{
+    "name": "dataExport",
+    "data": {
+      "format": "csv",
+      "filters": {"date": "2025-06-28"}
+    }
+  }'
 ```
-
-#### `POST /submit-job`
-
-Submits a job to the queue for processing.
-
-**Request Body:**
-```json
-{
-  "name": "jobName",
-  "data": {
-    "key1": "value1",
-    "key2": "value2"
-    // Any job-specific data
-  },
-  "options": {
-    // Optional job options
-    "removeOnComplete": {"count": 5},
-    "removeOnFail": {"count": 10}
-    // Any valid BullMQ job options
-  }
-}
-```
-
-The `options` field is optional. If not provided, default options will be used. If provided, it must be a valid JSON object.
-
-**Response:**
-```json
-{
-  "jobId": "job_id_here"
-}
-```
-
-## Job Processing
-
-The system uses BullMQ to manage job queues. Jobs are submitted via the API and processed asynchronously. The current implementation supports various job types as seen in the logs (e.g., "dataExport", "paint").
 
 ## WebSocket Support
 
-The application includes Socket.io for real-time updates. This can be used to receive job progress and completion events.
+The application includes Socket.io for real-time updates. Clients can subscribe to job events:
+
+```javascript
+// Client-side example
+const socket = io('http://localhost:4000', {
+  auth: { token: 'your_jwt_token' }
+});
+
+// Subscribe to a specific job
+socket.emit('subscribe:job', 'job_id_here');
+
+// Listen for job progress
+socket.on('job:progress', (data) => {
+  console.log(`Job ${data.jobId} progress: ${data.progress}%`);
+});
+
+// Listen for job completion
+socket.on('job:completed', (data) => {
+  console.log(`Job ${data.jobId} completed with result:`, data.result);
+});
+```
 
 ## Bull Board UI
 
-The application includes Bull Board, a UI dashboard for monitoring and managing BullMQ job queues. The dashboard provides the following features:
-
-- View all queues and their jobs
-- Monitor job statuses (completed, failed, delayed, etc.)
-- View job details and data
-- Retry failed jobs
-- Promote delayed jobs
-- Clean queues
-
-Access the Bull Board UI at:
+Access the Bull Board UI dashboard for monitoring and managing job queues at:
 ```
 http://localhost:4000/admin
 ```
-
-The UI is accessible without authentication, so be careful when deploying to production environments.
-
-## Project Structure
-
-- `src/index.ts` - Main application entry point
-- `dist/` - Compiled JavaScript files
-- `logs/` - Application logs
-
-## Environment Variables
-
-- `TOKEN_SECRET` - Secret key for JWT token generation and verification
-- `PORT` - Server port (defaults to 4000)
 
 ## Dependencies
 
@@ -196,10 +246,36 @@ The UI is accessible without authentication, so be careful when deploying to pro
 - `bullmq` - Job queue management
 - `dotenv` - Environment variable management
 - `express` - Web server framework
-- `ioredis` - Redis client
+- `prisma` - Database ORM
 - `jsonwebtoken` - JWT authentication
 - `socket.io` - WebSocket support
+- `got` - HTTP client for webhook delivery
+
+## Documentation
+
+- [Redis Setup Guide](REDIS.md) - Detailed instructions for setting up Redis locally or using Redis.io free tier
+- [API Documentation Plan](API_DOCUMENTATION_PLAN.md) - Plan for implementing Swagger/OpenAPI documentation
 
 ## License
 
-[Add your license information here]
+MIT License
+
+Copyright (c) 2025 Muve Solutions LLP
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
