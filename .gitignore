@@ -12,5 +12,5 @@ node_modules
 /prisma/dev.db
 .vercel
 /logs
-
+logs
 /src/generated/prisma
