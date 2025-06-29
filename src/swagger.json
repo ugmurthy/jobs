@@ -1,0 +1,1198 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "JobRunner API Documentation",
+    "version": "1.0.0",
+    "description": "API documentation for the JobRunner backend service",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "contact": {
+      "name": "Muve Solutions LLP",
+      "url": "https://example.com",
+      "email": "info@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "Production server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          }
+        },
+        "example": {
+          "message": "Invalid input data",
+          "code": "VALIDATION_ERROR"
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the operation was successful",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Operation completed successfully"
+          }
+        }
+      },
+      "Job": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Auto-generated unique identifier",
+            "example": "job_123456"
+          },
+          "name": {
+            "type": "string",
+            "description": "Job name",
+            "example": "dataExport"
+          },
+          "data": {
+            "type": "object",
+            "description": "Job data payload",
+            "example": {
+              "format": "csv",
+              "filters": {
+                "date": "2025-06-28"
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "waiting",
+              "active",
+              "completed",
+              "failed",
+              "delayed"
+            ],
+            "description": "Current job status",
+            "example": "active"
+          },
+          "progress": {
+            "type": "number",
+            "description": "Job progress percentage (0-100)",
+            "example": 75
+          },
+          "result": {
+            "type": "object",
+            "description": "Job execution result",
+            "example": {
+              "fileUrl": "https://example.com/exports/data.csv",
+              "recordCount": 1250
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp",
+            "example": "2025-06-28T12:00:00Z"
+          }
+        }
+      },
+      "JobSubmitRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Job name",
+            "example": "dataExport"
+          },
+          "data": {
+            "type": "object",
+            "description": "Job data payload",
+            "example": {
+              "format": "csv",
+              "filters": {
+                "date": "2025-06-28"
+              }
+            }
+          }
+        }
+      },
+      "JobResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Auto-generated unique identifier",
+            "example": "job_123456"
+          },
+          "name": {
+            "type": "string",
+            "description": "Job name",
+            "example": "dataExport"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "waiting",
+              "active",
+              "completed",
+              "failed",
+              "delayed"
+            ],
+            "description": "Current job status",
+            "example": "active"
+          },
+          "progress": {
+            "type": "number",
+            "description": "Job progress percentage (0-100)",
+            "example": 75
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp",
+            "example": "2025-06-28T12:00:00Z"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "username",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Auto-generated unique identifier",
+            "example": "user_123456"
+          },
+          "username": {
+            "type": "string",
+            "description": "User's username",
+            "example": "johndoe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "User's password (hashed)",
+            "example": "********"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp",
+            "example": "2025-06-28T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp",
+            "example": "2025-06-28T12:00:00Z"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Auto-generated unique identifier",
+            "example": "user_123456"
+          },
+          "username": {
+            "type": "string",
+            "description": "User's username",
+            "example": "johndoe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "john.doe@example.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp",
+            "example": "2025-06-28T12:00:00Z"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "User's password",
+            "example": "securePassword123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "JWT access token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserResponse"
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Auto-generated unique identifier",
+            "example": "webhook_123456"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Webhook URL",
+            "example": "https://example.com/webhooks/callback"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Events to trigger this webhook",
+            "example": [
+              "job.completed",
+              "job.failed"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the webhook is active",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp",
+            "example": "2025-06-28T12:00:00Z"
+          }
+        }
+      },
+      "WebhookCreateRequest": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Webhook URL",
+            "example": "https://example.com/webhooks/callback"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Events to trigger this webhook",
+            "example": [
+              "job.completed",
+              "job.failed"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the webhook is active",
+            "default": true,
+            "example": true
+          }
+        }
+      },
+      "WebhookUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Webhook URL",
+            "example": "https://example.com/webhooks/callback"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Events to trigger this webhook",
+            "example": [
+              "job.completed",
+              "job.failed"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the webhook is active",
+            "example": true
+          }
+        }
+      },
+      "WebhookResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Auto-generated unique identifier",
+            "example": "webhook_123456"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Webhook URL",
+            "example": "https://example.com/webhooks/callback"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Events to trigger this webhook",
+            "example": [
+              "job.completed",
+              "job.failed"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the webhook is active",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp",
+            "example": "2025-06-28T12:00:00Z"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/admin": {
+      "get": {
+        "summary": "Bull Board UI for queue monitoring",
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Bull Board UI HTML page",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/dashboard": {
+      "get": {
+        "summary": "Admin dashboard",
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Admin dashboard data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "totalJobs": {
+                          "type": "integer",
+                          "description": "Total number of jobs",
+                          "example": 1250
+                        },
+                        "activeJobs": {
+                          "type": "integer",
+                          "description": "Number of active jobs",
+                          "example": 25
+                        },
+                        "completedJobs": {
+                          "type": "integer",
+                          "description": "Number of completed jobs",
+                          "example": 1200
+                        },
+                        "failedJobs": {
+                          "type": "integer",
+                          "description": "Number of failed jobs",
+                          "example": 25
+                        },
+                        "totalUsers": {
+                          "type": "integer",
+                          "description": "Total number of users",
+                          "example": 100
+                        },
+                        "totalWebhooks": {
+                          "type": "integer",
+                          "description": "Total number of webhooks",
+                          "example": 50
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Not an admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login with email and password",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout the current user",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Refresh access token",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "description": "New JWT access token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/submit": {
+      "post": {
+        "summary": "Submit a new job",
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobSubmitRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Job submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{jobId}": {
+      "get": {
+        "summary": "Get status of a specific job",
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "jobId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the job to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs": {
+      "get": {
+        "summary": "Get all jobs for the authenticated user",
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "waiting",
+                "active",
+                "completed",
+                "failed",
+                "delayed"
+              ]
+            },
+            "description": "Filter jobs by status"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "Maximum number of jobs to return"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "description": "Number of jobs to skip"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Jobs retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of jobs matching the criteria"
+                    },
+                    "jobs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/JobResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks": {
+      "get": {
+        "summary": "Get all webhooks for the authenticated user",
+        "tags": [
+          "Webhooks"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhooks retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WebhookResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new webhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Webhook created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{id}": {
+      "put": {
+        "summary": "Update a webhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the webhook to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a webhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the webhook to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Protected webhook notification route",
+        "tags": [
+          "Webhooks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the webhook"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook notification received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Admin",
+      "description": "Administrative endpoints and dashboard"
+    },
+    {
+      "name": "Authentication",
+      "description": "User authentication and authorization"
+    },
+    {
+      "name": "Jobs",
+      "description": "Job management and processing"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Webhook management and notifications"
+    }
+  ]
+}

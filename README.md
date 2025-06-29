@@ -256,6 +256,37 @@ http://localhost:4000/admin
 - [Redis Setup Guide](REDIS.md) - Detailed instructions for setting up Redis locally or using Redis.io free tier
 - [API Documentation Plan](API_DOCUMENTATION_PLAN.md) - Plan for implementing Swagger/OpenAPI documentation
 
+## API Documentation
+
+Interactive API documentation is available at:
+```
+http://localhost:4000/api-docs/
+```
+Note: Make sure to include the trailing slash in the URL.
+
+The documentation is automatically generated from the codebase and includes:
+- Detailed endpoint descriptions
+- Request/response schemas
+- Authentication requirements
+- Example requests and responses
+
+You can also download the OpenAPI specification at:
+```
+http://localhost:4000/api-docs.json
+```
+
+To build and run the application with the API documentation:
+```bash
+# Build the application (includes generating API documentation)
+pnpm run build
+
+# Start the server
+pnpm start
+
+# Or use the dev script to build and start in one command
+pnpm run dev
+```
+
 ## License
 
 MIT License

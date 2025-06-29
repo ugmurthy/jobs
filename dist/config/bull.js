@@ -6,7 +6,7 @@ import { logger } from '@ugm/logger';
 import redisOptions from './redis.js';
 // Default job options
 export const defaultOptions = {
-    removeOnComplete: { count: 3 }, // retain info on last 3 completed jobs
+    removeOnComplete: { count: 3 },
     removeOnFail: { count: 5 } // retain info on last 5 failed jobs
 };
 // Initialize queues

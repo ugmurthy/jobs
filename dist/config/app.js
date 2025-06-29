@@ -1,6 +1,7 @@
 import express from 'express';
 import { logger } from '@ugm/logger';
 import { serverAdapter } from './bull.js';
+import { setupApiDocs } from '../docs/index.js';
 // Initialize Express app
 export const initializeApp = () => {
     const app = express();
@@ -20,7 +21,10 @@ export const initializeApp = () => {
     app.use(express.json());
     // Set up Bull Board routes
     app.use('/admin', serverAdapter.getRouter());
+    // Set up API documentation
+    setupApiDocs(app);
     logger.info('Express app initialized with middleware');
+    logger.info('API Documentation available at /api-docs');
     return app;
 };
 export default { initializeApp };

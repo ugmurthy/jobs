@@ -150,7 +150,7 @@ class WebhookService {
                     logger.info(`Sending ${payload.eventType} webhook to ${webhook.url} for job ${payload.id}`);
                     await got.post(webhook.url, {
                         json: payload,
-                        timeout: { request: 10000 }, // 10s timeout
+                        timeout: { request: 10000 },
                         retry: { limit: 3 } // Retry 3 times
                     });
                     logger.info(`Successfully sent webhook to ${webhook.url}`);

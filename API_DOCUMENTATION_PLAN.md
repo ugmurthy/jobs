@@ -492,6 +492,82 @@ http://localhost:4000/api-docs.json
    - Refine documentation UI
    - Add examples and improve descriptions
 
+## Folder Structure
+
+To ensure a modular and maintainable API documentation implementation, we'll organize the code according to the following folder structure:
+
+```
+src/
+├── docs/                          # Main documentation module folder
+│   ├── index.ts                   # Main entry point for documentation module
+│   ├── config/                    # Documentation configuration
+│   │   ├── index.ts               # Exports all configuration
+│   │   ├── swagger.ts             # Swagger configuration
+│   │   └── ui-options.ts          # UI customization options
+│   ├── schemas/                   # Reusable schema definitions
+│   │   ├── index.ts               # Exports all schemas
+│   │   ├── user-schema.ts         # User-related schemas
+│   │   ├── job-schema.ts          # Job-related schemas
+│   │   ├── webhook-schema.ts      # Webhook-related schemas
+│   │   └── common-schema.ts       # Common/shared schemas (errors, etc.)
+│   ├── routes/                    # Route documentation
+│   │   ├── index.ts               # Exports all route documentation
+│   │   ├── auth-routes.ts         # Authentication routes documentation
+│   │   ├── job-routes.ts          # Job management routes documentation
+│   │   ├── webhook-routes.ts      # Webhook routes documentation
+│   │   └── admin-routes.ts        # Admin routes documentation
+│   ├── middleware/                # Documentation-related middleware
+│   │   ├── index.ts               # Exports all middleware
+│   │   ├── swagger-middleware.ts  # Middleware for Swagger UI
+│   │   └── validator.ts           # Request/response validation middleware
+│   └── utils/                     # Documentation utilities
+│       ├── index.ts               # Exports all utilities
+│       ├── type-generator.ts      # TypeScript type generation utilities
+│       └── doc-generator.ts       # Documentation generation utilities
+├── types/                         # Generated TypeScript types
+│   └── api.ts                     # Auto-generated API types from OpenAPI spec
+├── config/                        # Application configuration
+│   └── app.ts                     # Express app setup (includes Swagger integration)
+└── swagger.json                   # Generated OpenAPI specification
+```
+
+### scripts/
+```
+scripts/
+└── generate-docs.js               # Documentation generation script
+```
+
+### Benefits of This Structure
+
+1. **Separation of Concerns**: Each folder has a clear responsibility
+   - `config/`: Configuration settings
+   - `schemas/`: Data models and structures
+   - `routes/`: Endpoint documentation
+   - `middleware/`: Documentation-related middleware
+   - `utils/`: Helper functions
+
+2. **Modularity**: Each component is isolated and can be developed/tested independently
+   - Individual schema files for different entity types
+   - Separate route documentation files by feature area
+   - Middleware components that can be composed as needed
+
+3. **Scalability**: Easy to add new documentation as the API grows
+   - Add new schema files for new entity types
+   - Add new route documentation files for new API areas
+   - Structure supports future expansion
+
+4. **Maintainability**: Clear organization makes updates easier
+   - Changes to schemas don't affect route documentation
+   - UI customizations are isolated in their own files
+   - Generated files are clearly separated from hand-written code
+
+5. **Discoverability**: Developers can easily find relevant documentation code
+   - Intuitive naming conventions
+   - Index files that export all components from each folder
+   - Logical grouping of related functionality
+
+This structure follows the same modular architecture principles used in the rest of the JobRunner application, ensuring consistency across the codebase.
+
 ## Benefits
 
 - **Improved Developer Experience**: Clear, interactive documentation for all API endpoints

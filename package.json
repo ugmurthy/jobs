@@ -10,7 +10,13 @@
 		"clearlogs": "rm logs/*",
 		"redis-start": "exec brew services start redis",
 		"redis-info": "exec brew services info redis",
-		"redis-stop": "exec brew services stop redis"
+		"redis-stop": "exec brew services stop redis",
+		"generate-docs": "node scripts/generate-docs.js",
+		"prebuild": "pnpm run generate-docs",
+		"build": "tsc",
+		"generate-types": "openapi-typescript src/swagger.json --output src/types/api.ts",
+		"postgenerate-docs": "pnpm run generate-types",
+		"dev": "pnpm run build && pnpm start"
 	},
 	"dependencies": {
 		"@bull-board/api": "^6.10.1",
@@ -25,7 +31,9 @@
 		"ioredis": "^5.6.1",
 		"jsonwebtoken": "^9.0.2",
 		"socket.io": "^4.8.1",
-		"socket.io-client": "^4.8.1"
+		"socket.io-client": "^4.8.1",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-ui-express": "^5.0.1"
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.2",
@@ -33,6 +41,9 @@
 		"@types/fs-extra": "^9.0.13",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/node": "^18.19.112",
+		"@types/swagger-jsdoc": "^6.0.4",
+		"@types/swagger-ui-express": "^4.1.8",
+		"openapi-typescript": "^7.8.0",
 		"prisma": "^6.10.1",
 		"ts-node": "^10.9.1",
 		"ts-node-dev": "^2.0.0",
