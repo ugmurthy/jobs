@@ -1,7 +1,7 @@
 # 🚀 JobRunner
 
 <p align="center">
-  <img src="https://via.placeholder.com/200x200?text=JobRunner" alt="JobRunner Logo" width="200" height="200">
+  <img src="_assets/logo.gif" alt="JobRunner Logo" width="200" height="200">
 </p>
 
 A modern, modular backend service for job queue management with robust authentication, real-time updates, and comprehensive API.
