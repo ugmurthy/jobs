@@ -73,6 +73,7 @@
  *     tags: [Authentication]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: Logout successful
@@ -93,6 +94,7 @@
  *     tags: [Authentication]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: Token refreshed successfully

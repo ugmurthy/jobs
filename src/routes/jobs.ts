@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '@ugm/logger';
-import { authenticateToken } from '../middleware/auth.js';
+//import { authenticateToken } from '../middleware/auth.js';
 import { jobQueue, defaultOptions } from '../config/bull.js';
-
+import { authenticate } from '../middleware/combinedAuth.js';
 const router = Router();
 
 /**
@@ -28,7 +28,7 @@ function isValidOptions(options: unknown): boolean {
 /**
  * Submit a new job
  */
-router.post('/submit', authenticateToken, async (req: Request, res: Response) => {
+router.post('/submit', authenticate, async (req: Request, res: Response) => {
   const requestedJob = req.body;
 
   logger.info(`/submit REQUESTED BY: ${JSON.stringify(req.user)}`);
@@ -64,7 +64,7 @@ router.post('/submit', authenticateToken, async (req: Request, res: Response) =>
 /**
  * Get status of a specific job
  */
-router.get('/:jobId', authenticateToken, async (req: Request, res: Response, next: Function) => {
+router.get('/:jobId', authenticate, async (req: Request, res: Response, next: Function) => {
   try {
     // Skip this route handler if the jobId is 'schedule' - it will be handled by the scheduler routes
     if (req.params.jobId === 'schedule') {
@@ -122,7 +122,7 @@ router.get('/:jobId', authenticateToken, async (req: Request, res: Response, nex
 /**
  * Get all jobs for the authenticated user
  */
-router.get('/', authenticateToken, async (req: Request, res: Response) => {
+router.get('/', authenticate, async (req: Request, res: Response) => {
   try {
     // Log that we're hitting the root jobs route
     logger.info('GET /jobs route hit');

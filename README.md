@@ -14,7 +14,9 @@ JobRunner is a powerful Node.js/TypeScript service designed to handle asynchrono
 
 - **Modular Architecture**: Clean separation of concerns for improved maintainability
 - **RESTful API**: Comprehensive endpoints for job and webhook management
-- **JWT Authentication**: Secure API access with token-based authentication
+- **Authentication Options**:
+  - **JWT Authentication**: Secure API access with token-based authentication
+  - **API Key Authentication**: Alternative authentication for machine-to-machine communication
 - **Job Queue Processing**: Reliable job execution with BullMQ
 - **Job Scheduling**: Flexible job scheduling with cron expressions and repeat intervals
 - **Scheduler Workers**: Dedicated workers for processing scheduled jobs
@@ -88,7 +90,17 @@ TOKEN_SECRET=your_jwt_secret_key
 PORT=4000  # Optional, defaults to 4000
 REDIS_HOST=localhost  # Optional, defaults to localhost
 REDIS_PORT=6379  # Optional, defaults to 6379
+DATABASE_URL=postgresql://username:password@localhost:5432/jobrunner  # Required for Prisma ORM
 ```
+
+### API Key Configuration
+
+API keys are stored in the database using Prisma ORM. The system:
+- Generates random 32-byte API keys encoded as base64 strings
+- Uses the first 8 characters as a prefix for efficient lookups
+- Stores bcrypt hashes of the full keys for security
+
+No additional environment variables are required specifically for API key functionality, but ensure your database connection is properly configured via the `DATABASE_URL` environment variable.
 
 ## Project Structure
 
@@ -104,7 +116,9 @@ src/
 │   └── env.ts        # Environment variables
 │
 ├── middleware/       # Express middleware
-│   ├── auth.ts       # Authentication middleware
+│   ├── auth.ts       # JWT authentication middleware
+│   ├── apiKeyAuth.ts # API key authentication middleware
+│   ├── combinedAuth.ts # Combined authentication middleware
 │   └── error.ts      # Error handling middleware
 │
 ├── routes/           # API route handlers
@@ -113,13 +127,15 @@ src/
 │   ├── jobs.ts       # Job management routes
 │   ├── scheduler.ts  # Job scheduler routes
 │   ├── webhooks.ts   # Webhook management routes
-│   └── admin.ts      # Admin routes
+│   ├── admin.ts      # Admin routes
+│   └── apiKeys.ts    # API key management routes
 │
 ├── services/         # Business logic
 │   ├── userService.ts    # User management
 │   ├── jobService.ts     # Job-related logic
 │   ├── schedulerService.ts # Scheduler-related logic
-│   └── webhookService.ts # Webhook-related logic
+│   ├── webhookService.ts # Webhook-related logic
+│   └── apiKeyService.ts  # API key management
 │
 ├── workers/          # Background job workers
 │   ├── index.ts          # Worker registration
@@ -180,6 +196,13 @@ src/
 - `PUT /webhooks/url` - Update webhook URL (legacy) (requires authentication)
 - `POST /webhooks/:id` - Protected webhook notification route
 
+### API Key Management Routes
+
+- `GET /api-keys` - List all API keys for the authenticated user (requires authentication)
+- `POST /api-keys` - Create a new API key (requires authentication)
+- `DELETE /api-keys/:id` - Revoke an API key (requires authentication)
+- `PUT /api-keys/:id` - Update an API key (name, permissions, etc.) (requires authentication)
+
 ### Admin Routes
 
 - `GET /admin` - Bull Board UI
@@ -198,14 +221,81 @@ src/
 
 ## Authentication
 
-All protected endpoints require a valid JWT token in the Authorization header:
+JobRunner supports two authentication methods:
+
+### JWT Authentication
+
+For user-based authentication, include a valid JWT token in the Authorization header:
 
 ```
 Authorization: Bearer your_jwt_token
 ```
 
+### API Key Authentication
+
+For machine-to-machine communication, third-party integrations, and automated scripts, use API key authentication by including the API key in the `x-api-key` header (case-insensitive, but lowercase is recommended):
+
+```
+x-api-key: your_api_key
+```
+
+API keys can be created, managed, and revoked through the API key management endpoints. Each API key can have specific permissions and an optional expiration date.
+
+#### API Key Structure and Validation
+
+API keys in JobRunner follow a specific structure:
+- Each API key is a unique, randomly generated string
+- The first 8 characters of the key serve as a "prefix" that is stored in the database for quick lookups
+- The full API key is only shown once when created and should be stored securely
+- The system stores a bcrypt hash of the full key in the database, not the key itself
+
+When validating an API key:
+1. The system extracts the prefix (first 8 characters) from the provided key
+2. It looks up API keys with matching prefixes in the database
+3. For each matching key, it compares the full provided key with the stored hash using bcrypt
+4. It verifies the key is active and not expired
+5. If valid, it attaches the associated user and permissions to the request
+
+This approach provides several security benefits:
+- Even if the database is compromised, the actual API keys cannot be recovered
+- The prefix system allows for efficient lookups without storing the full key
+- Each key can have granular permissions, limiting access to only what's needed
+
+**Note:** All protected routes, including job routes (`/jobs/*`), webhook routes (`/webhooks/*`), and other authenticated endpoints support both JWT and API key authentication methods. The system will first check for an API key, and if not present, fall back to JWT authentication.
+
+**Important Implementation Detail:** If you're experiencing issues with API key authentication, ensure that individual route handlers in route files (e.g., `jobs.ts`, `webhooks.ts`) are not using the `authenticateToken` middleware directly. The combined authentication middleware is applied at the router level in `routes/index.ts`, but if route handlers also use `authenticateToken`, it will override the API key authentication.
+
+See [API Key Usage](API_KEY_USAGE.md) for detailed information on using and managing API keys.
+
+#### Troubleshooting API Key Authentication
+
+If you're experiencing issues with API key authentication:
+
+1. **Header Case Sensitivity**: While the header name is case-insensitive, ensure you're using `x-api-key` (lowercase is recommended for consistency).
+
+2. **Middleware Conflicts**: Ensure that individual route handlers in route files (e.g., `jobs.ts`, `webhooks.ts`) are not using the `authenticateToken` middleware directly, as this will override the combined authentication middleware.
+
+3. **Debug Logging**: Enable debug logging to see detailed information about the API key validation process:
+   ```javascript
+   // In your .env file
+   LOG_LEVEL=debug
+   ```
+
+4. **Check API Key Status**: Verify that your API key is active and not expired by listing your API keys:
+   ```bash
+   curl -X GET http://localhost:4000/api-keys \
+     -H "Authorization: Bearer your_jwt_token"
+   ```
+
+5. **Permissions**: Ensure your API key has the necessary permissions for the endpoint you're trying to access.
+
+6. **Database Connection**: Verify that your database connection is working correctly, as API key validation requires database access.
+
+If you continue to experience issues, check the server logs for more detailed error messages.
+
 ## Job Submission Example
 
+Using JWT authentication:
 ```bash
 curl -X POST http://localhost:4000/jobs/submit \
   -H "Content-Type: application/json" \
@@ -219,8 +309,23 @@ curl -X POST http://localhost:4000/jobs/submit \
   }'
 ```
 
+Using API key authentication:
+```bash
+curl -X POST http://localhost:4000/jobs/submit \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: your_api_key" \
+  -d '{
+    "name": "dataExport",
+    "data": {
+      "format": "csv",
+      "filters": {"date": "2025-06-28"}
+    }
+  }'
+```
+
 ## Job Scheduling Example
 
+Using JWT authentication:
 ```bash
 curl -X POST http://localhost:4000/jobs/schedule \
   -H "Content-Type: application/json" \
@@ -243,6 +348,110 @@ curl -X POST http://localhost:4000/jobs/schedule \
     }
   }'
 ```
+
+Using API key authentication:
+```bash
+curl -X POST http://localhost:4000/jobs/schedule \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: your_api_key" \
+  -d '{
+    "name": "dataExport",
+    "data": {
+      "format": "csv",
+      "filters": {"date": "2025-06-28"}
+    },
+    "schedule": {
+      "cron": "0 0 * * *",
+      "tz": "America/New_York",
+      "startDate": "2025-07-01T00:00:00.000Z",
+      "endDate": "2025-12-31T00:00:00.000Z"
+    },
+    "options": {
+      "removeOnComplete": { "count": 3 },
+      "removeOnFail": { "count": 5 }
+    }
+  }'
+```
+
+## API Key Examples
+
+### Creating an API Key
+
+```bash
+# First, create an API key (requires JWT authentication)
+curl -X POST http://localhost:4000/api-keys \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer your_jwt_token" \
+  -d '{
+    "name": "Integration Key",
+    "permissions": ["jobs:read", "jobs:write"],
+    "expiresAt": "2026-07-01T00:00:00.000Z"
+  }'
+
+# Response will include the full API key - save it securely as it will only be shown once
+# {
+#   "id": 1,
+#   "name": "Integration Key",
+#   "key": "jrn_5f9d7e3a2b1c8e4f6a0d9c8b7a6f5e4d3c2b1a",
+#   "prefix": "jrn_5f9d7",
+#   "permissions": ["jobs:read", "jobs:write"],
+#   "createdAt": "2025-07-03T21:05:26.000Z",
+#   "expiresAt": "2026-07-01T00:00:00.000Z"
+# }
+```
+
+#### Understanding API Key Format
+
+In the example above:
+- The full API key is `jrn_5f9d7e3a2b1c8e4f6a0d9c8b7a6f5e4d3c2b1a`
+- The prefix is `jrn_5f9d7` (first 8 characters)
+- Only the prefix and a bcrypt hash of the full key are stored in the database
+- The full key is only shown once at creation time
+
+When you list your API keys later, you'll only see the prefix, not the full key:
+
+```bash
+# Listing API keys
+curl -X GET http://localhost:4000/api-keys \
+  -H "Authorization: Bearer your_jwt_token"
+
+# Response will show only the prefixes
+# [
+#   {
+#     "id": 1,
+#     "name": "Integration Key",
+#     "prefix": "jrn_5f9d7",
+#     "permissions": ["jobs:read", "jobs:write"],
+#     "lastUsed": "2025-07-03T22:15:42.000Z",
+#     "createdAt": "2025-07-03T21:05:26.000Z",
+#     "expiresAt": "2026-07-01T00:00:00.000Z",
+#     "isActive": true
+#   }
+# ]
+```
+
+### Using an API Key
+
+```bash
+# Using API key instead of JWT token
+curl -X POST http://localhost:4000/jobs/submit \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: jrn_5f9d7e3a2b1c8e4f6a0d9c8b7a6f5e4d3c2b1a" \
+  -d '{
+    "name": "dataExport",
+    "data": {
+      "format": "csv",
+      "filters": {"date": "2025-06-28"}
+    }
+  }'
+```
+
+When you use an API key, the system:
+1. Extracts the prefix (`jrn_5f9d7`)
+2. Finds all API keys with that prefix in the database
+3. Compares the full key against the stored hash
+4. Verifies the key is active and not expired
+5. Grants access based on the key's permissions
 
 ## WebSocket Support
 
@@ -292,6 +501,8 @@ http://localhost:4000/admin
 
 - [Redis Setup Guide](REDIS.md) - Detailed instructions for setting up Redis locally or using Redis.io free tier
 - [API Documentation Plan](API_DOCUMENTATION_PLAN.md) - Plan for implementing Swagger/OpenAPI documentation
+- [API Key Implementation](API_KEY_IMPLEMENTATION.md) - Implementation plan for API key authentication
+- [API Key Usage](API_KEY_USAGE.md) - Guide for using and managing API keys
 
 ## API Documentation
 

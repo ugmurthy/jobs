@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '@ugm/logger';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticate } from '../middleware/combinedAuth.js';
 import { serverAdapter } from '../config/bull.js';
 
 const router = Router();
@@ -16,7 +16,7 @@ router.use('/', serverAdapter.getRouter());
  * Admin dashboard route
  * This is a placeholder for a future admin dashboard
  */
-router.get('/dashboard', authenticateToken, async (req: Request, res: Response) => {
+router.get('/dashboard', authenticate, async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     

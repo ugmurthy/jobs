@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '@ugm/logger';
-import { authenticateToken } from '../middleware/auth.js';
+//import { authenticate } from '../middleware/auth.js';
 import schedulerService from '../services/schedulerService.js';
-
+import { authenticate } from '../middleware/combinedAuth.js';
 // Define custom Request type with user property
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -16,7 +16,7 @@ logger.level='info'
 /**
  * Schedule a new job
  */
-router.post('/schedule', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.post('/schedule', authenticate, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { name, data, schedule, options } = req.body;
     const userId = req.user?.userId;
@@ -56,7 +56,7 @@ router.post('/schedule', authenticateToken, async (req: AuthenticatedRequest, re
 /**
  * Get all scheduled jobs for the authenticated user
  */
-router.get('/schedule', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/schedule', authenticate, async (req: AuthenticatedRequest, res: Response) => {
   logger.info('GET /jobs/schedule route hit');
   logger.debug(`/jobs/schedule request user: ${JSON.stringify(req.user)}`);
   try {
@@ -84,7 +84,7 @@ router.get('/schedule', authenticateToken, async (req: AuthenticatedRequest, res
 /**
  * Get a specific scheduled job
  */
-router.get('/schedule/:schedulerId', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/schedule/:schedulerId', authenticate, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { schedulerId } = req.params;
     const userId = req.user?.userId;
@@ -111,7 +111,7 @@ router.get('/schedule/:schedulerId', authenticateToken, async (req: Authenticate
 /**
  * Remove a scheduled job
  */
-router.delete('/schedule/:schedulerId', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.delete('/schedule/:schedulerId', authenticate, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { schedulerId } = req.params;
     const userId = req.user?.userId;

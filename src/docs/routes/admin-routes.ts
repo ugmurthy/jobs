@@ -25,6 +25,7 @@
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: Admin dashboard data

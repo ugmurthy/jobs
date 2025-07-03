@@ -13,6 +13,7 @@
  *     tags: [Webhooks]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: Webhooks retrieved successfully
@@ -33,6 +34,7 @@
  *     tags: [Webhooks]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -65,6 +67,7 @@
  *     tags: [Webhooks]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -108,6 +111,7 @@
  *     tags: [Webhooks]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id

@@ -1,6 +1,7 @@
 import { logger } from '@ugm/logger';
 import apiKeyService from '../services/apiKeyService.js';
 import userService from '../services/userService.js';
+logger.level = 'debug';
 /**
  * Middleware to authenticate using API key
  * Extracts API key from X-API-Key header and validates it
@@ -8,6 +9,7 @@ import userService from '../services/userService.js';
 export const authenticateApiKey = async (req, res, next) => {
     // Extract API key from header
     const apiKey = req.headers['x-api-key'];
+    logger.debug(`apiKeyAuth.ts : API key received: ${apiKey}`);
     if (!apiKey) {
         // No API key provided, let the next middleware handle it
         return next();

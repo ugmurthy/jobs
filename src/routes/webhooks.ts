@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '@ugm/logger';
 import prisma from '../lib/prisma.js';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticate } from '../middleware/combinedAuth.js';
 import userService from '../services/userService.js';
 
 const router = Router();
@@ -9,7 +9,7 @@ const router = Router();
 /**
  * Get all webhooks for the authenticated user
  */
-router.get('/', authenticateToken, async (req: Request, res: Response) => {
+router.get('/', authenticate, async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     
@@ -32,7 +32,7 @@ router.get('/', authenticateToken, async (req: Request, res: Response) => {
 /**
  * Add a new webhook
  */
-router.post('/', authenticateToken, async (req: Request, res: Response) => {
+router.post('/', authenticate, async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     
@@ -91,7 +91,7 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
 /**
  * Update a webhook
  */
-router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
+router.put('/:id', authenticate, async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     const webhookId = parseInt(req.params.id);
@@ -148,7 +148,7 @@ router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
 /**
  * Delete a webhook
  */
-router.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
+router.delete('/:id', authenticate, async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     const webhookId = parseInt(req.params.id);
@@ -186,7 +186,7 @@ router.delete('/:id', authenticateToken, async (req: Request, res: Response) => 
 /**
  * Update webhook URL (legacy)
  */
-router.put('/url', authenticateToken, async (req: Request, res: Response) => {
+router.put('/url', authenticate, async (req: Request, res: Response) => {
   try {
     if (!req.user) {
       res.status(401).json({ message: 'Not authenticated' });

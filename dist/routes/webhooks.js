@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { logger } from '@ugm/logger';
 import prisma from '../lib/prisma.js';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticate } from '../middleware/combinedAuth.js';
 import userService from '../services/userService.js';
 const router = Router();
 /**
  * Get all webhooks for the authenticated user
  */
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
     try {
         const userId = req.user?.userId;
         if (!userId) {
@@ -27,7 +27,7 @@ router.get('/', authenticateToken, async (req, res) => {
 /**
  * Add a new webhook
  */
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
     try {
         const userId = req.user?.userId;
         if (!userId) {
@@ -78,7 +78,7 @@ router.post('/', authenticateToken, async (req, res) => {
 /**
  * Update a webhook
  */
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', authenticate, async (req, res) => {
     try {
         const userId = req.user?.userId;
         const webhookId = parseInt(req.params.id);
@@ -128,7 +128,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 /**
  * Delete a webhook
  */
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', authenticate, async (req, res) => {
     try {
         const userId = req.user?.userId;
         const webhookId = parseInt(req.params.id);
@@ -161,7 +161,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 /**
  * Update webhook URL (legacy)
  */
-router.put('/url', authenticateToken, async (req, res) => {
+router.put('/url', authenticate, async (req, res) => {
     try {
         if (!req.user) {
             res.status(401).json({ message: 'Not authenticated' });

@@ -1,14 +1,14 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '@ugm/logger';
 import apiKeyService from '../services/apiKeyService.js';
-
+import { authenticate } from '../middleware/combinedAuth.js';
 const router = Router();
 
 /**
  * GET /api-keys
  * List all API keys for the authenticated user
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', authenticate, async (req: Request, res: Response) => {
   try {
     if (!req.user) {
       res.status(401).json({ message: 'Not authenticated' });
@@ -31,7 +31,7 @@ router.get('/', async (req: Request, res: Response) => {
  * POST /api-keys
  * Create a new API key
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', authenticate,async (req: Request, res: Response) => {
   try {
     if (!req.user) {
       res.status(401).json({ message: 'Not authenticated' });
@@ -84,7 +84,7 @@ router.post('/', async (req: Request, res: Response) => {
  * DELETE /api-keys/:id
  * Revoke an API key
  */
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id',authenticate, async (req: Request, res: Response) => {
   try {
     if (!req.user) {
       res.status(401).json({ message: 'Not authenticated' });
@@ -116,7 +116,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
  * PUT /api-keys/:id
  * Update an API key (name, permissions, etc.)
  */
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', authenticate,async (req: Request, res: Response) => {
   try {
     if (!req.user) {
       res.status(401).json({ message: 'Not authenticated' });

@@ -1,944 +1,216 @@
-{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Job events initialized","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Socket events initialized","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Initializing workers...","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"All workers initialized","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-02 15:57:42"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 15:57:42"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 15:57:49"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 15:57:49"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Retrieved 26 scheduled jobs","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"First scheduler ID: 1-dataExport-1751406748747","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406748747, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406039036, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406028929, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406017282, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751405874888, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751405507051, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751405417195, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751400561937, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751400432508, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399988263, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399457187, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399218137, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398323111, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398305950, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397892099, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397785436, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397287778, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397161587, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396873111, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396779354, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396348819, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751393158623, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392897048, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392520837, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392411328, matches user: true","timestamp":"2025-07-02 15:57:49"}
-{"level":"info","message":"Filtered 26 schedulers for user 1","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"User schedulers: , , , , , , , , , , , , , , , , , , , , , , , , , ","timestamp":"2025-07-02 15:57:49"}
-{"level":"info","message":"/jobs/schedule : Found 26 jobs scheduled for user 1","timestamp":"2025-07-02 15:57:49"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 15:57:49"}
-{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-02 15:58:30"}
-{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Job events initialized","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Socket events initialized","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Initializing workers...","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"All workers initialized","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-02 15:58:33"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 15:58:33"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 15:58:40"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 15:58:40"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Retrieved 26 scheduled jobs","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"First scheduler ID: 1-dataExport-1751406748747","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406748747, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406039036, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406028929, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406017282, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751405874888, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751405507051, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751405417195, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751400561937, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751400432508, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399988263, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399457187, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399218137, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398323111, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398305950, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397892099, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397785436, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397287778, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397161587, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396873111, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396779354, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396348819, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751393158623, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392897048, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392520837, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392411328, matches user: true","timestamp":"2025-07-02 15:58:40"}
-{"level":"info","message":"Filtered 26 schedulers for user 1","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"User schedulers: 1-dataExport-1751406748747, 1-dataExport-1751406039036, 1-dataExport-1751406028929, 1-dataExport-1751406017282, 1-welcomeMessage-1751405874888, 1-welcomeMessage-1751405507051, 1-welcomeMessage-1751405417195, 1-welcomeMessage-1751400561937, 1-welcomeMessage-1751400432508, 1-welcomeMessage-1751399988263, 1-welcomeMessage-1751399457187, 1-welcomeMessage-1751399218137, 1-welcomeMessage-1751398323111, 1-welcomeMessage-1751398305950, 1-welcomeMessage-1751397892099, 1-welcomeMessage-1751397785436, 1-welcomeMessage-1751397287778, 1-welcomeMessage-1751397161587, 1-welcomeMessage-1751396873111, 1-welcomeMessage-1751396779354, 1-welcomeMessage-1751396757064, 1-welcomeMessage-1751396348819, 1-welcomeMessage-1751393158623, 1-dataExport-1751392897048, 1-dataExport-1751392520837, 1-dataExport-1751392411328","timestamp":"2025-07-02 15:58:40"}
-{"level":"info","message":"/jobs/schedule : Found 26 jobs scheduled for user 1","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 15:58:40"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule/1-dataExport-1751406748747\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:00:22"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751406748747","timestamp":"2025-07-02 16:00:22"}
-{"level":"debug","message":"Response: GET /schedule/1-dataExport-1751406748747 - Status: 200","timestamp":"2025-07-02 16:00:22"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-dataExport-1751406748747\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:00:36"}
-{"level":"info","message":"Removing scheduled job 1-dataExport-1751406748747","timestamp":"2025-07-02 16:00:36"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751406748747","timestamp":"2025-07-02 16:00:36"}
-{"level":"info","message":"Scheduled job 1-dataExport-1751406748747 removed","timestamp":"2025-07-02 16:00:36"}
-{"level":"debug","message":"Response: DELETE /schedule/1-dataExport-1751406748747 - Status: 200","timestamp":"2025-07-02 16:00:36"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-dataExport-1751406039036\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:00:51"}
-{"level":"info","message":"Removing scheduled job 1-dataExport-1751406039036","timestamp":"2025-07-02 16:00:51"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751406039036","timestamp":"2025-07-02 16:00:51"}
-{"level":"info","message":"Scheduled job 1-dataExport-1751406039036 removed","timestamp":"2025-07-02 16:00:51"}
-{"level":"debug","message":"Response: DELETE /schedule/1-dataExport-1751406039036 - Status: 200","timestamp":"2025-07-02 16:00:51"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-dataExport-1751406028929\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:01:05"}
-{"level":"info","message":"Removing scheduled job 1-dataExport-1751406028929","timestamp":"2025-07-02 16:01:05"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751406028929","timestamp":"2025-07-02 16:01:05"}
-{"level":"info","message":"Scheduled job 1-dataExport-1751406028929 removed","timestamp":"2025-07-02 16:01:05"}
-{"level":"debug","message":"Response: DELETE /schedule/1-dataExport-1751406028929 - Status: 200","timestamp":"2025-07-02 16:01:05"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/-dataExport-1751406017282\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:01:25"}
-{"level":"info","message":"Removing scheduled job -dataExport-1751406017282","timestamp":"2025-07-02 16:01:25"}
-{"level":"info","message":"Getting scheduled job -dataExport-1751406017282","timestamp":"2025-07-02 16:01:25"}
-{"level":"warn","message":"Scheduled job -dataExport-1751406017282 not found","timestamp":"2025-07-02 16:01:25"}
-{"level":"debug","message":"Response: DELETE /schedule/-dataExport-1751406017282 - Status: 404","timestamp":"2025-07-02 16:01:25"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751405874888\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:01:40"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751405874888","timestamp":"2025-07-02 16:01:40"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751405874888","timestamp":"2025-07-02 16:01:40"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751405874888 removed","timestamp":"2025-07-02 16:01:40"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751405874888 - Status: 200","timestamp":"2025-07-02 16:01:40"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:01:52"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:01:52"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Retrieved 22 scheduled jobs","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"First scheduler ID: 1-dataExport-1751406017282","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406017282, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751405507051, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751405417195, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751400561937, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751400432508, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399988263, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399457187, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399218137, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398323111, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398305950, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397892099, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397785436, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397287778, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397161587, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396873111, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396779354, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396348819, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751393158623, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392897048, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392520837, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392411328, matches user: true","timestamp":"2025-07-02 16:01:52"}
-{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"User schedulers: 1-dataExport-1751406017282, 1-welcomeMessage-1751405507051, 1-welcomeMessage-1751405417195, 1-welcomeMessage-1751400561937, 1-welcomeMessage-1751400432508, 1-welcomeMessage-1751399988263, 1-welcomeMessage-1751399457187, 1-welcomeMessage-1751399218137, 1-welcomeMessage-1751398323111, 1-welcomeMessage-1751398305950, 1-welcomeMessage-1751397892099, 1-welcomeMessage-1751397785436, 1-welcomeMessage-1751397287778, 1-welcomeMessage-1751397161587, 1-welcomeMessage-1751396873111, 1-welcomeMessage-1751396779354, 1-welcomeMessage-1751396757064, 1-welcomeMessage-1751396348819, 1-welcomeMessage-1751393158623, 1-dataExport-1751392897048, 1-dataExport-1751392520837, 1-dataExport-1751392411328","timestamp":"2025-07-02 16:01:52"}
-{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:01:52"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/-dataExport-1751406017282\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:02:13"}
-{"level":"info","message":"Removing scheduled job -dataExport-1751406017282","timestamp":"2025-07-02 16:02:13"}
-{"level":"info","message":"Getting scheduled job -dataExport-1751406017282","timestamp":"2025-07-02 16:02:13"}
-{"level":"warn","message":"Scheduled job -dataExport-1751406017282 not found","timestamp":"2025-07-02 16:02:13"}
-{"level":"debug","message":"Response: DELETE /schedule/-dataExport-1751406017282 - Status: 404","timestamp":"2025-07-02 16:02:13"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751405507051\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:02:29"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751405507051","timestamp":"2025-07-02 16:02:29"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751405507051","timestamp":"2025-07-02 16:02:29"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751405507051 removed","timestamp":"2025-07-02 16:02:29"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751405507051 - Status: 200","timestamp":"2025-07-02 16:02:29"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751405417195\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:02:43"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751405417195","timestamp":"2025-07-02 16:02:43"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751405417195","timestamp":"2025-07-02 16:02:43"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751405417195 removed","timestamp":"2025-07-02 16:02:43"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751405417195 - Status: 200","timestamp":"2025-07-02 16:02:43"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751400432508\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:03:08"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751400432508","timestamp":"2025-07-02 16:03:08"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751400432508","timestamp":"2025-07-02 16:03:08"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751400432508 removed","timestamp":"2025-07-02 16:03:08"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751400432508 - Status: 200","timestamp":"2025-07-02 16:03:08"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751399988263\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:03:21"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751399988263","timestamp":"2025-07-02 16:03:21"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751399988263","timestamp":"2025-07-02 16:03:21"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751399988263 removed","timestamp":"2025-07-02 16:03:21"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751399988263 - Status: 200","timestamp":"2025-07-02 16:03:21"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:03:27"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:03:27"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Retrieved 18 scheduled jobs","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"First scheduler ID: 1-dataExport-1751406017282","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406017282, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751400561937, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399457187, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399218137, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398323111, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398305950, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397892099, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397785436, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397287778, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397161587, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396873111, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396779354, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396348819, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751393158623, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392897048, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392520837, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392411328, matches user: true","timestamp":"2025-07-02 16:03:27"}
-{"level":"info","message":"Filtered 18 schedulers for user 1","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"User schedulers: 1-dataExport-1751406017282, 1-welcomeMessage-1751400561937, 1-welcomeMessage-1751399457187, 1-welcomeMessage-1751399218137, 1-welcomeMessage-1751398323111, 1-welcomeMessage-1751398305950, 1-welcomeMessage-1751397892099, 1-welcomeMessage-1751397785436, 1-welcomeMessage-1751397287778, 1-welcomeMessage-1751397161587, 1-welcomeMessage-1751396873111, 1-welcomeMessage-1751396779354, 1-welcomeMessage-1751396757064, 1-welcomeMessage-1751396348819, 1-welcomeMessage-1751393158623, 1-dataExport-1751392897048, 1-dataExport-1751392520837, 1-dataExport-1751392411328","timestamp":"2025-07-02 16:03:27"}
-{"level":"info","message":"/jobs/schedule : Found 18 jobs scheduled for user 1","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:03:27"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751400561937\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:03:50"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751400561937","timestamp":"2025-07-02 16:03:50"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751400561937","timestamp":"2025-07-02 16:03:50"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751400561937 removed","timestamp":"2025-07-02 16:03:50"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751400561937 - Status: 200","timestamp":"2025-07-02 16:03:50"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-dataExport-1751392411328\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:04:04"}
-{"level":"info","message":"Removing scheduled job 1-dataExport-1751392411328","timestamp":"2025-07-02 16:04:04"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751392411328","timestamp":"2025-07-02 16:04:04"}
-{"level":"info","message":"Scheduled job 1-dataExport-1751392411328 removed","timestamp":"2025-07-02 16:04:04"}
-{"level":"debug","message":"Response: DELETE /schedule/1-dataExport-1751392411328 - Status: 200","timestamp":"2025-07-02 16:04:04"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-dataExport-1751392520837\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:04:17"}
-{"level":"info","message":"Removing scheduled job 1-dataExport-1751392520837","timestamp":"2025-07-02 16:04:17"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751392520837","timestamp":"2025-07-02 16:04:17"}
-{"level":"info","message":"Scheduled job 1-dataExport-1751392520837 removed","timestamp":"2025-07-02 16:04:17"}
-{"level":"debug","message":"Response: DELETE /schedule/1-dataExport-1751392520837 - Status: 200","timestamp":"2025-07-02 16:04:17"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:04:27"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:04:27"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Retrieved 15 scheduled jobs","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"First scheduler ID: 1-dataExport-1751406017282","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751406017282, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399457187, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399218137, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398323111, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398305950, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397892099, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397785436, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397287778, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397161587, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396873111, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396779354, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396348819, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751393158623, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392897048, matches user: true","timestamp":"2025-07-02 16:04:27"}
-{"level":"info","message":"Filtered 15 schedulers for user 1","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"User schedulers: 1-dataExport-1751406017282, 1-welcomeMessage-1751399457187, 1-welcomeMessage-1751399218137, 1-welcomeMessage-1751398323111, 1-welcomeMessage-1751398305950, 1-welcomeMessage-1751397892099, 1-welcomeMessage-1751397785436, 1-welcomeMessage-1751397287778, 1-welcomeMessage-1751397161587, 1-welcomeMessage-1751396873111, 1-welcomeMessage-1751396779354, 1-welcomeMessage-1751396757064, 1-welcomeMessage-1751396348819, 1-welcomeMessage-1751393158623, 1-dataExport-1751392897048","timestamp":"2025-07-02 16:04:27"}
-{"level":"info","message":"/jobs/schedule : Found 15 jobs scheduled for user 1","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:04:27"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-dataExport-1751406017282\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:04:43"}
-{"level":"info","message":"Removing scheduled job 1-dataExport-1751406017282","timestamp":"2025-07-02 16:04:43"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751406017282","timestamp":"2025-07-02 16:04:43"}
-{"level":"info","message":"Scheduled job 1-dataExport-1751406017282 removed","timestamp":"2025-07-02 16:04:43"}
-{"level":"debug","message":"Response: DELETE /schedule/1-dataExport-1751406017282 - Status: 200","timestamp":"2025-07-02 16:04:43"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751399457187\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:04:55"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751399457187","timestamp":"2025-07-02 16:04:55"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751399457187","timestamp":"2025-07-02 16:04:55"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751399457187 removed","timestamp":"2025-07-02 16:04:55"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751399457187 - Status: 200","timestamp":"2025-07-02 16:04:55"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751393158623\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:05:08"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751393158623","timestamp":"2025-07-02 16:05:08"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751393158623","timestamp":"2025-07-02 16:05:08"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751393158623 removed","timestamp":"2025-07-02 16:05:08"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751393158623 - Status: 200","timestamp":"2025-07-02 16:05:08"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:05:18"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:05:18"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Retrieved 12 scheduled jobs","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"First scheduler ID: 1-welcomeMessage-1751399218137","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751399218137, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398323111, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398305950, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397892099, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397785436, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397287778, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397161587, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396873111, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396779354, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396348819, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751392897048, matches user: true","timestamp":"2025-07-02 16:05:18"}
-{"level":"info","message":"Filtered 12 schedulers for user 1","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"User schedulers: 1-welcomeMessage-1751399218137, 1-welcomeMessage-1751398323111, 1-welcomeMessage-1751398305950, 1-welcomeMessage-1751397892099, 1-welcomeMessage-1751397785436, 1-welcomeMessage-1751397287778, 1-welcomeMessage-1751397161587, 1-welcomeMessage-1751396873111, 1-welcomeMessage-1751396779354, 1-welcomeMessage-1751396757064, 1-welcomeMessage-1751396348819, 1-dataExport-1751392897048","timestamp":"2025-07-02 16:05:18"}
-{"level":"info","message":"/jobs/schedule : Found 12 jobs scheduled for user 1","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:05:18"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751399218137\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:06:04"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751399218137","timestamp":"2025-07-02 16:06:04"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751399218137","timestamp":"2025-07-02 16:06:04"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751399218137 removed","timestamp":"2025-07-02 16:06:04"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751399218137 - Status: 200","timestamp":"2025-07-02 16:06:04"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-dataExport-1751392897048\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:06:16"}
-{"level":"info","message":"Removing scheduled job 1-dataExport-1751392897048","timestamp":"2025-07-02 16:06:16"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751392897048","timestamp":"2025-07-02 16:06:16"}
-{"level":"info","message":"Scheduled job 1-dataExport-1751392897048 removed","timestamp":"2025-07-02 16:06:16"}
-{"level":"debug","message":"Response: DELETE /schedule/1-dataExport-1751392897048 - Status: 200","timestamp":"2025-07-02 16:06:16"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751396348819\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:06:27"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751396348819","timestamp":"2025-07-02 16:06:27"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751396348819","timestamp":"2025-07-02 16:06:27"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751396348819 removed","timestamp":"2025-07-02 16:06:27"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751396348819 - Status: 200","timestamp":"2025-07-02 16:06:27"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:06:39"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:06:39"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Retrieved 9 scheduled jobs","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"First scheduler ID: 1-welcomeMessage-1751398323111","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398323111, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751398305950, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397892099, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397785436, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397287778, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751397161587, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396873111, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396779354, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 16:06:39"}
-{"level":"info","message":"Filtered 9 schedulers for user 1","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"User schedulers: 1-welcomeMessage-1751398323111, 1-welcomeMessage-1751398305950, 1-welcomeMessage-1751397892099, 1-welcomeMessage-1751397785436, 1-welcomeMessage-1751397287778, 1-welcomeMessage-1751397161587, 1-welcomeMessage-1751396873111, 1-welcomeMessage-1751396779354, 1-welcomeMessage-1751396757064","timestamp":"2025-07-02 16:06:39"}
-{"level":"info","message":"/jobs/schedule : Found 9 jobs scheduled for user 1","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:06:39"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751398323111\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:06:58"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751398323111","timestamp":"2025-07-02 16:06:58"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751398323111","timestamp":"2025-07-02 16:06:58"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751398323111 removed","timestamp":"2025-07-02 16:06:58"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751398323111 - Status: 200","timestamp":"2025-07-02 16:06:58"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751398305950\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:07:11"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751398305950","timestamp":"2025-07-02 16:07:11"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751398305950","timestamp":"2025-07-02 16:07:11"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751398305950 removed","timestamp":"2025-07-02 16:07:11"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751398305950 - Status: 200","timestamp":"2025-07-02 16:07:11"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751397892099\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:07:25"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751397892099","timestamp":"2025-07-02 16:07:25"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751397892099","timestamp":"2025-07-02 16:07:25"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751397892099 removed","timestamp":"2025-07-02 16:07:25"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751397892099 - Status: 200","timestamp":"2025-07-02 16:07:25"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751397892099\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:07:37"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751397892099","timestamp":"2025-07-02 16:07:37"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751397892099","timestamp":"2025-07-02 16:07:37"}
-{"level":"warn","message":"Scheduled job 1-welcomeMessage-1751397892099 not found","timestamp":"2025-07-02 16:07:37"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751397892099 - Status: 404","timestamp":"2025-07-02 16:07:37"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751397785436\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:07:41"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751397785436","timestamp":"2025-07-02 16:07:41"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751397785436","timestamp":"2025-07-02 16:07:41"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751397785436 removed","timestamp":"2025-07-02 16:07:41"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751397785436 - Status: 200","timestamp":"2025-07-02 16:07:41"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751397287778\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:07:57"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751397287778","timestamp":"2025-07-02 16:07:57"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751397287778","timestamp":"2025-07-02 16:07:57"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751397287778 removed","timestamp":"2025-07-02 16:07:57"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751397287778 - Status: 200","timestamp":"2025-07-02 16:07:57"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751397161587\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:08:11"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751397161587","timestamp":"2025-07-02 16:08:11"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751397161587","timestamp":"2025-07-02 16:08:11"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751397161587 removed","timestamp":"2025-07-02 16:08:11"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751397161587 - Status: 200","timestamp":"2025-07-02 16:08:11"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751397161587\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:08:12"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751397161587","timestamp":"2025-07-02 16:08:12"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751397161587","timestamp":"2025-07-02 16:08:12"}
-{"level":"warn","message":"Scheduled job 1-welcomeMessage-1751397161587 not found","timestamp":"2025-07-02 16:08:12"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751397161587 - Status: 404","timestamp":"2025-07-02 16:08:12"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751396873111\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:08:25"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751396873111","timestamp":"2025-07-02 16:08:25"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751396873111","timestamp":"2025-07-02 16:08:25"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751396873111 removed","timestamp":"2025-07-02 16:08:25"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751396873111 - Status: 200","timestamp":"2025-07-02 16:08:25"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751396779354\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:08:38"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751396779354","timestamp":"2025-07-02 16:08:38"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751396779354","timestamp":"2025-07-02 16:08:38"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751396779354 removed","timestamp":"2025-07-02 16:08:38"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751396779354 - Status: 200","timestamp":"2025-07-02 16:08:38"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:08:58"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Retrieved 1 scheduled jobs","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"First scheduler ID: 1-welcomeMessage-1751396757064","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 16:08:58"}
-{"level":"info","message":"Filtered 1 schedulers for user 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"User schedulers: 1-welcomeMessage-1751396757064","timestamp":"2025-07-02 16:08:58"}
-{"level":"info","message":"/jobs/schedule : Found 1 jobs scheduled for user 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:08:58"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Retrieved 1 scheduled jobs","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"First scheduler ID: 1-welcomeMessage-1751396757064","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Checking scheduler ID: 1-welcomeMessage-1751396757064, matches user: true","timestamp":"2025-07-02 16:08:58"}
-{"level":"info","message":"Filtered 1 schedulers for user 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"User schedulers: 1-welcomeMessage-1751396757064","timestamp":"2025-07-02 16:08:58"}
-{"level":"info","message":"/jobs/schedule : Found 1 jobs scheduled for user 1","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:08:58"}
-{"level":"debug","message":"Request: {\"method\":\"DELETE\",\"url\":\"/jobs/schedule/1-welcomeMessage-1751396757064\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:09:21"}
-{"level":"info","message":"Removing scheduled job 1-welcomeMessage-1751396757064","timestamp":"2025-07-02 16:09:21"}
-{"level":"info","message":"Getting scheduled job 1-welcomeMessage-1751396757064","timestamp":"2025-07-02 16:09:21"}
-{"level":"info","message":"Scheduled job 1-welcomeMessage-1751396757064 removed","timestamp":"2025-07-02 16:09:21"}
-{"level":"debug","message":"Response: DELETE /schedule/1-welcomeMessage-1751396757064 - Status: 200","timestamp":"2025-07-02 16:09:21"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:09:26"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:09:26"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:09:26"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:09:26"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:09:26"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:09:26"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:09:26"}
-{"level":"debug","message":"Retrieved 0 scheduled jobs","timestamp":"2025-07-02 16:09:26"}
-{"level":"info","message":"Filtered 0 schedulers for user 1","timestamp":"2025-07-02 16:09:26"}
-{"level":"debug","message":"No schedulers found for user 1","timestamp":"2025-07-02 16:09:26"}
-{"level":"info","message":"/jobs/schedule : Found 0 jobs scheduled for user 1","timestamp":"2025-07-02 16:09:26"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:09:26"}
-{"level":"debug","message":"Request: {\"method\":\"POST\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[\"name\",\"data\",\"schedule\",\"options\"]}","timestamp":"2025-07-02 16:12:17"}
-{"level":"debug","message":"===================","timestamp":"2025-07-02 16:12:17"}
-{"level":"info","message":"schedulerService : Scheduling job: (dataExport) for user (1)","timestamp":"2025-07-02 16:12:17"}
-{"level":"debug","message":"repeatOpts {\"pattern\":\"*/2 * * * *\",\"tz\":\"America/New_York\",\"startDate\":\"2025-07-01T10:00:00.000Z\",\"endDate\":\"2025-12-31T00:00:00.000Z\"}","timestamp":"2025-07-02 16:12:17"}
-{"level":"debug","message":"submission.name dataExport","timestamp":"2025-07-02 16:12:17"}
-{"level":"debug","message":"jobData {\"message\":\"data export for 2-July-2025 repeat every 2 min for 4 times \",\"userId\":1}","timestamp":"2025-07-02 16:12:17"}
-{"level":"debug","message":"options : {\"removeOnComplete\":{\"count\":3},\"removeOnFail\":{\"count\":5}}","timestamp":"2025-07-02 16:12:17"}
-{"level":"info","message":"Job scheduled: 1-dataExport-1751497937647","timestamp":"2025-07-02 16:12:17"}
-{"level":"debug","message":"==================","timestamp":"2025-07-02 16:12:17"}
-{"level":"debug","message":"Response: POST /schedule - Status: 200","timestamp":"2025-07-02 16:12:17"}
-{"level":"debug","message":"Request: {\"method\":\"GET\",\"url\":\"/jobs/schedule\",\"query\":{},\"bodyKeys\":[]}","timestamp":"2025-07-02 16:12:49"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"/jobs/schedule request user: {\"userId\":1,\"username\":\"ugmurthy\"}","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"User ID from request: 1","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"Fetching scheduled jobs for user 1","timestamp":"2025-07-02 16:12:49"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"Calling schedulerService.getJobSchedulers()","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"Retrieved 1 scheduled jobs","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"First scheduler ID: 1-dataExport-1751497937647","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"Checking scheduler ID: 1-dataExport-1751497937647, matches user: true","timestamp":"2025-07-02 16:12:49"}
-{"level":"info","message":"Filtered 1 schedulers for user 1","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"User schedulers: 1-dataExport-1751497937647","timestamp":"2025-07-02 16:12:49"}
-{"level":"info","message":"/jobs/schedule : Found 1 jobs scheduled for user 1","timestamp":"2025-07-02 16:12:49"}
-{"level":"debug","message":"Response: GET /schedule - Status: 200","timestamp":"2025-07-02 16:12:49"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751497937647:1751498040000 (dataExport)","timestamp":"2025-07-02 16:14:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498040000 added to jobQueue as job 326","timestamp":"2025-07-02 16:14:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498040000 completed with result: {\"success\":true,\"jobId\":\"326\"}","timestamp":"2025-07-02 16:14:00"}
-{"level":"info","message":"Job 326 progress: 50%","timestamp":"2025-07-02 16:14:00"}
-{"level":"info","message":"WORKER: webhooks 8617/progress active for 1/326/dataExport","timestamp":"2025-07-02 16:14:00"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 326","timestamp":"2025-07-02 16:14:00"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"326\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"progress\",\"progress\":50}","timestamp":"2025-07-02 16:14:00"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:14:00"}
-{"level":"info","message":"WORKER : 8617 : progress : completed!","timestamp":"2025-07-02 16:14:00"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:14:00"}
-{"level":"info","message":"Job 326 progress: 100%","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"Job 326 completed with result: [object Object]","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"WORKER: webhooks 8618/progress active for 1/326/dataExport","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 326","timestamp":"2025-07-02 16:14:01"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"326\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"progress\",\"progress\":100}","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"WORKER : 8618 : progress : completed!","timestamp":"2025-07-02 16:14:01"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"WORKER: webhooks 8619/completed active for 1/326/dataExport","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 326","timestamp":"2025-07-02 16:14:01"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"326\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"completed\",\"result\":{\"status\":\"done\",\"completedAt\":\"4:14:01 pm\",\"id\":\"326\",\"name\":\"dataExport\",\"data\":{\"message\":\"data export for 2-July-2025 repeat every 2 min for 4 times \",\"userId\":1}}}","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (326)","timestamp":"2025-07-02 16:14:01"}
-{"level":"debug","message":"Request: {\"method\":\"POST\",\"url\":\"/webhook\",\"query\":{},\"bodyKeys\":[\"id\",\"jobname\",\"userId\",\"eventType\",\"result\"]}","timestamp":"2025-07-02 16:14:01"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:14:01"}
-{"level":"debug","message":"Response: POST /webhook - Status: 404","timestamp":"2025-07-02 16:14:01"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"WORKER : 8619 : completed : completed!","timestamp":"2025-07-02 16:14:01"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:14:01"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751497937647:1751498160000 (dataExport)","timestamp":"2025-07-02 16:16:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498160000 added to jobQueue as job 327","timestamp":"2025-07-02 16:16:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498160000 completed with result: {\"success\":true,\"jobId\":\"327\"}","timestamp":"2025-07-02 16:16:00"}
-{"level":"info","message":"Job 327 progress: 50%","timestamp":"2025-07-02 16:16:00"}
-{"level":"info","message":"WORKER: webhooks 8620/progress active for 1/327/dataExport","timestamp":"2025-07-02 16:16:00"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 327","timestamp":"2025-07-02 16:16:00"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"327\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"progress\",\"progress\":50}","timestamp":"2025-07-02 16:16:00"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:16:00"}
-{"level":"info","message":"WORKER : 8620 : progress : completed!","timestamp":"2025-07-02 16:16:00"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:16:00"}
-{"level":"info","message":"Job 327 progress: 100%","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"Job 327 completed with result: [object Object]","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"WORKER: webhooks 8621/progress active for 1/327/dataExport","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 327","timestamp":"2025-07-02 16:16:01"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"327\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"progress\",\"progress\":100}","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"WORKER : 8621 : progress : completed!","timestamp":"2025-07-02 16:16:01"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"WORKER: webhooks 8622/completed active for 1/327/dataExport","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 327","timestamp":"2025-07-02 16:16:01"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"327\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"completed\",\"result\":{\"status\":\"done\",\"completedAt\":\"4:16:01 pm\",\"id\":\"327\",\"name\":\"dataExport\",\"data\":{\"message\":\"data export for 2-July-2025 repeat every 2 min for 4 times \",\"userId\":1}}}","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (327)","timestamp":"2025-07-02 16:16:01"}
-{"level":"debug","message":"Request: {\"method\":\"POST\",\"url\":\"/webhook\",\"query\":{},\"bodyKeys\":[\"id\",\"jobname\",\"userId\",\"eventType\",\"result\"]}","timestamp":"2025-07-02 16:16:01"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:16:01"}
-{"level":"debug","message":"Response: POST /webhook - Status: 404","timestamp":"2025-07-02 16:16:01"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"WORKER : 8622 : completed : completed!","timestamp":"2025-07-02 16:16:01"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:16:01"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751497937647:1751498280000 (dataExport)","timestamp":"2025-07-02 16:18:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498280000 added to jobQueue as job 328","timestamp":"2025-07-02 16:18:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498280000 completed with result: {\"success\":true,\"jobId\":\"328\"}","timestamp":"2025-07-02 16:18:00"}
-{"level":"info","message":"Job 328 progress: 50%","timestamp":"2025-07-02 16:18:00"}
-{"level":"info","message":"WORKER: webhooks 8623/progress active for 1/328/dataExport","timestamp":"2025-07-02 16:18:00"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 328","timestamp":"2025-07-02 16:18:00"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"328\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"progress\",\"progress\":50}","timestamp":"2025-07-02 16:18:00"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:18:00"}
-{"level":"info","message":"WORKER : 8623 : progress : completed!","timestamp":"2025-07-02 16:18:00"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:18:00"}
-{"level":"info","message":"Job 328 progress: 100%","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"Job 328 completed with result: [object Object]","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"WORKER: webhooks 8624/progress active for 1/328/dataExport","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 328","timestamp":"2025-07-02 16:18:01"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"328\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"progress\",\"progress\":100}","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"WORKER : 8624 : progress : completed!","timestamp":"2025-07-02 16:18:01"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"WORKER: webhooks 8625/completed active for 1/328/dataExport","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 328","timestamp":"2025-07-02 16:18:01"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"328\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"completed\",\"result\":{\"status\":\"done\",\"completedAt\":\"4:18:01 pm\",\"id\":\"328\",\"name\":\"dataExport\",\"data\":{\"message\":\"data export for 2-July-2025 repeat every 2 min for 4 times \",\"userId\":1}}}","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (328)","timestamp":"2025-07-02 16:18:01"}
-{"level":"debug","message":"Request: {\"method\":\"POST\",\"url\":\"/webhook\",\"query\":{},\"bodyKeys\":[\"id\",\"jobname\",\"userId\",\"eventType\",\"result\"]}","timestamp":"2025-07-02 16:18:01"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:18:01"}
-{"level":"debug","message":"Response: POST /webhook - Status: 404","timestamp":"2025-07-02 16:18:01"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"WORKER : 8625 : completed : completed!","timestamp":"2025-07-02 16:18:01"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:18:01"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751497937647:1751498400000 (dataExport)","timestamp":"2025-07-02 16:20:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498400000 added to jobQueue as job 329","timestamp":"2025-07-02 16:20:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498400000 completed with result: {\"success\":true,\"jobId\":\"329\"}","timestamp":"2025-07-02 16:20:00"}
-{"level":"info","message":"Job 329 progress: 50%","timestamp":"2025-07-02 16:20:00"}
-{"level":"info","message":"WORKER: webhooks 8626/progress active for 1/329/dataExport","timestamp":"2025-07-02 16:20:00"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 329","timestamp":"2025-07-02 16:20:00"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"329\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"progress\",\"progress\":50}","timestamp":"2025-07-02 16:20:00"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:20:00"}
-{"level":"info","message":"WORKER : 8626 : progress : completed!","timestamp":"2025-07-02 16:20:00"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:20:00"}
-{"level":"info","message":"Job 329 progress: 100%","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"Job 329 completed with result: [object Object]","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"WORKER: webhooks 8627/progress active for 1/329/dataExport","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 329","timestamp":"2025-07-02 16:20:01"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"329\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"progress\",\"progress\":100}","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"WORKER : 8627 : progress : completed!","timestamp":"2025-07-02 16:20:01"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"WORKER: webhooks 8628/completed active for 1/329/dataExport","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 329","timestamp":"2025-07-02 16:20:01"}
-{"level":"debug","message":"sendWebhookNotification : payload {\"id\":\"329\",\"jobname\":\"dataExport\",\"userId\":1,\"eventType\":\"completed\",\"result\":{\"status\":\"done\",\"completedAt\":\"4:20:01 pm\",\"id\":\"329\",\"name\":\"dataExport\",\"data\":{\"message\":\"data export for 2-July-2025 repeat every 2 min for 4 times \",\"userId\":1}}}","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (329)","timestamp":"2025-07-02 16:20:01"}
-{"level":"debug","message":"Request: {\"method\":\"POST\",\"url\":\"/webhook\",\"query\":{},\"bodyKeys\":[\"id\",\"jobname\",\"userId\",\"eventType\",\"result\"]}","timestamp":"2025-07-02 16:20:01"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:20:01"}
-{"level":"debug","message":"Response: POST /webhook - Status: 404","timestamp":"2025-07-02 16:20:01"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"WORKER : 8628 : completed : completed!","timestamp":"2025-07-02 16:20:01"}
-{"level":"debug","message":"Return value: {\"success\":false,\"webhooksTriggered\":0,\"webhooksFailed\":1}","timestamp":"2025-07-02 16:20:01"}
-{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-02 16:20:54"}
-{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Job events initialized","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Socket events initialized","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Initializing workers...","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"All workers initialized","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 16:21:04"}
-{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-02 16:21:21"}
-{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-02 16:21:21"}
-{"level":"info","message":"Filtered 1 schedulers for user 1","timestamp":"2025-07-02 16:21:21"}
-{"level":"info","message":"/jobs/schedule : Found 1 jobs scheduled for user 1","timestamp":"2025-07-02 16:21:21"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751497937647:1751498520000 (dataExport)","timestamp":"2025-07-02 16:22:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498520000 added to jobQueue as job 330","timestamp":"2025-07-02 16:22:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498520000 completed with result: {\"success\":true,\"jobId\":\"330\"}","timestamp":"2025-07-02 16:22:00"}
-{"level":"info","message":"Job 330 progress: 50%","timestamp":"2025-07-02 16:22:00"}
-{"level":"info","message":"WORKER: webhooks 8629/progress active for 1/330/dataExport","timestamp":"2025-07-02 16:22:00"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 330","timestamp":"2025-07-02 16:22:00"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:22:00"}
-{"level":"info","message":"WORKER : 8629 : progress : completed!","timestamp":"2025-07-02 16:22:00"}
-{"level":"info","message":"Job 330 progress: 100%","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"Job 330 completed with result: [object Object]","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"WORKER: webhooks 8630/progress active for 1/330/dataExport","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 330","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"WORKER : 8630 : progress : completed!","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"WORKER: webhooks 8631/completed active for 1/330/dataExport","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 330","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (330)","timestamp":"2025-07-02 16:22:01"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:22:01"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"WORKER : 8631 : completed : completed!","timestamp":"2025-07-02 16:22:01"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751497937647:1751498640000 (dataExport)","timestamp":"2025-07-02 16:24:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498640000 added to jobQueue as job 331","timestamp":"2025-07-02 16:24:00"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751497937647:1751498640000 completed with result: {\"success\":true,\"jobId\":\"331\"}","timestamp":"2025-07-02 16:24:00"}
-{"level":"info","message":"Job 331 progress: 50%","timestamp":"2025-07-02 16:24:00"}
-{"level":"info","message":"WORKER: webhooks 8632/progress active for 1/331/dataExport","timestamp":"2025-07-02 16:24:00"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 331","timestamp":"2025-07-02 16:24:00"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:24:00"}
-{"level":"info","message":"WORKER : 8632 : progress : completed!","timestamp":"2025-07-02 16:24:00"}
-{"level":"info","message":"Job 331 progress: 100%","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"Job 331 completed with result: [object Object]","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"WORKER: webhooks 8633/progress active for 1/331/dataExport","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 331","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"WORKER : 8633 : progress : completed!","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"WORKER: webhooks 8634/completed active for 1/331/dataExport","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 331","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (331)","timestamp":"2025-07-02 16:24:01"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:24:01"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"WORKER : 8634 : completed : completed!","timestamp":"2025-07-02 16:24:01"}
-{"level":"info","message":"Removing scheduled job 1-dataExport-1751497937647","timestamp":"2025-07-02 16:24:34"}
-{"level":"info","message":"Getting scheduled job 1-dataExport-1751497937647","timestamp":"2025-07-02 16:24:34"}
-{"level":"info","message":"Scheduled job 1-dataExport-1751497937647 removed","timestamp":"2025-07-02 16:24:34"}
-{"expiredAt":"2025-07-02T23:26:14.000Z","level":"error","message":"Authentication error: jwt expired","name":"TokenExpiredError","stack":"TokenExpiredError: jwt expired\n    at /Users/ugmurthy/jobs/node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/verify.js:190:21\n    at getSecret (/Users/ugmurthy/jobs/node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/verify.js:97:14)\n    at module.exports [as verify] (/Users/ugmurthy/jobs/node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/verify.js:101:10)\n    at authenticateToken (file:///Users/ugmurthy/jobs/dist/middleware/auth.js:16:29)\n    at Layer.handleRequest (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/layer.js:152:17)\n    at next (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/route.js:157:13)\n    at Route.dispatch (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/route.js:117:3)\n    at handle (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:435:11)\n    at Layer.handleRequest (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/layer.js:152:17)\n    at /Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:295:15","timestamp":"2025-07-02 16:48:26"}
-{"level":"info","message":"schedulerService : Scheduling job: (dataExport) for user (1)","timestamp":"2025-07-02 16:49:01"}
-{"level":"info","message":"Job scheduled: 1-dataExport-1751500141715","timestamp":"2025-07-02 16:49:01"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751500141715:1751500140000 (dataExport)","timestamp":"2025-07-02 16:49:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500140000 added to jobQueue as job 332","timestamp":"2025-07-02 16:49:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500140000 completed with result: {\"success\":true,\"jobId\":\"332\"}","timestamp":"2025-07-02 16:49:01"}
-{"level":"info","message":"Job 332 progress: 50%","timestamp":"2025-07-02 16:49:02"}
-{"level":"info","message":"WORKER: webhooks 8635/progress active for 1/332/dataExport","timestamp":"2025-07-02 16:49:02"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 332","timestamp":"2025-07-02 16:49:02"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:49:02"}
-{"level":"info","message":"WORKER : 8635 : progress : completed!","timestamp":"2025-07-02 16:49:02"}
-{"level":"info","message":"Job 332 progress: 100%","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"Job 332 completed with result: [object Object]","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"WORKER: webhooks 8636/progress active for 1/332/dataExport","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 332","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"WORKER : 8636 : progress : completed!","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"WORKER: webhooks 8637/completed active for 1/332/dataExport","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 332","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (332)","timestamp":"2025-07-02 16:49:03"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:49:03"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"WORKER : 8637 : completed : completed!","timestamp":"2025-07-02 16:49:03"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751500141715:1751500200000 (dataExport)","timestamp":"2025-07-02 16:50:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500200000 added to jobQueue as job 333","timestamp":"2025-07-02 16:50:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500200000 completed with result: {\"success\":true,\"jobId\":\"333\"}","timestamp":"2025-07-02 16:50:01"}
-{"level":"info","message":"Job 333 progress: 50%","timestamp":"2025-07-02 16:50:02"}
-{"level":"info","message":"WORKER: webhooks 8638/progress active for 1/333/dataExport","timestamp":"2025-07-02 16:50:02"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 333","timestamp":"2025-07-02 16:50:02"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:50:02"}
-{"level":"info","message":"WORKER : 8638 : progress : completed!","timestamp":"2025-07-02 16:50:02"}
-{"level":"info","message":"Job 333 progress: 100%","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"Job 333 completed with result: [object Object]","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"WORKER: webhooks 8639/progress active for 1/333/dataExport","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 333","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"WORKER : 8639 : progress : completed!","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"WORKER: webhooks 8640/completed active for 1/333/dataExport","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 333","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (333)","timestamp":"2025-07-02 16:50:03"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:50:03"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"WORKER : 8640 : completed : completed!","timestamp":"2025-07-02 16:50:03"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751500141715:1751500260000 (dataExport)","timestamp":"2025-07-02 16:51:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500260000 added to jobQueue as job 334","timestamp":"2025-07-02 16:51:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500260000 completed with result: {\"success\":true,\"jobId\":\"334\"}","timestamp":"2025-07-02 16:51:01"}
-{"level":"info","message":"Job 334 progress: 50%","timestamp":"2025-07-02 16:51:02"}
-{"level":"info","message":"WORKER: webhooks 8641/progress active for 1/334/dataExport","timestamp":"2025-07-02 16:51:02"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 334","timestamp":"2025-07-02 16:51:02"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:51:02"}
-{"level":"info","message":"WORKER : 8641 : progress : completed!","timestamp":"2025-07-02 16:51:02"}
-{"level":"info","message":"Job 334 progress: 100%","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"Job 334 completed with result: [object Object]","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"WORKER: webhooks 8642/progress active for 1/334/dataExport","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 334","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"WORKER : 8642 : progress : completed!","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"WORKER: webhooks 8643/completed active for 1/334/dataExport","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 334","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (334)","timestamp":"2025-07-02 16:51:03"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:51:03"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"WORKER : 8643 : completed : completed!","timestamp":"2025-07-02 16:51:03"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751500141715:1751500320000 (dataExport)","timestamp":"2025-07-02 16:52:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500320000 added to jobQueue as job 335","timestamp":"2025-07-02 16:52:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500320000 completed with result: {\"success\":true,\"jobId\":\"335\"}","timestamp":"2025-07-02 16:52:01"}
-{"level":"info","message":"Job 335 progress: 50%","timestamp":"2025-07-02 16:52:02"}
-{"level":"info","message":"WORKER: webhooks 8644/progress active for 1/335/dataExport","timestamp":"2025-07-02 16:52:02"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 335","timestamp":"2025-07-02 16:52:02"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:52:02"}
-{"level":"info","message":"WORKER : 8644 : progress : completed!","timestamp":"2025-07-02 16:52:02"}
-{"level":"info","message":"Job 335 progress: 100%","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"Job 335 completed with result: [object Object]","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"WORKER: webhooks 8645/progress active for 1/335/dataExport","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 335","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"WORKER : 8645 : progress : completed!","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"WORKER: webhooks 8646/completed active for 1/335/dataExport","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 335","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (335)","timestamp":"2025-07-02 16:52:03"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:52:03"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"WORKER : 8646 : completed : completed!","timestamp":"2025-07-02 16:52:03"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751500141715:1751500380000 (dataExport)","timestamp":"2025-07-02 16:53:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500380000 added to jobQueue as job 336","timestamp":"2025-07-02 16:53:01"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751500141715:1751500380000 completed with result: {\"success\":true,\"jobId\":\"336\"}","timestamp":"2025-07-02 16:53:01"}
-{"level":"info","message":"Job 336 progress: 50%","timestamp":"2025-07-02 16:53:02"}
-{"level":"info","message":"WORKER: webhooks 8647/progress active for 1/336/dataExport","timestamp":"2025-07-02 16:53:02"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 336","timestamp":"2025-07-02 16:53:02"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:53:02"}
-{"level":"info","message":"WORKER : 8647 : progress : completed!","timestamp":"2025-07-02 16:53:02"}
-{"level":"info","message":"Job 336 progress: 100%","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"Job 336 completed with result: [object Object]","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"WORKER: webhooks 8648/progress active for 1/336/dataExport","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 336","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"WORKER : 8648 : progress : completed!","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"WORKER: webhooks 8649/completed active for 1/336/dataExport","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 336","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (336)","timestamp":"2025-07-02 16:53:03"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 16:53:03"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 16:53:03"}
-{"level":"info","message":"WORKER : 8649 : completed : completed!","timestamp":"2025-07-02 16:53:03"}
-{"expiredAt":"2025-07-03T00:48:38.000Z","level":"error","message":"Authentication error: jwt expired","name":"TokenExpiredError","stack":"TokenExpiredError: jwt expired\n    at /Users/ugmurthy/jobs/node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/verify.js:190:21\n    at getSecret (/Users/ugmurthy/jobs/node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/verify.js:97:14)\n    at module.exports [as verify] (/Users/ugmurthy/jobs/node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/verify.js:101:10)\n    at authenticateToken (file:///Users/ugmurthy/jobs/dist/middleware/auth.js:16:29)\n    at Layer.handleRequest (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/layer.js:152:17)\n    at next (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/route.js:157:13)\n    at Route.dispatch (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/route.js:117:3)\n    at handle (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:435:11)\n    at Layer.handleRequest (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/layer.js:152:17)\n    at /Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:295:15","timestamp":"2025-07-02 20:55:45"}
-{"level":"error","message":"Token refresh error: Cannot destructure property 'refreshToken' of 'req.body' as it is undefined.","stack":"TypeError: Cannot destructure property 'refreshToken' of 'req.body' as it is undefined.\n    at file:///Users/ugmurthy/jobs/dist/routes/auth.js:92:17\n    at Layer.handleRequest (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/layer.js:152:17)\n    at next (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/route.js:157:13)\n    at Route.dispatch (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/route.js:117:3)\n    at handle (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:435:11)\n    at Layer.handleRequest (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/lib/layer.js:152:17)\n    at /Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:295:15\n    at processParams (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:582:12)\n    at next (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:291:5)\n    at Function.handle (/Users/ugmurthy/jobs/node_modules/.pnpm/router@2.2.0/node_modules/router/index.js:186:3)","timestamp":"2025-07-02 20:55:59"}
-{"level":"info","message":"schedulerService : Scheduling job: (ollama) for user (1)","timestamp":"2025-07-02 20:56:41"}
-{"level":"info","message":"Job scheduled: 1-ollama-1751515001656","timestamp":"2025-07-02 20:56:41"}
-{"level":"info","message":"Processing scheduled job: repeat:1-ollama-1751515001656:1751514960000 (ollama)","timestamp":"2025-07-02 20:56:41"}
-{"level":"info","message":"Scheduled job repeat:1-ollama-1751515001656:1751514960000 added to jobQueue as job 337","timestamp":"2025-07-02 20:56:41"}
-{"level":"info","message":"Scheduled job repeat:1-ollama-1751515001656:1751514960000 completed with result: {\"success\":true,\"jobId\":\"337\"}","timestamp":"2025-07-02 20:56:41"}
-{"level":"info","message":"Job 337 completed with result: [object Object]","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"WORKER: webhooks 8650/ollama active for 1/337/ollama","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 337","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"No webhooks configured for user 1 and event ollama","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"WORKER : 8650 : ollama : completed!","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"WORKER: webhooks 8651/completed active for 1/337/ollama","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 337","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (337)","timestamp":"2025-07-02 20:56:46"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 20:56:46"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"WORKER : 8651 : completed : completed!","timestamp":"2025-07-02 20:56:46"}
-{"level":"info","message":"Processing scheduled job: repeat:1-ollama-1751515001656:1751515020000 (ollama)","timestamp":"2025-07-02 20:57:41"}
-{"level":"info","message":"Scheduled job repeat:1-ollama-1751515001656:1751515020000 added to jobQueue as job 338","timestamp":"2025-07-02 20:57:41"}
-{"level":"info","message":"Scheduled job repeat:1-ollama-1751515001656:1751515020000 completed with result: {\"success\":true,\"jobId\":\"338\"}","timestamp":"2025-07-02 20:57:41"}
-{"level":"info","message":"Job 338 completed with result: [object Object]","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"WORKER: webhooks 8652/ollama active for 1/338/ollama","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 338","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"No webhooks configured for user 1 and event ollama","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"WORKER : 8652 : ollama : completed!","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"WORKER: webhooks 8653/completed active for 1/338/ollama","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 338","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (338)","timestamp":"2025-07-02 20:57:46"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-02 20:57:46"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"WORKER : 8653 : completed : completed!","timestamp":"2025-07-02 20:57:46"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 21:33:30"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 21:49:22"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 22:06:34"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 22:22:37"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 22:39:28"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 22:56:48"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 23:12:44"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 23:18:02"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 23:18:08"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-02 23:52:37"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 00:25:34"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 00:43:16"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 00:59:21"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 01:17:13"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 01:33:42"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 01:49:40"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 01:49:46"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 02:07:27"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 02:25:05"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 02:41:13"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 02:57:35"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 03:12:51"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 03:28:51"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 03:46:07"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 04:00:18"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 04:00:24"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 04:18:49"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 04:35:40"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 04:50:45"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 05:08:32"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 05:13:51"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 05:13:57"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 05:30:29"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 05:38:06"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 05:38:12"}
-{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-03 13:36:44"}
-{"level":"info","message":"Starting API key migration process...","timestamp":"2025-07-03 13:58:18"}
-{"level":"info","message":"Running Prisma migration...","timestamp":"2025-07-03 13:58:18"}
-{"cmd":"npx prisma migrate dev --name add-api-keys","code":1,"killed":false,"level":"error","message":"Error running Prisma migration: Command failed: npx prisma migrate dev --name add-api-keys\n\nError: Prisma schema validation - (validate wasm)\nError code: P1012\n\u001b[1;91merror\u001b[0m: \u001b[1mField \"permissions\" in model \"ApiKey\" can't be a list. The current connector does not support lists of primitive types.\u001b[0m\n  \u001b[1;94m-->\u001b[0m  \u001b[4mprisma/schema.prisma:53\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\u001b[1;94m52 | \u001b[0m  prefix      String    @unique // First few characters of the key (for display)\n\u001b[1;94m53 | \u001b[0m  \u001b[1;91mpermissions String[]  // Array of permissions granted to this key\u001b[0m\n\u001b[1;94m54 | \u001b[0m  lastUsed    DateTime?\n\u001b[1;94m   | \u001b[0m\n\nValidation Error Count: 1\n[Context: validate]\n\nPrisma CLI Version : 6.10.1\n","signal":null,"stack":"Error: Command failed: npx prisma migrate dev --name add-api-keys\n\nError: Prisma schema validation - (validate wasm)\nError code: P1012\n\u001b[1;91merror\u001b[0m: \u001b[1mField \"permissions\" in model \"ApiKey\" can't be a list. The current connector does not support lists of primitive types.\u001b[0m\n  \u001b[1;94m-->\u001b[0m  \u001b[4mprisma/schema.prisma:53\u001b[0m\n\u001b[1;94m   | \u001b[0m\n\u001b[1;94m52 | \u001b[0m  prefix      String    @unique // First few characters of the key (for display)\n\u001b[1;94m53 | \u001b[0m  \u001b[1;91mpermissions String[]  // Array of permissions granted to this key\u001b[0m\n\u001b[1;94m54 | \u001b[0m  lastUsed    DateTime?\n\u001b[1;94m   | \u001b[0m\n\nValidation Error Count: 1\n[Context: validate]\n\nPrisma CLI Version : 6.10.1\n\n    at genericNodeError (node:internal/errors:983:15)\n    at wrappedFn (node:internal/errors:537:14)\n    at ChildProcess.exithandler (node:child_process:414:12)\n    at ChildProcess.emit (node:events:518:28)\n    at maybeClose (node:internal/child_process:1101:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:304:5)","timestamp":"2025-07-03 13:58:18"}
-{"level":"info","message":"Database provider:","timestamp":"2025-07-03 14:03:01"}
-{"level":"info","message":"Starting API key migration process...","timestamp":"2025-07-03 14:03:01"}
-{"level":"info","message":"Running Prisma migration...","timestamp":"2025-07-03 14:03:01"}
-{"level":"info","message":"Prisma migration output:","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"Environment variables loaded from .env\nPrisma schema loaded from prisma/schema.prisma\nDatasource \"db\": SQLite database \"dev.db\" at \"file:./dev.db\"\n\nApplying migration `20250707135500_add_api_keys`\n\nThe following migration(s) have been applied:\n\nmigrations/\n  └─ 20250707135500_add_api_keys/\n    └─ migration.sql\nPrisma Migrate created the following migration without applying it 20250703210302_add_api_keys\n\nYou can now edit it and apply it by running prisma migrate dev.\n","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"Generating Prisma client...","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"Prisma client generation output:","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"Environment variables loaded from .env\nPrisma schema loaded from prisma/schema.prisma\n\n✔ Generated Prisma Client (v6.10.1) to ./node_modules/.pnpm/@prisma+client@6.10.1_prisma@6.10.1_typescript@4.9.5__typescript@4.9.5/node_modules/@prisma/client in 23ms\n\nStart by importing your Prisma Client (See: https://pris.ly/d/importing-client)\n\nTip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints\n\n","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"API key migration process completed successfully!","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"The database has been updated with the new API key table.","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"The Prisma client has been regenerated with the new API key model.","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"You can now use API key authentication alongside JWT authentication.","timestamp":"2025-07-03 14:03:02"}
-{"level":"info","message":"Database provider:","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"Starting API key migration process...","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"Running Prisma migration...","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"Prisma migration output:","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"Environment variables loaded from .env\nPrisma schema loaded from prisma/schema.prisma\nDatasource \"db\": SQLite database \"dev.db\" at \"file:./dev.db\"\n\nPrisma Migrate created the following migration without applying it 20250703210400_add_api_keys\n\nYou can now edit it and apply it by running prisma migrate dev.\n","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"Generating Prisma client...","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"Prisma client generation output:","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"Environment variables loaded from .env\nPrisma schema loaded from prisma/schema.prisma\n\n✔ Generated Prisma Client (v6.10.1) to ./node_modules/.pnpm/@prisma+client@6.10.1_prisma@6.10.1_typescript@4.9.5__typescript@4.9.5/node_modules/@prisma/client in 22ms\n\nStart by importing your Prisma Client (See: https://pris.ly/d/importing-client)\n\nTip: Interested in query caching in just a few lines of code? Try Accelerate today! https://pris.ly/tip-3-accelerate\n\n","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"API key migration process completed successfully!","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"The database has been updated with the new API key table.","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"The Prisma client has been regenerated with the new API key model.","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"You can now use API key authentication alongside JWT authentication.","timestamp":"2025-07-03 14:04:00"}
-{"level":"info","message":"Database provider:","timestamp":"2025-07-03 14:05:26"}
-{"level":"info","message":"Starting API key migration process...","timestamp":"2025-07-03 14:05:26"}
-{"level":"info","message":"Running Prisma migration...","timestamp":"2025-07-03 14:05:26"}
-{"level":"info","message":"Prisma migration output:","timestamp":"2025-07-03 14:05:26"}
-{"level":"info","message":"Environment variables loaded from .env\nPrisma schema loaded from prisma/schema.prisma\nDatasource \"db\": SQLite database \"dev.db\" at \"file:./dev.db\"\n\nPrisma Migrate created the following migration without applying it 20250703210526_add_api_keys\n\nYou can now edit it and apply it by running prisma migrate dev.\n","timestamp":"2025-07-03 14:05:26"}
-{"level":"info","message":"Generating Prisma client...","timestamp":"2025-07-03 14:05:26"}
-{"level":"info","message":"Prisma client generation output:","timestamp":"2025-07-03 14:05:27"}
-{"level":"info","message":"Environment variables loaded from .env\nPrisma schema loaded from prisma/schema.prisma\n\n✔ Generated Prisma Client (v6.10.1) to ./node_modules/.pnpm/@prisma+client@6.10.1_prisma@6.10.1_typescript@4.9.5__typescript@4.9.5/node_modules/@prisma/client in 21ms\n\nStart by importing your Prisma Client (See: https://pris.ly/d/importing-client)\n\nTip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate\n\n","timestamp":"2025-07-03 14:05:27"}
-{"level":"info","message":"API key migration process completed successfully!","timestamp":"2025-07-03 14:05:27"}
-{"level":"info","message":"The database has been updated with the new API key table.","timestamp":"2025-07-03 14:05:27"}
-{"level":"info","message":"The Prisma client has been regenerated with the new API key model.","timestamp":"2025-07-03 14:05:27"}
-{"level":"info","message":"You can now use API key authentication alongside JWT authentication.","timestamp":"2025-07-03 14:05:27"}
-{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Job events initialized","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Socket events initialized","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Initializing workers...","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"All workers initialized","timestamp":"2025-07-03 14:07:29"}
-{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-03 14:07:30"}
-{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-03 14:07:30"}
-{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-03 14:07:30"}
-{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 14:07:30"}
-{"level":"info","message":"API key generated for user 1 with name \"jobsOnly\"","timestamp":"2025-07-03 14:11:01"}
-{"level":"info","message":"/submit REQUESTED BY: {\"userId\":1,\"username\":\"ugmurthy\",\"authMethod\":\"jwt\"}","timestamp":"2025-07-03 14:13:16"}
-{"level":"info","message":"No options provided, using default options","timestamp":"2025-07-03 14:13:16"}
-{"level":"info","message":"/submit: JOB SCHEDULED : 339/dataExport","timestamp":"2025-07-03 14:13:16"}
-{"level":"info","message":"Job 339 progress: 50%","timestamp":"2025-07-03 14:13:16"}
-{"level":"info","message":"WORKER: webhooks 8654/progress active for 1/339/dataExport","timestamp":"2025-07-03 14:13:16"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 339","timestamp":"2025-07-03 14:13:16"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 14:13:16"}
-{"level":"info","message":"WORKER : 8654 : progress : completed!","timestamp":"2025-07-03 14:13:16"}
-{"level":"info","message":"Job 339 progress: 100%","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"Job 339 completed with result: [object Object]","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"WORKER: webhooks 8655/progress active for 1/339/dataExport","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 339","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"WORKER : 8655 : progress : completed!","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"WORKER: webhooks 8656/completed active for 1/339/dataExport","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 339","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (339)","timestamp":"2025-07-03 14:13:17"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-03 14:13:17"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"WORKER : 8656 : completed : completed!","timestamp":"2025-07-03 14:13:17"}
-{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-03 14:14:33"}
-{"level":"info","message":"schedulerService : Scheduling job: (dataExport) for user (1)","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"Job scheduled: 1-dataExport-1751577383478","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751577383478:1751577360000 (dataExport)","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751577383478:1751577360000 added to jobQueue as job 340","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751577383478:1751577360000 completed with result: {\"success\":true,\"jobId\":\"340\"}","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"Job 340 progress: 50%","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"WORKER: webhooks 8657/progress active for 1/340/dataExport","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 340","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"WORKER : 8657 : progress : completed!","timestamp":"2025-07-03 14:16:23"}
-{"level":"info","message":"Job 340 progress: 100%","timestamp":"2025-07-03 14:16:24"}
-{"level":"info","message":"Job 340 completed with result: [object Object]","timestamp":"2025-07-03 14:16:24"}
-{"level":"info","message":"WORKER: webhooks 8658/progress active for 1/340/dataExport","timestamp":"2025-07-03 14:16:24"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 340","timestamp":"2025-07-03 14:16:24"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 14:16:24"}
-{"level":"info","message":"WORKER : 8658 : progress : completed!","timestamp":"2025-07-03 14:16:25"}
-{"level":"info","message":"WORKER: webhooks 8659/completed active for 1/340/dataExport","timestamp":"2025-07-03 14:16:25"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 340","timestamp":"2025-07-03 14:16:25"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (340)","timestamp":"2025-07-03 14:16:25"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-03 14:16:25"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-03 14:16:25"}
-{"level":"info","message":"WORKER : 8659 : completed : completed!","timestamp":"2025-07-03 14:16:25"}
-{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751577383478:1751577420000 (dataExport)","timestamp":"2025-07-03 14:17:23"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751577383478:1751577420000 added to jobQueue as job 341","timestamp":"2025-07-03 14:17:23"}
-{"level":"info","message":"Scheduled job repeat:1-dataExport-1751577383478:1751577420000 completed with result: {\"success\":true,\"jobId\":\"341\"}","timestamp":"2025-07-03 14:17:23"}
-{"level":"info","message":"Job 341 progress: 50%","timestamp":"2025-07-03 14:17:24"}
-{"level":"info","message":"WORKER: webhooks 8660/progress active for 1/341/dataExport","timestamp":"2025-07-03 14:17:24"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 341","timestamp":"2025-07-03 14:17:24"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 14:17:24"}
-{"level":"info","message":"WORKER : 8660 : progress : completed!","timestamp":"2025-07-03 14:17:24"}
-{"level":"info","message":"Job 341 progress: 100%","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"Job 341 completed with result: [object Object]","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"WORKER: webhooks 8661/progress active for 1/341/dataExport","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 341","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"WORKER : 8661 : progress : completed!","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"WORKER: webhooks 8662/completed active for 1/341/dataExport","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 341","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (341)","timestamp":"2025-07-03 14:17:25"}
-{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-03 14:17:25"}
-{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"WORKER : 8662 : completed : completed!","timestamp":"2025-07-03 14:17:25"}
-{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-03 14:17:44"}
+{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Job events initialized","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Socket events initialized","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Initializing workers...","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"All workers initialized","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 15:39:43"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-03 15:50:28"}
+{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Job events initialized","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Socket events initialized","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Initializing workers...","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"All workers initialized","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 15:50:31"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-03 15:52:24"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-03 15:52:53"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-03 15:52:53"}
+{"level":"info","message":"Filtered 3 schedulers for user 1","timestamp":"2025-07-03 15:52:53"}
+{"level":"info","message":"/jobs/schedule : Found 3 jobs scheduled for user 1","timestamp":"2025-07-03 15:52:53"}
+{"level":"info","message":"schedulerService : Scheduling job: (dataExport) for user (1)","timestamp":"2025-07-03 15:53:27"}
+{"level":"info","message":"Job scheduled: 1-dataExport-1751583207957","timestamp":"2025-07-03 15:53:27"}
+{"level":"info","message":"Getting scheduled job 1-dataExport-1751583207957","timestamp":"2025-07-03 15:54:09"}
+{"level":"info","message":"Removing scheduled job 1-dataExport-1751583207957","timestamp":"2025-07-03 15:54:21"}
+{"level":"info","message":"Getting scheduled job 1-dataExport-1751583207957","timestamp":"2025-07-03 15:54:21"}
+{"level":"info","message":"Scheduled job 1-dataExport-1751583207957 removed","timestamp":"2025-07-03 15:54:21"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-03 16:03:11"}
+{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Job events initialized","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Socket events initialized","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Initializing workers...","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"All workers initialized","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 16:03:15"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-03 16:04:08"}
+{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Job events initialized","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Socket events initialized","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Initializing workers...","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"All workers initialized","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-03 16:04:11"}
+{"level":"info","message":"/submit REQUESTED BY: {\"userId\":1,\"username\":\"ugmurthy\",\"authMethod\":\"apiKey\",\"permissions\":[\"read:jobs\",\"write:jobs\"]}","timestamp":"2025-07-03 16:05:03"}
+{"level":"info","message":"No options provided, using default options","timestamp":"2025-07-03 16:05:03"}
+{"level":"info","message":"/submit: JOB SCHEDULED : 343/dataExport","timestamp":"2025-07-03 16:05:03"}
+{"level":"info","message":"Job 343 progress: 50%","timestamp":"2025-07-03 16:05:04"}
+{"level":"info","message":"WORKER: webhooks 8666/progress active for 1/343/dataExport","timestamp":"2025-07-03 16:05:04"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 343","timestamp":"2025-07-03 16:05:04"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:05:04"}
+{"level":"info","message":"WORKER : 8666 : progress : completed!","timestamp":"2025-07-03 16:05:04"}
+{"level":"info","message":"Job 343 progress: 100%","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"Job 343 completed with result: [object Object]","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"WORKER: webhooks 8667/progress active for 1/343/dataExport","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 343","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"WORKER : 8667 : progress : completed!","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"WORKER: webhooks 8668/completed active for 1/343/dataExport","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 343","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (343)","timestamp":"2025-07-03 16:05:05"}
+{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-03 16:05:05"}
+{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-03 16:05:05"}
+{"level":"info","message":"WORKER : 8668 : completed : completed!","timestamp":"2025-07-03 16:05:05"}
+{"level":"warn","message":"Job not found with ID: 338","timestamp":"2025-07-03 16:05:19"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-03 16:05:27"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-03 16:05:36"}
+{"level":"info","message":"schedulerService : Scheduling job: (dataExport) for user (1)","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"Job scheduled: 1-dataExport-1751583960000","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751583960000:1751583960000 (dataExport)","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1751583960000:1751583960000 added to jobQueue as job 344","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1751583960000:1751583960000 completed with result: {\"success\":true,\"jobId\":\"344\"}","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"Job 344 progress: 50%","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"WORKER: webhooks 8669/progress active for 1/344/dataExport","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 344","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"WORKER : 8669 : progress : completed!","timestamp":"2025-07-03 16:06:00"}
+{"level":"info","message":"Job 344 progress: 100%","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"Job 344 completed with result: [object Object]","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"WORKER: webhooks 8670/progress active for 1/344/dataExport","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 344","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"WORKER : 8670 : progress : completed!","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"WORKER: webhooks 8671/completed active for 1/344/dataExport","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 344","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (344)","timestamp":"2025-07-03 16:06:01"}
+{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-03 16:06:01"}
+{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"WORKER : 8671 : completed : completed!","timestamp":"2025-07-03 16:06:01"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751583960000:1751583966000 (dataExport)","timestamp":"2025-07-03 16:06:06"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1751583960000:1751583966000 added to jobQueue as job 345","timestamp":"2025-07-03 16:06:06"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1751583960000:1751583966000 completed with result: {\"success\":true,\"jobId\":\"345\"}","timestamp":"2025-07-03 16:06:06"}
+{"level":"info","message":"Job 345 progress: 50%","timestamp":"2025-07-03 16:06:06"}
+{"level":"info","message":"WORKER: webhooks 8672/progress active for 1/345/dataExport","timestamp":"2025-07-03 16:06:06"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 345","timestamp":"2025-07-03 16:06:06"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:06:06"}
+{"level":"info","message":"WORKER : 8672 : progress : completed!","timestamp":"2025-07-03 16:06:06"}
+{"level":"info","message":"Job 345 progress: 100%","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"Job 345 completed with result: [object Object]","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"WORKER: webhooks 8673/progress active for 1/345/dataExport","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 345","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"WORKER : 8673 : progress : completed!","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"WORKER: webhooks 8674/completed active for 1/345/dataExport","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 345","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (345)","timestamp":"2025-07-03 16:06:07"}
+{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-03 16:06:07"}
+{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"WORKER : 8674 : completed : completed!","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"Filtered 4 schedulers for user 1","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"/jobs/schedule : Found 4 jobs scheduled for user 1","timestamp":"2025-07-03 16:06:07"}
+{"level":"info","message":"Getting scheduled job 1-dataExport-1751583207957","timestamp":"2025-07-03 16:06:23"}
+{"level":"warn","message":"Scheduled job 1-dataExport-1751583207957 not found","timestamp":"2025-07-03 16:06:23"}
+{"level":"info","message":"Getting scheduled job 1-dataExport-1751583960000","timestamp":"2025-07-03 16:07:10"}
+{"level":"info","message":"Removing scheduled job 1-dataExport-1751583960000","timestamp":"2025-07-03 16:07:21"}
+{"level":"info","message":"Getting scheduled job 1-dataExport-1751583960000","timestamp":"2025-07-03 16:07:21"}
+{"level":"info","message":"Scheduled job 1-dataExport-1751583960000 removed","timestamp":"2025-07-03 16:07:21"}
+{"level":"warn","message":"Job not found with ID: 338","timestamp":"2025-07-03 16:09:40"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-03 16:09:54"}
+{"level":"info","message":"schedulerService : Scheduling job: (dataExport) for user (1)","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"Job scheduled: 1-dataExport-1751584202458","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751584202458:1751584200000 (dataExport)","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1751584202458:1751584200000 added to jobQueue as job 346","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1751584202458:1751584200000 completed with result: {\"success\":true,\"jobId\":\"346\"}","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"Job 346 progress: 50%","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"WORKER: webhooks 8675/progress active for 1/346/dataExport","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 346","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"WORKER : 8675 : progress : completed!","timestamp":"2025-07-03 16:10:02"}
+{"level":"info","message":"Job 346 progress: 100%","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"Job 346 completed with result: [object Object]","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"WORKER: webhooks 8676/progress active for 1/346/dataExport","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 346","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"WORKER : 8676 : progress : completed!","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"WORKER: webhooks 8677/completed active for 1/346/dataExport","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 346","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (346)","timestamp":"2025-07-03 16:10:03"}
+{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-03 16:10:03"}
+{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"WORKER : 8677 : completed : completed!","timestamp":"2025-07-03 16:10:03"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1751584202458:1751584206000 (dataExport)","timestamp":"2025-07-03 16:10:08"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1751584202458:1751584206000 added to jobQueue as job 347","timestamp":"2025-07-03 16:10:08"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1751584202458:1751584206000 completed with result: {\"success\":true,\"jobId\":\"347\"}","timestamp":"2025-07-03 16:10:08"}
+{"level":"info","message":"Job 347 progress: 50%","timestamp":"2025-07-03 16:10:08"}
+{"level":"info","message":"WORKER: webhooks 8678/progress active for 1/347/dataExport","timestamp":"2025-07-03 16:10:08"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 347","timestamp":"2025-07-03 16:10:08"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:10:08"}
+{"level":"info","message":"WORKER : 8678 : progress : completed!","timestamp":"2025-07-03 16:10:08"}
+{"level":"info","message":"Job 347 progress: 100%","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"Job 347 completed with result: [object Object]","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"WORKER: webhooks 8679/progress active for 1/347/dataExport","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 347","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"WORKER : 8679 : progress : completed!","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"WORKER: webhooks 8680/completed active for 1/347/dataExport","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 347","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (347)","timestamp":"2025-07-03 16:10:09"}
+{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-03 16:10:09"}
+{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"WORKER : 8680 : completed : completed!","timestamp":"2025-07-03 16:10:09"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-03 16:10:10"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-03 16:10:10"}
+{"level":"info","message":"Filtered 4 schedulers for user 1","timestamp":"2025-07-03 16:10:10"}
+{"level":"info","message":"/jobs/schedule : Found 4 jobs scheduled for user 1","timestamp":"2025-07-03 16:10:10"}
+{"level":"info","message":"Getting scheduled job 1-dataExport-1751583960000","timestamp":"2025-07-03 16:10:17"}
+{"level":"warn","message":"Scheduled job 1-dataExport-1751583960000 not found","timestamp":"2025-07-03 16:10:17"}
+{"level":"info","message":"Getting scheduled job 1-dataExport-1751584202458","timestamp":"2025-07-03 16:10:44"}
+{"level":"info","message":"Removing scheduled job 1-dataExport-1751584202458","timestamp":"2025-07-03 16:10:52"}
+{"level":"info","message":"Getting scheduled job 1-dataExport-1751584202458","timestamp":"2025-07-03 16:10:52"}
+{"level":"info","message":"Scheduled job 1-dataExport-1751584202458 removed","timestamp":"2025-07-03 16:10:52"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-03 16:11:17"}

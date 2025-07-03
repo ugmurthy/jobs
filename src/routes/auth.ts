@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '@ugm/logger';
 import userService from '../services/userService.js';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticate } from '../middleware/combinedAuth.js';
 
 const router = Router();
 
@@ -81,7 +81,7 @@ router.post('/login', async (req: Request, res: Response) => {
 /**
  * User logout route
  */
-router.post('/logout', authenticateToken, async (req: Request, res: Response) => {
+router.post('/logout', authenticate, async (req: Request, res: Response) => {
   try {
     if (!req.user) {
       res.status(401).json({ message: 'Not authenticated' });
@@ -184,7 +184,7 @@ router.post('/reset-password', async (req: Request, res: Response) => {
 /**
  * Protected route example
  */
-router.get('/protected', authenticateToken, (req: Request, res: Response) => {
+router.get('/protected', authenticate, (req: Request, res: Response) => {
   if (!req.user) { 
     res.status(401).json({ message: 'Not authenticated' });
     return;

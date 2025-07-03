@@ -13,6 +13,7 @@
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -45,6 +46,7 @@
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: jobId
@@ -78,6 +80,7 @@
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: query
  *         name: status
@@ -126,6 +129,7 @@
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -162,6 +166,7 @@
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: List of scheduled jobs
@@ -188,6 +193,7 @@
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: schedulerId
@@ -220,6 +226,7 @@
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: schedulerId
