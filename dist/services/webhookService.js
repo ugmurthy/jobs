@@ -108,7 +108,8 @@ class WebhookService {
      * Send webhook notification
      */
     async sendWebhookNotification(payload) {
-        logger.info(`Sending webhook notification for job ${payload.id}`);
+        logger.info(`sendWebhookNotification : Sending webhook notification for job ${payload.id}`);
+        logger.debug(`sendWebhookNotification : payload ${JSON.stringify(payload)}`);
         try {
             // Get user from database
             const user = await userService.getUserById(payload.userId);
@@ -140,6 +141,7 @@ class WebhookService {
                     description: 'Legacy webhook'
                 });
             }
+            console.debug(`sendWebhookNotification : webhooks for userId (${payload.userId}) \n(${JSON.stringify(webhooks)})`);
             if (webhooks.length === 0) {
                 logger.info(`No webhooks configured for user ${payload.userId} and event ${payload.eventType}`);
                 return [false];
@@ -147,7 +149,7 @@ class WebhookService {
             // Send to all configured webhooks
             const promises = webhooks.map(async (webhook) => {
                 try {
-                    logger.info(`Sending ${payload.eventType} webhook to ${webhook.url} for job ${payload.id}`);
+                    logger.info(`Sending (${payload.eventType}) webhook to (${webhook.url}) for job (${payload.id})`);
                     await got.post(webhook.url, {
                         json: payload,
                         timeout: { request: 10000 },

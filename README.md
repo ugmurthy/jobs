@@ -16,6 +16,8 @@ JobRunner is a powerful Node.js/TypeScript service designed to handle asynchrono
 - **RESTful API**: Comprehensive endpoints for job and webhook management
 - **JWT Authentication**: Secure API access with token-based authentication
 - **Job Queue Processing**: Reliable job execution with BullMQ
+- **Job Scheduling**: Flexible job scheduling with cron expressions and repeat intervals
+- **Scheduler Workers**: Dedicated workers for processing scheduled jobs
 - **Redis-backed Persistence**: Durable storage for jobs and state
 - **WebSocket Support**: Real-time updates on job progress and completion
 - **Bull Board UI**: Visual dashboard for monitoring and managing job queues
@@ -97,7 +99,7 @@ src/
 ├── config/           # Configuration modules
 │   ├── app.ts        # Express app setup
 │   ├── socket.ts     # Socket.IO configuration
-│   ├── bull.ts       # Bull/BullMQ configuration
+│   ├── bull.ts       # Bull/BullMQ configuration with job scheduler
 │   ├── redis.ts      # Redis configuration
 │   └── env.ts        # Environment variables
 │
@@ -109,17 +111,20 @@ src/
 │   ├── index.ts      # Route registration
 │   ├── auth.ts       # Authentication routes
 │   ├── jobs.ts       # Job management routes
+│   ├── scheduler.ts  # Job scheduler routes
 │   ├── webhooks.ts   # Webhook management routes
 │   └── admin.ts      # Admin routes
 │
 ├── services/         # Business logic
 │   ├── userService.ts    # User management
 │   ├── jobService.ts     # Job-related logic
+│   ├── schedulerService.ts # Scheduler-related logic
 │   └── webhookService.ts # Webhook-related logic
 │
 ├── workers/          # Background job workers
 │   ├── index.ts          # Worker registration
-│   └── webhookWorker.ts  # Webhook processing worker
+│   ├── webhookWorker.ts  # Webhook processing worker
+│   └── schedulerWorker.ts # Scheduler processing worker
 │
 ├── events/           # Event handlers
 │   ├── index.ts          # Event registration
@@ -158,6 +163,13 @@ src/
 - `POST /jobs/submit` - Submit a job (requires authentication)
 - `GET /jobs/:jobId` - Get status of a specific job (requires authentication)
 - `GET /jobs` - Get all jobs for the authenticated user (requires authentication)
+
+### Job Scheduler Routes
+
+- `POST /jobs/schedule` - Schedule a job for future execution (requires authentication)
+- `GET /jobs/schedule` - Get all scheduled jobs for the authenticated user (requires authentication)
+- `GET /jobs/schedule/:schedulerId` - Get status of a specific scheduled job (requires authentication)
+- `DELETE /jobs/schedule/:schedulerId` - Remove a scheduled job (requires authentication)
 
 ### Webhook Routes
 
@@ -203,6 +215,31 @@ curl -X POST http://localhost:4000/jobs/submit \
     "data": {
       "format": "csv",
       "filters": {"date": "2025-06-28"}
+    }
+  }'
+```
+
+## Job Scheduling Example
+
+```bash
+curl -X POST http://localhost:4000/jobs/schedule \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer your_jwt_token" \
+  -d '{
+    "name": "dataExport",
+    "data": {
+      "format": "csv",
+      "filters": {"date": "2025-06-28"}
+    },
+    "schedule": {
+      "cron": "0 0 * * *",
+      "tz": "America/New_York",
+      "startDate": "2025-07-01T00:00:00.000Z",
+      "endDate": "2025-12-31T00:00:00.000Z"
+    },
+    "options": {
+      "removeOnComplete": { "count": 3 },
+      "removeOnFail": { "count": 5 }
     }
   }'
 ```

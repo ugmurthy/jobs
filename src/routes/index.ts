@@ -11,11 +11,35 @@ import authRoutes from './auth.js';
 import jobsRoutes from './jobs.js';
 import webhooksRoutes from './webhooks.js';
 import adminRoutes from './admin.js';
+import schedulerRoutes from './scheduler.js';
 
 /**
  * Register all application routes
  */
 export const registerRoutes = (app: Express): void => {
+  // Add request logging middleware
+  app.use((req, res, next) => {
+    // Log basic request info
+    const logInfo = {
+      method: req.method,
+      url: req.url,
+      query: req.query,
+      // Don't log full body to avoid logging sensitive info
+      bodyKeys: req.body ? Object.keys(req.body) : []
+    };
+    
+    logger.debug(`Request: ${JSON.stringify(logInfo)}`);
+    
+    // Add response logging
+    const originalSend = res.send;
+    res.send = function(body) {
+      logger.debug(`Response: ${req.method} ${req.url} - Status: ${res.statusCode}`);
+      return originalSend.call(this, body);
+    };
+    
+    next();
+  });
+
   // Root route
   app.get('/', (req, res) => {
     res.json({ message: 'API is running' });
@@ -23,6 +47,8 @@ export const registerRoutes = (app: Express): void => {
 
   // Register route modules with their prefixes
   app.use('/auth', authRoutes);
+  // Register scheduler routes before jobs routes to ensure they take precedence
+  app.use('/jobs', schedulerRoutes); // Add scheduler routes under /jobs prefix
   app.use('/jobs', jobsRoutes);
   app.use('/webhooks', webhooksRoutes);
   app.use('/admin', adminRoutes);

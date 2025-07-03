@@ -27,9 +27,9 @@ function isValidOptions(options) {
  */
 router.post('/submit', authenticateToken, async (req, res) => {
     const requestedJob = req.body;
-    logger.info(`/submit-job REQUESTED BY: ${JSON.stringify(req.user)}`);
-    logger.debug(`/submit-job name: ${requestedJob.name}`);
-    logger.debug(`/submit-job data: ${JSON.stringify(requestedJob.data)}`);
+    logger.info(`/submit REQUESTED BY: ${JSON.stringify(req.user)}`);
+    logger.debug(`/submit name: ${requestedJob.name}`);
+    logger.debug(`/submit data: ${JSON.stringify(requestedJob.data)}`);
     // Check if options are provided in the request
     let jobOptions = defaultOptions;
     if (requestedJob.options) {
@@ -50,23 +50,30 @@ router.post('/submit', authenticateToken, async (req, res) => {
         userId: req.user?.userId
     };
     const job = await jobQueue.add(requestedJob.name, jobData, jobOptions);
-    logger.debug(`/submit-job: jobData: ${JSON.stringify(jobData)}`);
-    logger.info(`/submit-job: JOB SCHEDULED : ${job.id}/${requestedJob.name}`);
+    logger.debug(`/submit: jobData: ${JSON.stringify(jobData)}`);
+    logger.info(`/submit: JOB SCHEDULED : ${job.id}/${requestedJob.name}`);
     res.json({ jobId: job.id });
 });
 /**
  * Get status of a specific job
  */
-router.get('/:jobId', authenticateToken, async (req, res) => {
+router.get('/:jobId', authenticateToken, async (req, res, next) => {
     try {
+        // Skip this route handler if the jobId is 'schedule' - it will be handled by the scheduler routes
+        if (req.params.jobId === 'schedule') {
+            logger.debug('Skipping jobs route for /schedule path - will be handled by scheduler routes');
+            return next();
+        }
         const { jobId } = req.params;
         const userId = req.user?.userId;
         if (!userId) {
             res.status(401).json({ message: 'Not authenticated' });
             return;
         }
+        logger.debug(`Getting job with ID: ${jobId}`);
         const job = await jobQueue.getJob(jobId);
         if (!job) {
+            logger.warn(`Job not found with ID: ${jobId}`);
             res.status(404).json({ message: 'Job not found' });
             return;
         }
@@ -103,8 +110,12 @@ router.get('/:jobId', authenticateToken, async (req, res) => {
  */
 router.get('/', authenticateToken, async (req, res) => {
     try {
+        // Log that we're hitting the root jobs route
+        logger.info('GET /jobs route hit');
         const userId = req.user?.userId;
+        logger.debug(`User ID from request: ${userId}`);
         if (!userId) {
+            logger.warn('No user ID found in request');
             res.status(401).json({ message: 'Not authenticated' });
             return;
         }

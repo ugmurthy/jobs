@@ -1,4 +1,4 @@
-import { Queue, QueueEvents } from 'bullmq';
+import { Queue, QueueEvents, JobScheduler } from 'bullmq';
 import { createBullBoard } from "@bull-board/api";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter.js";
 import { ExpressAdapter } from "@bull-board/express";
@@ -12,6 +12,9 @@ export const defaultOptions = {
 // Initialize queues
 export const jobQueue = new Queue('jobQueue', { connection: redisOptions });
 export const webHookQueue = new Queue('webhooks', { connection: redisOptions });
+export const schedQueue = new Queue('schedQueue', { connection: redisOptions });
+// Initialize JobScheduler
+export const jobScheduler = new JobScheduler('schedQueue', { connection: redisOptions });
 // Initialize queue events
 export const queueEvents = new QueueEvents('jobQueue', { connection: redisOptions });
 // Set up Bull Board
@@ -19,7 +22,8 @@ export const serverAdapter = new ExpressAdapter();
 export const bullBoard = createBullBoard({
     queues: [
         new BullMQAdapter(jobQueue),
-        new BullMQAdapter(webHookQueue)
+        new BullMQAdapter(webHookQueue),
+        new BullMQAdapter(schedQueue)
     ],
     serverAdapter: serverAdapter,
 });
@@ -28,12 +32,14 @@ serverAdapter.setBasePath('/admin');
 // Function to initialize Bull/BullMQ
 export const initializeBull = () => {
     logger.info('Bull/BullMQ initialized');
-    logger.info('Job queue and webhook queue created');
+    logger.info('Job queue, webhook queue, and scheduler queue created');
 };
 export default {
     jobQueue,
     webHookQueue,
+    schedQueue,
     queueEvents,
+    jobScheduler,
     serverAdapter,
     bullBoard,
     defaultOptions,

@@ -118,6 +118,138 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *
+ * /jobs/schedule:
+ *   post:
+ *     summary: Schedule a new job
+ *     description: Schedule a job to run at specified times using cron expressions or intervals
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ScheduleJobRequest'
+ *     responses:
+ *       200:
+ *         description: Job scheduled successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 schedulerId:
+ *                   type: string
+ *                   description: ID of the scheduled job
+ *                   example: "1-dataExport-1625097600000"
+ *       400:
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *   get:
+ *     summary: Get all scheduled jobs
+ *     description: Get all scheduled jobs for the authenticated user
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of scheduled jobs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 scheduledJobs:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ScheduledJob'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *
+ * /jobs/schedule/{schedulerId}:
+ *   get:
+ *     summary: Get a specific scheduled job
+ *     description: Get details of a specific scheduled job
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: schedulerId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the scheduled job
+ *     responses:
+ *       200:
+ *         description: Scheduled job details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ScheduledJob'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Scheduled job not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *   delete:
+ *     summary: Remove a scheduled job
+ *     description: Remove a specific scheduled job
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: schedulerId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the scheduled job
+ *     responses:
+ *       200:
+ *         description: Scheduled job removed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Scheduled job removed successfully"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Scheduled job not found or unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 
 // Export an empty object to make this file a valid module

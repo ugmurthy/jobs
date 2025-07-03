@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Monitor Dashboard</title>
+    
+    <!-- Tailwind CSS and DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Socket.IO Client -->
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .job-card {
+            transition: all 0.3s ease;
+        }
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .notification {
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .status-indicator {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-base-100">
+    <!-- Navigation -->
+    <div class="navbar bg-primary text-primary-content shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars text-xl"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a onclick="showDashboard()" class="text-base-content">Dashboard</a></li>
+                    <li><a onclick="showJobSubmission()" class="text-base-content">Submit Job</a></li>
+                    <li><a onclick="showScheduledJobs()" class="text-base-content">Scheduled Jobs</a></li>
+                    <li><a onclick="showWebhooks()" class="text-base-content">Webhooks</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl">
+                <i class="fas fa-tasks mr-2"></i>
+                Job Monitor
+            </a>
+        </div>
+        
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a onclick="showDashboard()" class="btn btn-ghost">
+                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                </a></li>
+                <li><a onclick="showJobSubmission()" class="btn btn-ghost">
+                    <i class="fas fa-plus mr-2"></i>Submit Job
+                </a></li>
+                <li><a onclick="showScheduledJobs()" class="btn btn-ghost">
+                    <i class="fas fa-calendar-alt mr-2"></i>Scheduled Jobs
+                </a></li>
+                <li><a onclick="showWebhooks()" class="btn btn-ghost">
+                    <i class="fas fa-webhook mr-2"></i>Webhooks
+                </a></li>
+            </ul>
+        </div>
+        
+        <div class="navbar-end">
+            <div class="flex items-center gap-4">
+                <!-- Connection Status -->
+                <div class="flex items-center gap-2">
+                    <div id="connectionStatus" class="w-3 h-3 rounded-full bg-error"></div>
+                    <span id="connectionText" class="text-sm">Disconnected</span>
+                </div>
+                
+                <!-- User Info -->
+                <div id="userInfo" class="hidden flex items-center gap-2">
+                    <i class="fas fa-user"></i>
+                    <span id="username"></span>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><a onclick="setTheme('light')" class="text-base-content">Light</a></li>
+                        <li><a onclick="setTheme('dark')" class="text-base-content">Dark</a></li>
+                        <li><a onclick="setTheme('cupcake')" class="text-base-content">Cupcake</a></li>
+                        <li><a onclick="setTheme('cyberpunk')" class="text-base-content">Cyberpunk</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Logout Button -->
+                <button id="logoutBtn" onclick="logout()" class="btn btn-ghost btn-circle hidden">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4">
+        <!-- Login Section -->
+        <div id="loginSection" class="min-h-screen flex items-center justify-center">
+            <div class="card w-96 bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title justify-center text-2xl mb-6">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Login
+                    </h2>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Username</span>
+                        </label>
+                        <input id="loginUsername" type="text" placeholder="Enter username" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Password</span>
+                        </label>
+                        <input id="loginPassword" type="password" placeholder="Enter password" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control mt-6">
+                        <button onclick="login()" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Login
+                        </button>
+                    </div>
+                    
+                    <div class="divider">OR</div>
+                    
+                    <div class="form-control">
+                        <button onclick="showRegister()" class="btn btn-outline">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Register New Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Section -->
+        <div id="registerSection" class="min-h-screen flex items-center justify-center hidden">
+            <div class="card w-96 bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title justify-center text-2xl mb-6">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Register
+                    </h2>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Username</span>
+                        </label>
+                        <input id="registerUsername" type="text" placeholder="Choose username" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Password</span>
+                        </label>
+                        <input id="registerPassword" type="password" placeholder="Choose password" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Email (optional)</span>
+                        </label>
+                        <input id="registerEmail" type="email" placeholder="Enter email" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Webhook URL (optional)</span>
+                        </label>
+                        <input id="registerWebhook" type="url" placeholder="https://your-webhook-url.com" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control mt-6">
+                        <button onclick="register()" class="btn btn-primary">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Register
+                        </button>
+                    </div>
+                    
+                    <div class="form-control mt-2">
+                        <button onclick="showLogin()" class="btn btn-ghost">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back to Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="hidden">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="stat bg-base-100 shadow rounded-lg">
+                    <div class="stat-figure text-primary">
+                        <i class="fas fa-tasks text-3xl"></i>
+                    </div>
+                    <div class="stat-title">Total Jobs</div>
+                    <div class="stat-value text-primary" id="totalJobs">0</div>
+                </div>
+                
+                <div class="stat bg-base-100 shadow rounded-lg">
+                    <div class="stat-figure text-success">
+                        <i class="fas fa-check-circle text-3xl"></i>
+                    </div>
+                    <div class="stat-title">Completed</div>
+                    <div class="stat-value text-success" id="completedJobs">0</div>
+                </div>
+                
+                <div class="stat bg-base-100 shadow rounded-lg">
+                    <div class="stat-figure text-warning">
+                        <i class="fas fa-clock text-3xl"></i>
+                    </div>
+                    <div class="stat-title">Running</div>
+                    <div class="stat-value text-warning" id="runningJobs">0</div>
+                </div>
+                
+                <div class="stat bg-base-100 shadow rounded-lg">
+                    <div class="stat-figure text-error">
+                        <i class="fas fa-exclamation-triangle text-3xl"></i>
+                    </div>
+                    <div class="stat-title">Failed</div>
+                    <div class="stat-value text-error" id="failedJobs">0</div>
+                </div>
+            </div>
+
+            <!-- Jobs List -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="card-title">
+                            <i class="fas fa-list mr-2"></i>
+                            Recent Jobs
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="refreshJobs()" class="btn btn-sm btn-outline">
+                                <i class="fas fa-refresh mr-2"></i>
+                                Refresh
+                            </button>
+                            <button onclick="loadAllJobs()" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye mr-2"></i>
+                                View All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Controls -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <select id="statusFilter" class="select select-bordered select-sm" onchange="filterJobs()">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                            <option value="waiting">Waiting</option>
+                            <option value="delayed">Delayed</option>
+                        </select>
+                        
+                        <input id="searchJobs" type="text" placeholder="Search jobs..." class="input input-bordered input-sm" oninput="filterJobs()" />
+                    </div>
+                    
+                    <div id="jobsList" class="space-y-4">
+                        <!-- Jobs will be populated here -->
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div id="pagination" class="flex justify-center mt-6">
+                        <!-- Pagination controls will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Submission Section -->
+        <div id="jobSubmissionSection" class="hidden">
+            <div class="card bg-base-100 shadow-xl max-w-2xl mx-auto">
+                <div class="card-body">
+                    <h2 class="card-title justify-center text-2xl mb-6">
+                        <i class="fas fa-plus mr-2"></i>
+                        Submit New Job
+                    </h2>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Job Name</span>
+                        </label>
+                        <input id="jobName" type="text" placeholder="Enter job name" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Job Data (JSON)</span>
+                        </label>
+                        <textarea id="jobData" class="textarea textarea-bordered h-32" placeholder='{"key": "value", "message": "Hello World"}'></textarea>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Job Options (JSON, optional)</span>
+                        </label>
+                        <textarea id="jobOptions" class="textarea textarea-bordered h-24" placeholder='{"removeOnComplete": {"count": 5}}'></textarea>
+                    </div>
+                    
+                    <!-- Schedule Options -->
+                    <div class="form-control mt-4">
+                        <div class="flex items-center mb-2">
+                            <label class="cursor-pointer label justify-start">
+                                <input id="scheduleJobToggle" type="checkbox" class="checkbox checkbox-primary mr-2" onchange="toggleScheduleOptions()" />
+                                <span class="label-text font-medium">Schedule this job</span>
+                            </label>
+                        </div>
+                        
+                        <div id="scheduleOptionsContainer" class="hidden border rounded-lg p-4 bg-base-200">
+                            <div class="tabs tabs-boxed mb-4">
+                                <a class="tab tab-active" onclick="switchScheduleTab('cron', this)">Cron Expression</a>
+                                <a class="tab" onclick="switchScheduleTab('repeat', this)">Repeat Interval</a>
+                            </div>
+                            
+                            <!-- Cron Expression Tab -->
+                            <div id="cronTab" class="schedule-tab">
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">Cron Expression</span>
+                                        <span class="label-text-alt">
+                                            <a href="https://crontab.guru/" target="_blank" class="link link-hover">
+                                                <i class="fas fa-question-circle"></i> Help
+                                            </a>
+                                        </span>
+                                    </label>
+                                    <input id="cronExpression" type="text" placeholder="0 0 * * *" class="input input-bordered" />
+                                    <label class="label">
+                                        <span class="label-text-alt">Example: "0 0 * * *" (daily at midnight)</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">Timezone (optional)</span>
+                                    </label>
+                                    <input id="cronTimezone" type="text" placeholder="America/New_York" class="input input-bordered" />
+                                </div>
+                            </div>
+                            
+                            <!-- Repeat Interval Tab -->
+                            <div id="repeatTab" class="schedule-tab hidden">
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">Repeat Every (milliseconds)</span>
+                                    </label>
+                                    <input id="repeatInterval" type="number" placeholder="3600000" class="input input-bordered" />
+                                    <label class="label">
+                                        <span class="label-text-alt">Example: 3600000 (every hour)</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">Limit (optional)</span>
+                                    </label>
+                                    <input id="repeatLimit" type="number" placeholder="10" class="input input-bordered" />
+                                    <label class="label">
+                                        <span class="label-text-alt">Maximum number of repetitions</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Common Schedule Options -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">Start Date (optional)</span>
+                                    </label>
+                                    <input id="scheduleStartDate" type="datetime-local" class="input input-bordered" />
+                                </div>
+                                
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">End Date (optional)</span>
+                                    </label>
+                                    <input id="scheduleEndDate" type="datetime-local" class="input input-bordered" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-control mt-6">
+                        <button onclick="submitJob()" class="btn btn-primary">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            Submit Job
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scheduled Jobs Section -->
+        <div id="scheduledJobsSection" class="hidden">
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="card-title">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            Scheduled Jobs
+                        </h2>
+                        <button onclick="loadScheduledJobs()" class="btn btn-sm btn-outline">
+                            <i class="fas fa-refresh mr-2"></i>
+                            Refresh
+                        </button>
+                    </div>
+                    
+                    <div id="scheduledJobsList" class="space-y-4">
+                        <!-- Scheduled jobs will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Webhooks Section -->
+        <div id="webhooksSection" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Add Webhook -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <i class="fas fa-plus mr-2"></i>
+                            Add Webhook
+                        </h2>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Webhook URL</span>
+                            </label>
+                            <input id="webhookUrl" type="url" placeholder="https://your-webhook-url.com" class="input input-bordered" />
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Event Type</span>
+                            </label>
+                            <select id="webhookEventType" class="select select-bordered">
+                                <option value="all">All Events</option>
+                                <option value="progress">Progress Updates</option>
+                                <option value="completed">Job Completion</option>
+                                <option value="failed">Job Failures</option>
+                                <option value="delta">Delta Updates</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Description</span>
+                            </label>
+                            <input id="webhookDescription" type="text" placeholder="Webhook description" class="input input-bordered" />
+                        </div>
+                        
+                        <div class="form-control mt-4">
+                            <button onclick="addWebhook()" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add Webhook
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Webhooks List -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="card-title">
+                                <i class="fas fa-list mr-2"></i>
+                                Your Webhooks
+                            </h2>
+                            <button onclick="loadWebhooks()" class="btn btn-sm btn-outline">
+                                <i class="fas fa-refresh mr-2"></i>
+                                Refresh
+                            </button>
+                        </div>
+                        
+                        <div id="webhooksList" class="space-y-3">
+                            <!-- Webhooks will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast toast-end z-50">
+        <!-- Notifications will be added here -->
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal">
+        <div class="modal-box">
+            <div class="flex items-center justify-center">
+                <span class="loading loading-spinner loading-lg mr-4"></span>
+                <span id="loadingText">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let socket = null;
+        let authToken = localStorage.getItem('authToken');
+        let refreshToken = localStorage.getItem('refreshToken');
+        let currentUser = null;
+        let jobs = [];
+        let scheduledJobs = [];
+        let webhooks = [];
+        let currentPage = 1;
+        let totalPages = 1;
+        const API_BASE = 'http://localhost:4000';
+        let deltaContentAccumulator = {}; // Object to accumulate delta content by jobId
+        let currentScheduleTab = 'cron'; // Default schedule tab
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            if (authToken) {
+                initializeApp();
+            } else {
+                showLogin();
+            }
+        });
+
+        // Authentication Functions
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                showNotification('Please enter username and password', 'error');
+                return;
+            }
+
+            showLoading('Logging in...');
+
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    authToken = data.accessToken;
+                    refreshToken = data.refreshToken;
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('refreshToken', refreshToken);
+                    localStorage.setItem('username', username);
+                    
+                    currentUser = { username };
+                    initializeApp();
+                    showNotification('Login successful!', 'success');
+                } else {
+                    showNotification(data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error. Please try again.', 'error');
+                console.error('Login error:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function register() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const email = document.getElementById('registerEmail').value;
+            const webhookUrl = document.getElementById('registerWebhook').value;
+
+            if (!username || !password) {
+                showNotification('Please enter username and password', 'error');
+                return;
+            }
+
+            showLoading('Creating account...');
+
+            try {
+                const response = await fetch(`${API_BASE}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password, email, webhookUrl })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    authToken = data.accessToken;
+                    refreshToken = data.refreshToken;
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('refreshToken', refreshToken);
+                    localStorage.setItem('username', username);
+                    
+                    currentUser = { username };
+                    initializeApp();
+                    showNotification('Registration successful!', 'success');
+                } else {
+                    showNotification(data.message || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error. Please try again.', 'error');
+                console.error('Registration error:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function logout() {
+            if (socket) {
+                socket.disconnect();
+                socket = null;
+            }
+            
+            authToken = null;
+            refreshToken = null;
+            currentUser = null;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('username');
+            
+            // Clear login form fields
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            
+            // Clear register form fields for security
+            document.getElementById('registerUsername').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerWebhook').value = '';
+            
+            showLogin();
+            updateConnectionStatus(false);
+            showNotification('Logged out successfully', 'info');
+        }
+
+        // App Initialization
+        function initializeApp() {
+            currentUser = { username: localStorage.getItem('username') };
+            document.getElementById('username').textContent = currentUser.username;
+            document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            
+            connectSocket();
+            showDashboard();
+            loadJobs();
+        }
+
+        // Socket.IO Functions
+        function connectSocket() {
+            if (socket) {
+                socket.disconnect();
+            }
+
+            socket = io(API_BASE, {
+                auth: {
+                    token: authToken
+                }
+            });
+
+            socket.on('connect', () => {
+                console.log('Connected to server');
+                updateConnectionStatus(true);
+                showNotification('Connected to real-time updates', 'success');
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+                updateConnectionStatus(false);
+                showNotification('Disconnected from real-time updates', 'warning');
+            });
+
+            socket.on('connect_error', (error) => {
+                console.error('Connection error:', error);
+                updateConnectionStatus(false);
+                showNotification('Connection error: ' + error.message, 'error');
+            });
+
+            // Job event listeners
+            socket.on('job:progress', (data) => {
+                console.log('Job progress:', data);
+                updateJobInList(data.jobId, { progress: data.progress, state: 'active' });
+                
+                // Check if this is a delta event
+                if (data.progress && data.progress.event === 'delta') {
+                    // Accumulate delta content instead of showing notification
+                    if (data.progress.content && data.progress.content.content) {
+                        accumulateDeltaContent(data.jobId, data.jobName, data.progress.content.content);
+                    }
+                } else {
+                    // For non-delta progress events, show notification as usual
+                    showNotification(`Job ${data.jobName} progress: ${data.progress}%`, 'info');
+                }
+            });
+
+            socket.on('job:completed', (data) => {
+                console.log('Job completed:', data);
+                updateJobInList(data.jobId, { state: 'completed', result: data.result });
+                showNotification(`Job ${data.jobName} completed!`, 'success');
+                updateStats();
+                
+                // Update the delta modal if it exists to show completion status
+                if (deltaContentAccumulator[data.jobId] && deltaContentAccumulator[data.jobId].modalOpen) {
+                    const modal = document.getElementById(`delta-modal-${data.jobId}`);
+                    if (modal) {
+                        const titleElement = modal.querySelector('h3');
+                        if (titleElement) {
+                            titleElement.innerHTML = `
+                                <i class="fas fa-check-circle text-success mr-2"></i>

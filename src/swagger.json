@@ -185,6 +185,131 @@
           }
         }
       },
+      "ScheduleOptions": {
+        "type": "object",
+        "properties": {
+          "cron": {
+            "type": "string",
+            "description": "Cron expression (e.g., \"0 0 * * *\" for daily at midnight)",
+            "example": "0 0 * * *"
+          },
+          "repeat": {
+            "type": "object",
+            "properties": {
+              "every": {
+                "type": "number",
+                "description": "Repeat interval in milliseconds",
+                "example": 3600000
+              },
+              "limit": {
+                "type": "number",
+                "description": "Maximum number of repetitions",
+                "example": 24
+              }
+            }
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When to start the job",
+            "example": "2025-07-01T00:00:00.000Z"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When to stop scheduling the job",
+            "example": "2025-12-31T00:00:00.000Z"
+          },
+          "tz": {
+            "type": "string",
+            "description": "Timezone for cron expressions",
+            "example": "America/New_York"
+          }
+        }
+      },
+      "ScheduledJob": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Scheduler ID",
+            "example": "1-dataExport-1625097600000"
+          },
+          "name": {
+            "type": "string",
+            "description": "Job name",
+            "example": "dataExport"
+          },
+          "data": {
+            "type": "object",
+            "description": "Job data",
+            "example": {
+              "format": "csv",
+              "filters": {
+                "date": "2025-06-28"
+              }
+            }
+          },
+          "options": {
+            "type": "object",
+            "description": "Job options",
+            "example": {
+              "removeOnComplete": {
+                "count": 3
+              },
+              "removeOnFail": {
+                "count": 5
+              }
+            }
+          },
+          "nextRun": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Next scheduled run time",
+            "example": "2025-07-01T00:00:00.000Z"
+          }
+        }
+      },
+      "ScheduleJobRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "data",
+          "schedule"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Job name",
+            "example": "dataExport"
+          },
+          "data": {
+            "type": "object",
+            "description": "Job data payload",
+            "example": {
+              "format": "csv",
+              "filters": {
+                "date": "2025-06-28"
+              }
+            }
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/ScheduleOptions"
+          },
+          "options": {
+            "type": "object",
+            "description": "Job options (same as regular jobs)",
+            "example": {
+              "removeOnComplete": {
+                "count": 3
+              },
+              "removeOnFail": {
+                "count": 5
+              }
+            }
+          }
+        }
+      },
       "User": {
         "type": "object",
         "required": [
@@ -895,6 +1020,229 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/schedule": {
+      "post": {
+        "summary": "Schedule a new job",
+        "description": "Schedule a job to run at specified times using cron expressions or intervals",
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleJobRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job scheduled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "schedulerId": {
+                      "type": "string",
+                      "description": "ID of the scheduled job",
+                      "example": "1-dataExport-1625097600000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all scheduled jobs",
+        "description": "Get all scheduled jobs for the authenticated user",
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of scheduled jobs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scheduledJobs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ScheduledJob"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/schedule/{schedulerId}": {
+      "get": {
+        "summary": "Get a specific scheduled job",
+        "description": "Get details of a specific scheduled job",
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "schedulerId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the scheduled job"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scheduled job details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduledJob"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Scheduled job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a scheduled job",
+        "description": "Remove a specific scheduled job",
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "schedulerId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the scheduled job"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scheduled job removed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Scheduled job removed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Scheduled job not found or unauthorized",
             "content": {
               "application/json": {
                 "schema": {

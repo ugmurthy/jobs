@@ -3,7 +3,7 @@ import { logger } from '@ugm/logger';
 import { PORT } from './config/env.js';
 import { initializeApp } from './config/app.js';
 import { initializeSocketIO } from './config/socket.js';
-import { jobQueue, webHookQueue, queueEvents, initializeBull } from './config/bull.js';
+import { jobQueue, webHookQueue, schedQueue, queueEvents, jobScheduler, initializeBull } from './config/bull.js';
 import { registerRoutes } from './routes/index.js';
 import { initializeEvents } from './events/index.js';
 import { initializeWorkers } from './workers/index.js';
@@ -64,4 +64,4 @@ process.on('SIGINT', () => {
 });
 
 // Export for testing
-export { jobQueue, webHookQueue, queueEvents };
+export { jobQueue, webHookQueue, schedQueue, queueEvents, jobScheduler };

@@ -507,6 +507,214 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/jobs/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all scheduled jobs
+         * @description Get all scheduled jobs for the authenticated user
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description List of scheduled jobs */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            scheduledJobs?: components["schemas"]["ScheduledJob"][];
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Schedule a new job
+         * @description Schedule a job to run at specified times using cron expressions or intervals
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ScheduleJobRequest"];
+                };
+            };
+            responses: {
+                /** @description Job scheduled successfully */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /**
+                             * @description ID of the scheduled job
+                             * @example 1-dataExport-1625097600000
+                             */
+                            schedulerId?: string;
+                        };
+                    };
+                };
+                /** @description Invalid request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/schedule/{schedulerId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a specific scheduled job
+         * @description Get details of a specific scheduled job
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ID of the scheduled job */
+                    schedulerId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Scheduled job details */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ScheduledJob"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Scheduled job not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /**
+         * Remove a scheduled job
+         * @description Remove a specific scheduled job
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ID of the scheduled job */
+                    schedulerId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Scheduled job removed successfully */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example Scheduled job removed successfully */
+                            message?: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Scheduled job not found or unauthorized */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/webhooks": {
         parameters: {
             query?: never;
@@ -859,6 +1067,112 @@ export interface components {
              * @example 2025-06-28T12:00:00Z
              */
             createdAt?: string;
+        };
+        ScheduleOptions: {
+            /**
+             * @description Cron expression (e.g., "0 0 * * *" for daily at midnight)
+             * @example 0 0 * * *
+             */
+            cron?: string;
+            repeat?: {
+                /**
+                 * @description Repeat interval in milliseconds
+                 * @example 3600000
+                 */
+                every?: number;
+                /**
+                 * @description Maximum number of repetitions
+                 * @example 24
+                 */
+                limit?: number;
+            };
+            /**
+             * Format: date-time
+             * @description When to start the job
+             * @example 2025-07-01T00:00:00.000Z
+             */
+            startDate?: string;
+            /**
+             * Format: date-time
+             * @description When to stop scheduling the job
+             * @example 2025-12-31T00:00:00.000Z
+             */
+            endDate?: string;
+            /**
+             * @description Timezone for cron expressions
+             * @example America/New_York
+             */
+            tz?: string;
+        };
+        ScheduledJob: {
+            /**
+             * @description Scheduler ID
+             * @example 1-dataExport-1625097600000
+             */
+            id?: string;
+            /**
+             * @description Job name
+             * @example dataExport
+             */
+            name?: string;
+            /**
+             * @description Job data
+             * @example {
+             *       "format": "csv",
+             *       "filters": {
+             *         "date": "2025-06-28"
+             *       }
+             *     }
+             */
+            data?: Record<string, never>;
+            /**
+             * @description Job options
+             * @example {
+             *       "removeOnComplete": {
+             *         "count": 3
+             *       },
+             *       "removeOnFail": {
+             *         "count": 5
+             *       }
+             *     }
+             */
+            options?: Record<string, never>;
+            /**
+             * Format: date-time
+             * @description Next scheduled run time
+             * @example 2025-07-01T00:00:00.000Z
+             */
+            nextRun?: string;
+        };
+        ScheduleJobRequest: {
+            /**
+             * @description Job name
+             * @example dataExport
+             */
+            name: string;
+            /**
+             * @description Job data payload
+             * @example {
+             *       "format": "csv",
+             *       "filters": {
+             *         "date": "2025-06-28"
+             *       }
+             *     }
+             */
+            data: Record<string, never>;
+            schedule: components["schemas"]["ScheduleOptions"];
+            /**
+             * @description Job options (same as regular jobs)
+             * @example {
+             *       "removeOnComplete": {
+             *         "count": 3
+             *       },
+             *       "removeOnFail": {
+             *         "count": 5
+             *       }
+             *     }
+             */
+            options?: Record<string, never>;
         };
         User: {
             /**
