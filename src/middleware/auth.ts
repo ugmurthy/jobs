@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { logger } from '@ugm/logger';
-import userService, { UserPayload } from '../services/userService.js';
+import userService, { UserPayload, AuthenticatedUser } from '../services/userService.js';
 import { TOKEN_SECRET } from '../config/env.js';
 
 /**
@@ -28,8 +28,9 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
     
     req.user = {
       userId: decoded.userId,
-      username: decoded.username
-    };
+      username: decoded.username,
+      authMethod: 'jwt'
+    } as AuthenticatedUser;
     next();
   } catch (err) {
     logger.error('Authentication error:', err);

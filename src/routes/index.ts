@@ -1,6 +1,7 @@
 import { Express, Request, Response } from 'express';
 import { logger } from '@ugm/logger';
 import { authenticateToken } from '../middleware/auth.js';
+import { authenticate } from '../middleware/combinedAuth.js';
 import userService from '../services/userService.js';
 import { jobQueue, defaultOptions } from '../config/bull.js';
 import prisma from '../lib/prisma.js';
@@ -12,6 +13,7 @@ import jobsRoutes from './jobs.js';
 import webhooksRoutes from './webhooks.js';
 import adminRoutes from './admin.js';
 import schedulerRoutes from './scheduler.js';
+import apiKeyRoutes from './apiKeys.js';
 
 /**
  * Register all application routes
@@ -49,9 +51,10 @@ export const registerRoutes = (app: Express): void => {
   app.use('/auth', authRoutes);
   // Register scheduler routes before jobs routes to ensure they take precedence
   app.use('/jobs', schedulerRoutes); // Add scheduler routes under /jobs prefix
-  app.use('/jobs', jobsRoutes);
-  app.use('/webhooks', webhooksRoutes);
-  app.use('/admin', adminRoutes);
+  app.use('/jobs', authenticate, jobsRoutes);
+  app.use('/webhooks', authenticate, webhooksRoutes);
+  app.use('/admin', authenticate, adminRoutes);
+  app.use('/api-keys', authenticate, apiKeyRoutes);
 
   // Define legacy routes directly for backward compatibility
   
@@ -125,7 +128,7 @@ export const registerRoutes = (app: Express): void => {
   });
 
   // User logout route
-  app.post('/logout', authenticateToken, async (req: Request, res: Response) => {
+  app.post('/logout', authenticate, async (req: Request, res: Response) => {
     try {
       if (!req.user) {
         res.status(401).json({ message: 'Not authenticated' });
@@ -166,7 +169,7 @@ export const registerRoutes = (app: Express): void => {
   });
 
   // Submit job route
-  app.post('/submit-job', authenticateToken, async (req: Request, res: Response) => {
+  app.post('/submit-job', authenticate, async (req: Request, res: Response) => {
     const requestedJob = req.body;
   
     logger.info(`/submit-job REQUESTED BY: ${JSON.stringify(req.user)}`);

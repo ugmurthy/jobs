@@ -127,6 +127,227 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api-keys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all API keys for the authenticated user */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description API keys retrieved successfully */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example API keys retrieved successfully */
+                            message?: string;
+                            apiKeys?: components["schemas"]["ApiKeyResponse"][];
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a new API key */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ApiKey"];
+                };
+            };
+            responses: {
+                /** @description API key created successfully */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiKeyWithSecretResponse"];
+                    };
+                };
+                /** @description Invalid input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api-keys/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update an API key */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ID of the API key to update */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @description A descriptive name for the API key */
+                        name?: string;
+                        /** @description Array of permissions granted to this key */
+                        permissions?: string[];
+                        /**
+                         * Format: date-time
+                         * @description When the API key expires (null for never)
+                         */
+                        expiresAt?: string;
+                        /** @description Whether the API key is active */
+                        isActive?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description API key updated successfully */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example API key updated successfully */
+                            message?: string;
+                            apiKey?: components["schemas"]["ApiKeyResponse"];
+                        };
+                    };
+                };
+                /** @description Invalid input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description API key not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        /** Revoke an API key */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ID of the API key to revoke */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description API key revoked successfully */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example API key revoked successfully */
+                            message?: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description API key not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/register": {
         parameters: {
             query?: never;
@@ -953,6 +1174,145 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        ApiKey: {
+            /**
+             * @description A descriptive name for the API key
+             * @example My API Key
+             */
+            name: string;
+            /**
+             * @description Array of permissions granted to this key
+             * @example [
+             *       "read:jobs",
+             *       "write:jobs"
+             *     ]
+             */
+            permissions: string[];
+            /**
+             * Format: date-time
+             * @description Optional expiration date for the API key
+             * @example 2025-12-31T23:59:59Z
+             */
+            expiresAt?: string;
+        };
+        ApiKeyResponse: {
+            /**
+             * @description Unique identifier for the API key
+             * @example 1
+             */
+            id?: number;
+            /**
+             * @description ID of the user who owns this API key
+             * @example 42
+             */
+            userId?: number;
+            /**
+             * @description A descriptive name for the API key
+             * @example My API Key
+             */
+            name?: string;
+            /**
+             * @description First few characters of the key (for display)
+             * @example abc12345
+             */
+            prefix?: string;
+            /**
+             * @description Array of permissions granted to this key
+             * @example [
+             *       "read:jobs",
+             *       "write:jobs"
+             *     ]
+             */
+            permissions?: string[];
+            /**
+             * Format: date-time
+             * @description When the API key was last used
+             * @example 2025-07-01T12:34:56Z
+             */
+            lastUsed?: string;
+            /**
+             * Format: date-time
+             * @description When the API key was created
+             * @example 2025-06-01T00:00:00Z
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description When the API key expires (null if never)
+             * @example 2025-12-31T23:59:59Z
+             */
+            expiresAt?: string;
+            /**
+             * @description Whether the API key is active
+             * @example true
+             */
+            isActive?: boolean;
+        };
+        ApiKeyWithSecretResponse: {
+            /**
+             * @description Success message
+             * @example API key created successfully
+             */
+            message?: string;
+            apiKey?: {
+                /**
+                 * @description Unique identifier for the API key
+                 * @example 1
+                 */
+                id?: number;
+                /**
+                 * @description ID of the user who owns this API key
+                 * @example 42
+                 */
+                userId?: number;
+                /**
+                 * @description A descriptive name for the API key
+                 * @example My API Key
+                 */
+                name?: string;
+                /**
+                 * @description First few characters of the key (for display)
+                 * @example abc12345
+                 */
+                prefix?: string;
+                /**
+                 * @description Array of permissions granted to this key
+                 * @example [
+                 *       "read:jobs",
+                 *       "write:jobs"
+                 *     ]
+                 */
+                permissions?: string[];
+                /**
+                 * Format: date-time
+                 * @description When the API key was last used
+                 * @example null
+                 */
+                lastUsed?: string;
+                /**
+                 * Format: date-time
+                 * @description When the API key was created
+                 * @example 2025-06-01T00:00:00Z
+                 */
+                createdAt?: string;
+                /**
+                 * Format: date-time
+                 * @description When the API key expires (null if never)
+                 * @example 2025-12-31T23:59:59Z
+                 */
+                expiresAt?: string;
+                /**
+                 * @description Whether the API key is active
+                 * @example true
+                 */
+                isActive?: boolean;
+                /**
+                 * @description The full API key (only shown once upon creation)
+                 * @example abc12345def67890ghi12345jkl67890mno12345pqr67890
+                 */
+                key?: string;
+            };
+        };
         /** @example {
          *       "message": "Invalid input data",
          *       "code": "VALIDATION_ERROR"

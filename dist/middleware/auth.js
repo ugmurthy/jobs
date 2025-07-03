@@ -22,7 +22,8 @@ export async function authenticateToken(req, res, next) {
         }
         req.user = {
             userId: decoded.userId,
-            username: decoded.username
+            username: decoded.username,
+            authMethod: 'jwt'
         };
         next();
     }

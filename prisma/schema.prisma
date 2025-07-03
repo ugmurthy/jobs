@@ -17,6 +17,7 @@ model User {
   email             String?   @unique
   webhookUrl        String?   // Legacy field
   webhooks          Webhook[]
+  apiKeys           ApiKey[]  // New relation to API keys
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   
@@ -41,4 +42,19 @@ model Webhook {
   userId      Int
   
   @@unique([userId, url, eventType])
+}
+
+model ApiKey {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  name        String    // A descriptive name for the API key
+  key         String    @unique // The actual API key (hashed)
+  prefix      String    @unique // First few characters of the key (for display)
+  permissions String    // JSON string of permissions granted to this key
+  lastUsed    DateTime?
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  isActive    Boolean   @default(true)
+  
+  user        User      @relation(fields: [userId], references: [id])
 }

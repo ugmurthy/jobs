@@ -1,5 +1,5 @@
 import { logger } from '@ugm/logger';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticate } from '../middleware/combinedAuth.js';
 import userService from '../services/userService.js';
 import { jobQueue, defaultOptions } from '../config/bull.js';
 import { notFoundHandler, errorHandler } from '../middleware/error.js';
@@ -9,6 +9,7 @@ import jobsRoutes from './jobs.js';
 import webhooksRoutes from './webhooks.js';
 import adminRoutes from './admin.js';
 import schedulerRoutes from './scheduler.js';
+import apiKeyRoutes from './apiKeys.js';
 /**
  * Register all application routes
  */
@@ -40,9 +41,10 @@ export const registerRoutes = (app) => {
     app.use('/auth', authRoutes);
     // Register scheduler routes before jobs routes to ensure they take precedence
     app.use('/jobs', schedulerRoutes); // Add scheduler routes under /jobs prefix
-    app.use('/jobs', jobsRoutes);
-    app.use('/webhooks', webhooksRoutes);
-    app.use('/admin', adminRoutes);
+    app.use('/jobs', authenticate, jobsRoutes);
+    app.use('/webhooks', authenticate, webhooksRoutes);
+    app.use('/admin', authenticate, adminRoutes);
+    app.use('/api-keys', authenticate, apiKeyRoutes);
     // Define legacy routes directly for backward compatibility
     // User registration route
     app.post('/register', async (req, res) => {
@@ -105,7 +107,7 @@ export const registerRoutes = (app) => {
         }
     });
     // User logout route
-    app.post('/logout', authenticateToken, async (req, res) => {
+    app.post('/logout', authenticate, async (req, res) => {
         try {
             if (!req.user) {
                 res.status(401).json({ message: 'Not authenticated' });
@@ -140,7 +142,7 @@ export const registerRoutes = (app) => {
         }
     });
     // Submit job route
-    app.post('/submit-job', authenticateToken, async (req, res) => {
+    app.post('/submit-job', authenticate, async (req, res) => {
         const requestedJob = req.body;
         logger.info(`/submit-job REQUESTED BY: ${JSON.stringify(req.user)}`);
         logger.debug(`/submit-job name: ${requestedJob.name}`);

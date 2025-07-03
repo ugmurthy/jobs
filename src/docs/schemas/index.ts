@@ -5,3 +5,4 @@ export * from './common-schema';
 export * from './user-schema';
 export * from './job-schema';
 export * from './webhook-schema';
+export * from './apikey-schema';

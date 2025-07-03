@@ -33,6 +33,13 @@ export interface AuthTokens {
 export interface UserPayload {
   userId: number;
   username: string;
+  authMethod?: 'jwt' | 'apiKey';
+  permissions?: string[];
+}
+
+// Extended interface for authenticated users with auth method
+export interface AuthenticatedUser extends UserPayload {
+  authMethod: 'jwt' | 'apiKey';
 }
 
 export class UserService {
