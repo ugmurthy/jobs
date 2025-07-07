@@ -63,14 +63,13 @@
  *     LoginRequest:
  *       type: object
  *       required:
- *         - email
+ *         - username
  *         - password
  *       properties:
- *         email:
+ *         username:
  *           type: string
- *           format: email
- *           description: User's email
- *           example: "john.doe@example.com"
+ *           description: Username
+ *           example: "johndoe"
  *         password:
  *           type: string
  *           format: password

@@ -415,7 +415,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Login with email and password */
+        /** Login with username and password */
         post: {
             parameters: {
                 query?: never;
@@ -1596,11 +1596,10 @@ export interface components {
         };
         LoginRequest: {
             /**
-             * Format: email
-             * @description User's email
-             * @example john.doe@example.com
+             * @description Username
+             * @example johndoe
              */
-            email: string;
+            username: string;
             /**
              * Format: password
              * @description User's password

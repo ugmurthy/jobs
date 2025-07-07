@@ -39,7 +39,7 @@
  * 
  * /auth/login:
  *   post:
- *     summary: Login with email and password
+ *     summary: Login with username and password
  *     tags: [Authentication]
  *     requestBody:
  *       required: true

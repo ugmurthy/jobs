@@ -185,11 +185,43 @@ router.post('/reset-password', async (req: Request, res: Response) => {
  * Protected route example
  */
 router.get('/protected', authenticate, (req: Request, res: Response) => {
-  if (!req.user) { 
+  if (!req.user) {
     res.status(401).json({ message: 'Not authenticated' });
     return;
   }
   res.json({ message: 'This is a protected route', user: req.user });
+});
+
+/**
+ * Get current user information
+ */
+router.get('/me', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'Not authenticated' });
+      return;
+    }
+    
+    // Get full user details from database
+    const user = await userService.getUserById(req.user.userId);
+    
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+    
+    // Return user without sensitive information
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    });
+  } catch (error) {
+    logger.error('Error fetching current user:', error);
+    res.status(500).json({ message: 'An error occurred while fetching user data' });
+  }
 });
 
 export default router;

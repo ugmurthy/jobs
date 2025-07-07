@@ -548,15 +548,14 @@
       "LoginRequest": {
         "type": "object",
         "required": [
-          "email",
+          "username",
           "password"
         ],
         "properties": {
-          "email": {
+          "username": {
             "type": "string",
-            "format": "email",
-            "description": "User's email",
-            "example": "john.doe@example.com"
+            "description": "Username",
+            "example": "johndoe"
           },
           "password": {
             "type": "string",
@@ -1160,7 +1159,7 @@
     },
     "/auth/login": {
       "post": {
-        "summary": "Login with email and password",
+        "summary": "Login with username and password",
         "tags": [
           "Authentication"
         ],
