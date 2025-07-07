@@ -73,6 +73,52 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *   delete:
+ *     summary: Delete a specific job
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *       - apiKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: jobId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the job to delete
+ *     responses:
+ *       200:
+ *         description: Job deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Job deleted successfully"
+ *                 id:
+ *                   type: string
+ *                   description: ID of the deleted job
+ *                   example: "123456789"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       403:
+ *         description: Forbidden - User does not own this job
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Job not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  * 
  * /jobs:
  *   get:

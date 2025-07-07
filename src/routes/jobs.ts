@@ -196,4 +196,45 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * Delete a specific job
+ */
+router.delete('/:jobId', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { jobId } = req.params;
+    const userId = req.user?.userId;
+    
+    if (!userId) {
+      res.status(401).json({ message: 'Not authenticated' });
+      return;
+    }
+    
+    logger.debug(`Deleting job with ID: ${jobId}`);
+    const job = await jobQueue.getJob(jobId);
+    
+    if (!job) {
+      logger.warn(`Job not found with ID: ${jobId}`);
+      res.status(404).json({ message: 'Job not found' });
+      return;
+    }
+    
+    // Ensure user can only delete their own jobs
+    if (job.data.userId !== userId) {
+      res.status(403).json({ message: 'Unauthorized access to job' });
+      return;
+    }
+    
+    // Remove the job from the queue
+    await job.remove();
+    
+    res.json({
+      message: 'Job deleted successfully',
+      id: jobId
+    });
+  } catch (error) {
+    logger.error('Job deletion error:', error);
+    res.status(500).json({ message: 'An error occurred while deleting the job' });
+  }
+});
+
 export default router;
