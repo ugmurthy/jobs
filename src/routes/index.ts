@@ -14,6 +14,7 @@ import webhooksRoutes from './webhooks.js';
 import adminRoutes from './admin.js';
 import schedulerRoutes from './scheduler.js';
 import apiKeyRoutes from './apiKeys.js';
+import dashboardRoutes from './dashboard.js';
 
 /**
  * Register all application routes
@@ -55,6 +56,7 @@ export const registerRoutes = (app: Express): void => {
   app.use('/webhooks', authenticate, webhooksRoutes);
   app.use('/admin', authenticate, adminRoutes);
   app.use('/api-keys', authenticate, apiKeyRoutes);
+  app.use('/dashboard', authenticate, dashboardRoutes);
 
   // Define legacy routes directly for backward compatibility
   

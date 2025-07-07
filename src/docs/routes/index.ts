@@ -6,3 +6,4 @@ export * from './job-routes';
 export * from './webhook-routes';
 export * from './admin-routes';
 export * from './apikey-routes';
+export * from './dashboard-routes';

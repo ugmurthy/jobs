@@ -557,6 +557,165 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/dashboard/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get dashboard statistics */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Dashboard statistics */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            jobStats?: {
+                                /**
+                                 * @description Total number of jobs
+                                 * @example 1250
+                                 */
+                                total?: number;
+                                /**
+                                 * @description Number of pending jobs
+                                 * @example 15
+                                 */
+                                pending?: number;
+                                /**
+                                 * @description Number of running jobs
+                                 * @example 8
+                                 */
+                                running?: number;
+                                /**
+                                 * @description Number of completed jobs
+                                 * @example 1180
+                                 */
+                                completed?: number;
+                                /**
+                                 * @description Number of failed jobs
+                                 * @example 47
+                                 */
+                                failed?: number;
+                                /**
+                                 * @description Job completion rate percentage
+                                 * @example 94.4
+                                 */
+                                completionRate?: number;
+                            };
+                            /** @description List of recent jobs */
+                            recentJobs?: {
+                                /**
+                                 * @description Job ID
+                                 * @example job-123456
+                                 */
+                                id?: string;
+                                /**
+                                 * @description Job name
+                                 * @example Data Export
+                                 */
+                                name?: string;
+                                /**
+                                 * @description Job status
+                                 * @example completed
+                                 * @enum {string}
+                                 */
+                                status?: "pending" | "running" | "completed" | "failed";
+                                /**
+                                 * Format: date-time
+                                 * @description Job creation timestamp
+                                 * @example 2025-07-06T12:30:45Z
+                                 */
+                                createdAt?: string;
+                                /**
+                                 * Format: date-time
+                                 * @description Job completion timestamp
+                                 * @example 2025-07-06T12:35:12Z
+                                 */
+                                completedAt?: string;
+                                /**
+                                 * @description Job duration in seconds
+                                 * @example 267
+                                 */
+                                duration?: number;
+                            }[];
+                            schedulerStats?: {
+                                /**
+                                 * @description Number of active scheduled jobs
+                                 * @example 8
+                                 */
+                                activeSchedules?: number;
+                                /**
+                                 * @description Total number of scheduled jobs
+                                 * @example 12
+                                 */
+                                totalSchedules?: number;
+                                /**
+                                 * Format: date-time
+                                 * @description Next scheduled job timestamp
+                                 * @example 2025-07-06T18:00:00Z
+                                 */
+                                nextScheduledJob?: string;
+                            };
+                            webhookStats?: {
+                                /**
+                                 * @description Total number of webhooks
+                                 * @example 15
+                                 */
+                                totalWebhooks?: number;
+                                /**
+                                 * @description Number of active webhooks
+                                 * @example 12
+                                 */
+                                activeWebhooks?: number;
+                                /**
+                                 * @description Webhook delivery success rate percentage
+                                 * @example 98.5
+                                 */
+                                deliveryRate?: number;
+                                /**
+                                 * @description Total number of webhook deliveries
+                                 * @example 1250
+                                 */
+                                totalDeliveries?: number;
+                                /**
+                                 * @description Number of failed webhook deliveries
+                                 * @example 19
+                                 */
+                                failedDeliveries?: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/jobs/submit": {
         parameters: {
             query?: never;
