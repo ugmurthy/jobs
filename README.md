@@ -1,5 +1,10 @@
 # 🚀 JobRunner
 
+> **⚠️ DISCLAIMER: WORK IN PROGRESS ⚠️**
+> This project is currently under active development and is not ready for production use.
+> Features may be incomplete, contain bugs, or undergo significant changes without notice.
+> Use at your own risk in development or testing environments only.
+
 <p align="center">
   <img src="_assets/logo.gif" alt="JobRunner Logo" width="900" height="250">
 </p>
