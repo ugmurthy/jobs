@@ -86,3 +86,5 @@
 {"level":"error","message":"Error 404: Not Found - /auth/validate-api-key","timestamp":"2025-07-06 20:59:19"}
 {"level":"error","message":"Error 404: Not Found - /auth/validate-api-key","timestamp":"2025-07-06 21:05:00"}
 {"level":"error","message":"Error 404: Not Found - /auth/validate-api-key","timestamp":"2025-07-06 21:05:09"}
+{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-06 21:12:22"}
+{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-06 21:12:22"}

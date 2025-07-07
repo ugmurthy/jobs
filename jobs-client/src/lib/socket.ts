@@ -32,9 +32,11 @@ export function initializeSocket(): Socket | null {
 
   // Create new socket connection with auth
   socket = io({
-    auth: {
-      token: token || apiKey,
-    },
+    auth: token
+      ? { token }
+      : apiKey
+        ? { apiKey }
+        : undefined,
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
@@ -55,6 +57,14 @@ export function initializeSocket(): Socket | null {
   socket.on('connect_error', (error) => {
     store.dispatch(connectionError({ message: error.message }));
     console.error('Socket connection error:', error);
+    console.error('Socket connection error details:', {
+      message: error.message,
+      context: {
+        token: token ? 'Present' : 'Not present',
+        apiKey: apiKey ? 'Present' : 'Not present',
+        authMethod: token ? 'JWT' : apiKey ? 'API Key' : 'None'
+      }
+    });
   });
 
   // Job events
