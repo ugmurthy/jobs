@@ -184,6 +184,7 @@ src/
 - `POST /jobs/submit` - Submit a job (requires authentication)
 - `GET /jobs/:jobId` - Get status of a specific job (requires authentication)
 - `GET /jobs` - Get all jobs for the authenticated user (requires authentication)
+- `DELETE /jobs/:jobId` - Delete a specific job (requires authentication)
 
 ### Job Scheduler Routes
 
@@ -376,6 +377,28 @@ curl -X POST http://localhost:4000/jobs/schedule \
       "removeOnFail": { "count": 5 }
     }
   }'
+```
+
+## Job Deletion Example
+
+Using JWT authentication:
+```bash
+curl -X DELETE http://localhost:4000/jobs/123456789 \
+  -H "Authorization: Bearer your_jwt_token"
+```
+
+Using API key authentication:
+```bash
+curl -X DELETE http://localhost:4000/jobs/123456789 \
+  -H "x-api-key: your_api_key"
+```
+
+The response will include a success message and the ID of the deleted job:
+```json
+{
+  "message": "Job deleted successfully",
+  "id": "123456789"
+}
 ```
 
 ## API Key Examples

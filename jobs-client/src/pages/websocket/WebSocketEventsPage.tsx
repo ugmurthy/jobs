@@ -29,17 +29,49 @@ export default function WebSocketEventsPage() {
     }
   };
 
-  const filteredEvents = events.filter(event => {
-    if (filter === 'all') return true;
-    if (filter === 'job') return event.type.startsWith('job:');
-    if (filter === 'webhook') return event.type.startsWith('webhook:');
-    if (filter === 'system') return event.type.startsWith('system:');
-    return true;
-  });
+  // Filter events based on selected filter type and sort by timestamp (newest first)
+  const filteredEvents = events
+    .filter(event => {
+      if (filter === 'all') return true;
+      if (filter === 'job') return event.type.startsWith('job:');
+      if (filter === 'webhook') return event.type.startsWith('webhook:');
+      if (filter === 'system') return event.type.startsWith('system:');
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort by timestamp, newest first
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    });
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleString();
+    
+    // Format date as DD-MMM-YY
+    const day = date.getDate().toString().padStart(2, '0');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear().toString().slice(-2);
+    const formattedDate = `${day}-${month}-${year}`;
+    
+    // Format time
+    const timePart = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    
+    return { date: formattedDate, time: timePart };
+  };
+
+  // Extract jobId and jobName from event payload
+  const getJobInfo = (event: WebSocketEvent) => {
+    const { payload } = event;
+    
+    // Different event types might have different payload structures
+    if (payload) {
+      return {
+        jobId: payload.jobId || payload.id || '',
+        jobName: payload.jobName || payload.jobname || '',
+      };
+    }
+    
+    return { jobId: '', jobName: '' };
   };
 
   return (
@@ -119,46 +151,74 @@ export default function WebSocketEventsPage() {
             No events received yet. Events will appear here in real-time as they occur.
           </div>
         ) : (
-          <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-            {filteredEvents.map((event, index) => (
-              <li key={index} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700">
-                <div className="flex justify-between cursor-pointer" onClick={() => toggleEventExpansion(index)}>
-                  <div className="flex items-center">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mr-3 ${getEventTypeColor(event.type)}`}>
-                      {event.type}
-                    </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {formatTimestamp(event.timestamp)}
-                    </span>
+          <>
+            {/* Column Headers */}
+            <div className="grid grid-cols-5 gap-4 p-4 font-medium text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+              <div>Job ID</div>
+              <div>Job Name</div>
+              <div>Event</div>
+              <div>Date</div>
+              <div>Time</div>
+            </div>
+            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredEvents.map((event, index) => (
+                <li key={index} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <div className="cursor-pointer" onClick={() => toggleEventExpansion(index)}>
+                    <div className="grid grid-cols-5 gap-4 items-center">
+                      {/* JobId */}
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                        {getJobInfo(event).jobId}
+                      </div>
+                      
+                      {/* JobName */}
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                        {getJobInfo(event).jobName}
+                      </div>
+                      
+                      {/* Event Type */}
+                      <div>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getEventTypeColor(event.type)}`}>
+                          {event.type}
+                        </span>
+                      </div>
+                      
+                      {/* Date */}
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {formatTimestamp(event.timestamp).date}
+                      </div>
+                      
+                      {/* Time */}
+                      <div className="text-sm text-gray-500 dark:text-gray-400 flex justify-between items-center">
+                        <span>{formatTimestamp(event.timestamp).time}</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={`w-5 h-5 text-gray-500 transition-transform ${
+                            expandedEvents.has(index) ? 'transform rotate-180' : ''
+                          }`}
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`w-5 h-5 text-gray-500 transition-transform ${
-                        expandedEvents.has(index) ? 'transform rotate-180' : ''
-                      }`}
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                
-                {expandedEvents.has(index) && (
-                  <div className="mt-3 p-3 bg-gray-100 rounded dark:bg-gray-700">
-                    <pre className="text-xs overflow-auto whitespace-pre-wrap">
-                      {JSON.stringify(event.payload, null, 2)}
-                    </pre>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+                  
+                  {expandedEvents.has(index) && (
+                    <div className="mt-3 p-3 bg-gray-100 rounded dark:bg-gray-700">
+                      <pre className="text-xs overflow-auto whitespace-pre-wrap">
+                        {JSON.stringify(event.payload, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </div>
     </div>
