@@ -77,8 +77,8 @@ export async function apiRequest<T>(
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     } else if (apiKey) {
-      //headers.Authorization = `Bearer ${apiKey}`;
-      headers.apiKey = `${apiKey}`
+      // Send API key in the X-API-Key header
+      headers['X-API-Key'] = apiKey;
     }
   }
 

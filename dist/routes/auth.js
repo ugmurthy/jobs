@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { logger } from '@ugm/logger';
 import userService from '../services/userService.js';
+import apiKeyService from '../services/apiKeyService.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 const router = Router();
 /**
@@ -193,6 +194,47 @@ router.get('/me', authenticate, async (req, res) => {
     catch (error) {
         logger.error('Error fetching current user:', error);
         res.status(500).json({ message: 'An error occurred while fetching user data' });
+    }
+});
+/**
+ * Validate API key and return user information
+ */
+router.get('/validate-api-key', async (req, res) => {
+    try {
+        // Extract API key from header
+        const apiKey = req.header('X-API-Key');
+        if (!apiKey) {
+            res.status(400).json({ message: 'API key is required' });
+            return;
+        }
+        // Validate the API key
+        const result = await apiKeyService.validateApiKey(apiKey);
+        if (!result) {
+            res.status(401).json({ message: 'Invalid API key' });
+            return;
+        }
+        const { userId, permissions } = result;
+        // Get user from database
+        const user = await userService.getUserById(userId);
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+        // Return user information without sensitive data
+        res.json({
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
+            },
+            permissions
+        });
+    }
+    catch (error) {
+        logger.error('API key validation error:', error);
+        res.status(500).json({ message: 'An error occurred during API key validation' });
     }
 });
 export default router;

@@ -11,6 +11,7 @@ import { MainLayout, AuthLayout, DashboardLayout } from '@/layouts';
 // Pages
 import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
+import ApiKeyLoginPage from '@/pages/auth/ApiKeyLoginPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import JobsPage from '@/pages/jobs/JobsPage';
 import NewJobPage from '@/pages/jobs/NewJobPage';
@@ -43,6 +44,7 @@ function App() {
           <Route element={<AuthLayout />}>
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/register" element={<RegisterPage />} />
+            <Route path="/auth/api-key" element={<ApiKeyLoginPage />} />
           </Route>
 
           {/* Main app routes */}
