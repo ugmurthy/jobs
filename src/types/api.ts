@@ -588,15 +588,25 @@ export interface paths {
                                  */
                                 total?: number;
                                 /**
-                                 * @description Number of pending jobs
-                                 * @example 15
-                                 */
-                                pending?: number;
-                                /**
-                                 * @description Number of running jobs
+                                 * @description Number of active jobs
                                  * @example 8
                                  */
-                                running?: number;
+                                active?: number;
+                                /**
+                                 * @description Number of delayed jobs
+                                 * @example 15
+                                 */
+                                delayed?: number;
+                                /**
+                                 * @description Number of paused jobs
+                                 * @example 2
+                                 */
+                                paused?: number;
+                                /**
+                                 * @description Number of jobs waiting for children
+                                 * @example 1
+                                 */
+                                "waiting-children"?: number;
                                 /**
                                  * @description Number of completed jobs
                                  * @example 1180
@@ -630,7 +640,7 @@ export interface paths {
                                  * @example completed
                                  * @enum {string}
                                  */
-                                status?: "pending" | "running" | "completed" | "failed";
+                                status?: "active" | "delayed" | "completed" | "failed" | "paused" | "waiting-children";
                                 /**
                                  * Format: date-time
                                  * @description Job creation timestamp

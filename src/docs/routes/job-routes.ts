@@ -132,7 +132,7 @@
  *         name: status
  *         schema:
  *           type: string
- *           enum: [waiting, active, completed, failed, delayed]
+ *           enum: [active, delayed, completed, failed, paused, waiting-children]
  *         description: Filter jobs by status
  *       - in: query
  *         name: limit

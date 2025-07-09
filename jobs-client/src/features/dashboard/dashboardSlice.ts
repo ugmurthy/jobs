@@ -3,17 +3,19 @@ import { api } from '@/lib/api';
 
 export interface JobStats {
   total: number;
-  pending: number;
-  running: number;
+  active: number;
+  delayed: number;
   completed: number;
   failed: number;
+  paused: number;
+  'waiting-children': number;
   completionRate: number;
 }
 
 export interface RecentJob {
   id: string;
   name: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
   createdAt: string;
   completedAt?: string;
   duration?: number;

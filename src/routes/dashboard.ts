@@ -31,17 +31,28 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
     logger.info(`Fetching dashboard stats for user ${userId}`);
     
     // Get all jobs from the queue
-    const allJobs = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed']);
+    const allJobs = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children']);
     
     // Filter jobs by user ID
     const userJobs = allJobs.filter((job: any) => job.data.userId === userId);
     
-    // Calculate job statistics
+    // Calculate job statistics using BullMQ status names
     const total = userJobs.length;
     const completed = userJobs.filter((job: any) => job.finishedOn && !job.failedReason).length;
     const failed = userJobs.filter((job: any) => job.failedReason).length;
-    const running = userJobs.filter((job: any) => job.processedOn && !job.finishedOn).length;
-    const pending = total - completed - failed - running;
+    const active = userJobs.filter((job: any) => job.processedOn && !job.finishedOn).length;
+    const delayed = userJobs.filter((job: any) => {
+      const state = job.opts?.delay && job.opts.delay > Date.now();
+      return state;
+    }).length;
+    const paused = userJobs.filter((job: any) => {
+      // Check if job is in paused state - this would need to be determined by queue state
+      return false; // Placeholder - would need actual paused job detection
+    }).length;
+    const waitingChildren = userJobs.filter((job: any) => {
+      // Check if job is waiting for children - this would need to be determined by job dependencies
+      return false; // Placeholder - would need actual waiting-children detection
+    }).length;
     const completionRate = total > 0 ? Math.round((completed / total) * 1000) / 10 : 0;
     
     // Get recent jobs (last 5)
@@ -51,11 +62,11 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
         .slice(0, 5)
         .map(async (job: any) => {
           const state = await job.getState();
-          let status: 'pending' | 'running' | 'completed' | 'failed';
+          let status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
           
           switch (state) {
             case 'active':
-              status = 'running';
+              status = 'active';
               break;
             case 'completed':
               status = 'completed';
@@ -63,8 +74,17 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
             case 'failed':
               status = 'failed';
               break;
+            case 'delayed':
+              status = 'delayed';
+              break;
+            case 'paused':
+              status = 'paused';
+              break;
+            case 'waiting-children':
+              status = 'waiting-children';
+              break;
             default:
-              status = 'pending';
+              status = 'active'; // Default to active for waiting jobs
           }
           
           const createdAt = new Date(job.timestamp).toISOString();
@@ -119,10 +139,12 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
     const response = {
       jobStats: {
         total,
-        pending,
-        running,
+        active,
+        delayed,
         completed,
         failed,
+        paused,
+        'waiting-children': waitingChildren,
         completionRate
       },
       recentJobs,

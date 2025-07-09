@@ -11,7 +11,7 @@ A comprehensive HTML dashboard for monitoring and managing jobs with real-time u
 
 ### 📊 Real-time Dashboard
 - **Live Job Monitoring**: Real-time updates via Socket.IO WebSockets
-- **Job Statistics**: Visual stats cards showing total, completed, running, and failed jobs
+- **Job Statistics**: Visual stats cards showing total, completed, active, failed, delayed, paused, and waiting-children jobs
 - **Job List**: Paginated list of jobs with filtering and search capabilities
 - **Job Details**: Detailed view of individual jobs with progress tracking
 

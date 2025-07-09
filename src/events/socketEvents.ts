@@ -18,7 +18,7 @@ export const initializeSocketEvents = (io: SocketIOServer): void => {
       
       // This is just a placeholder - actual implementation would fetch job status
       // and emit it back to the client
-      socket.emit('job-status-response', { jobId, status: 'pending' });
+      socket.emit('job-status-response', { jobId, status: 'active' });
     });
   });
 

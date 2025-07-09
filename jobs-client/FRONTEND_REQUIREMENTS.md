@@ -180,7 +180,7 @@ An administrative dashboard for monitoring system activity.
 - Vibrant color scheme with blue accent colors
 - Responsive grid layouts that adapt to different screen sizes
 - Interactive animations on hover and focus states
-- Status indicators with appropriate colors (green for success, red for errors, blue for active, yellow for pending)
+- Status indicators with appropriate colors (green for completed, red for failed, blue for active, yellow for delayed, orange for paused, purple for waiting-children)
 - Progress bars for active jobs
 - Icon integration using Lucide React for consistency
 

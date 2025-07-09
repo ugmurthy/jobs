@@ -7,7 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 interface JobDetail {
   id: string;
   name: string;
-  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+  status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
   progress: number;
   createdAt: string;
   startedAt?: string;
@@ -24,21 +24,25 @@ interface JobDetail {
   worker?: string;
 }
 
-// Helper function to map API status to UI status
-const mapJobStatus = (apiStatus: string): 'pending' | 'running' | 'completed' | 'failed' | 'cancelled' => {
+// Helper function to map API status to UI status - use BullMQ statuses directly
+const mapJobStatus = (apiStatus: string): 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children' => {
   switch (apiStatus) {
     case 'waiting':
-      return 'pending';
+      return 'active'; // Map legacy 'waiting' to 'active'
     case 'active':
-      return 'running';
+      return 'active';
     case 'completed':
       return 'completed';
     case 'failed':
       return 'failed';
     case 'delayed':
-      return 'pending';
+      return 'delayed';
+    case 'paused':
+      return 'paused';
+    case 'waiting-children':
+      return 'waiting-children';
     default:
-      return 'pending';
+      return 'active';
   }
 };
 
@@ -116,8 +120,8 @@ export default function JobDetailPage() {
       });
       
       toast({
-        title: 'Job Cancelled',
-        description: 'The job has been cancelled successfully',
+        title: 'Job Canceled',
+        description: 'The job has been canceled successfully',
       });
     } catch (err: any) {
       toast({
@@ -201,14 +205,16 @@ export default function JobDetailPage() {
     switch (status) {
       case 'completed':
         return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
-      case 'running':
+      case 'active':
         return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
-      case 'pending':
+      case 'delayed':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
       case 'failed':
         return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-      case 'cancelled':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+      case 'paused':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
+      case 'waiting-children':
+        return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
@@ -218,14 +224,16 @@ export default function JobDetailPage() {
     switch (status) {
       case 'completed':
         return 'bg-green-500 dark:bg-green-600';
-      case 'running':
+      case 'active':
         return 'bg-blue-500 dark:bg-blue-600';
-      case 'pending':
+      case 'delayed':
         return 'bg-yellow-500 dark:bg-yellow-600';
       case 'failed':
         return 'bg-red-500 dark:bg-red-600';
-      case 'cancelled':
-        return 'bg-gray-500 dark:bg-gray-600';
+      case 'paused':
+        return 'bg-purple-500 dark:bg-purple-600';
+      case 'waiting-children':
+        return 'bg-indigo-500 dark:bg-indigo-600';
       default:
         return 'bg-gray-500 dark:bg-gray-600';
     }
@@ -262,11 +270,11 @@ export default function JobDetailPage() {
                   <div className="w-full h-2 mr-2 bg-gray-200 rounded-full dark:bg-gray-700">
                     <div
                       className={`h-2 rounded-full ${getProgressColor(job.status, job.progress)}`}
-                      style={{ width: `${job.progress}%` }}
+                      style={{ width: `${typeof job.progress === 'number' ? job.progress : 0}%` }}
                     ></div>
                   </div>
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {job.progress}%
+                    {typeof job.progress === 'number' ? job.progress : 0}%
                   </span>
                 </div>
               </div>
@@ -433,7 +441,7 @@ export default function JobDetailPage() {
             </div>
             
             <div className="flex mt-4 space-x-2 md:mt-0">
-              {(job.status === 'pending' || job.status === 'running') && (
+              {(job.status === 'active' || job.status === 'delayed' || job.status === 'paused') && (
                 <button
                   onClick={handleCancelJob}
                   className="px-3 py-1 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
@@ -442,7 +450,7 @@ export default function JobDetailPage() {
                 </button>
               )}
               
-              {(job.status === 'failed' || job.status === 'cancelled') && (
+              {job.status === 'failed' && (
                 <button
                   onClick={handleRetryJob}
                   className="px-3 py-1 text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
@@ -478,11 +486,11 @@ export default function JobDetailPage() {
                   <div className="flex-1 h-2 mr-2 bg-gray-200 rounded-full dark:bg-gray-700">
                     <div
                       className={`h-2 rounded-full ${getProgressColor(job.status, job.progress)}`}
-                      style={{ width: `${job.progress}%` }}
+                      style={{ width: `${typeof job.progress === 'number' ? job.progress : 0}%` }}
                     ></div>
                   </div>
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {job.progress}%
+                    {typeof job.progress === 'number' ? job.progress : 0}%
                   </span>
                 </div>
               </div>

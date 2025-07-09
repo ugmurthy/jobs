@@ -29,14 +29,22 @@
  *                       type: integer
  *                       description: Total number of jobs
  *                       example: 1250
- *                     pending:
+ *                     active:
  *                       type: integer
- *                       description: Number of pending jobs
- *                       example: 15
- *                     running:
- *                       type: integer
- *                       description: Number of running jobs
+ *                       description: Number of active jobs
  *                       example: 8
+ *                     delayed:
+ *                       type: integer
+ *                       description: Number of delayed jobs
+ *                       example: 15
+ *                     paused:
+ *                       type: integer
+ *                       description: Number of paused jobs
+ *                       example: 2
+ *                     waiting-children:
+ *                       type: integer
+ *                       description: Number of jobs waiting for children
+ *                       example: 1
  *                     completed:
  *                       type: integer
  *                       description: Number of completed jobs
@@ -66,7 +74,7 @@
  *                       status:
  *                         type: string
  *                         description: Job status
- *                         enum: [pending, running, completed, failed]
+ *                         enum: [active, delayed, completed, failed, paused, waiting-children]
  *                         example: "completed"
  *                       createdAt:
  *                         type: string

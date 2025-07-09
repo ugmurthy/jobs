@@ -273,7 +273,7 @@ export default function WebhooksPage() {
           <div className="p-3 bg-gray-100 rounded-md dark:bg-gray-700">
             <p className="font-medium">job.started</p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Triggered when a job starts running
+              Triggered when a job becomes active
             </p>
           </div>
           <div className="p-3 bg-gray-100 rounded-md dark:bg-gray-700">

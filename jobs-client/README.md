@@ -14,7 +14,7 @@ A modern, responsive web client for managing jobs and scheduled tasks.
 - **Job List View**: Browse all jobs with filtering and sorting options
 - **Job Details**: View comprehensive information about each job including status, runtime, and results
 - **Job Submission**: Submit new jobs with custom parameters and data
-- **Status Monitoring**: Real-time updates on job status (pending, running, completed, failed)
+- **Status Monitoring**: Real-time updates on job status (active, delayed, completed, failed, paused, waiting-children)
 
 ### Scheduler
 

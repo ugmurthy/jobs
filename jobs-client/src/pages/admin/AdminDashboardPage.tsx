@@ -6,10 +6,12 @@ import { useAppDispatch } from '@/app/hooks';
 interface SystemStats {
   activeWorkers: number;
   totalJobs: number;
-  pendingJobs: number;
-  runningJobs: number;
+  activeJobs: number;
+  delayedJobs: number;
   completedJobs: number;
   failedJobs: number;
+  pausedJobs: number;
+  waitingChildrenJobs: number;
   averageJobDuration: number;
   cpuUsage: number;
   memoryUsage: number;
@@ -58,10 +60,12 @@ export default function AdminDashboardPage() {
           setSystemStats({
             activeWorkers: 5,
             totalJobs: 1250,
-            pendingJobs: 15,
-            runningJobs: 8,
+            activeJobs: 8,
+            delayedJobs: 15,
             completedJobs: 1180,
             failedJobs: 47,
+            pausedJobs: 3,
+            waitingChildrenJobs: 2,
             averageJobDuration: 45.2, // seconds
             cpuUsage: 32.5, // percentage
             memoryUsage: 68.3, // percentage
@@ -263,17 +267,17 @@ export default function AdminDashboardPage() {
           <h3 className="mb-3 text-sm font-medium text-gray-500 dark:text-gray-400">
             Job Status
           </h3>
-          <div className="grid grid-cols-2 gap-2 mb-4 sm:grid-cols-4">
-            <div className="p-2 text-center bg-yellow-100 rounded-md dark:bg-yellow-900/30">
-              <p className="text-xs text-yellow-800 dark:text-yellow-300">Pending</p>
-              <p className="text-lg font-semibold text-yellow-800 dark:text-yellow-300">
-                {systemStats.pendingJobs}
+          <div className="grid grid-cols-2 gap-2 mb-4 sm:grid-cols-3 lg:grid-cols-6">
+            <div className="p-2 text-center bg-blue-100 rounded-md dark:bg-blue-900/30">
+              <p className="text-xs text-blue-800 dark:text-blue-300">Active</p>
+              <p className="text-lg font-semibold text-blue-800 dark:text-blue-300">
+                {systemStats.activeJobs}
               </p>
             </div>
-            <div className="p-2 text-center bg-blue-100 rounded-md dark:bg-blue-900/30">
-              <p className="text-xs text-blue-800 dark:text-blue-300">Running</p>
-              <p className="text-lg font-semibold text-blue-800 dark:text-blue-300">
-                {systemStats.runningJobs}
+            <div className="p-2 text-center bg-yellow-100 rounded-md dark:bg-yellow-900/30">
+              <p className="text-xs text-yellow-800 dark:text-yellow-300">Delayed</p>
+              <p className="text-lg font-semibold text-yellow-800 dark:text-yellow-300">
+                {systemStats.delayedJobs}
               </p>
             </div>
             <div className="p-2 text-center bg-green-100 rounded-md dark:bg-green-900/30">
@@ -286,6 +290,18 @@ export default function AdminDashboardPage() {
               <p className="text-xs text-red-800 dark:text-red-300">Failed</p>
               <p className="text-lg font-semibold text-red-800 dark:text-red-300">
                 {systemStats.failedJobs}
+              </p>
+            </div>
+            <div className="p-2 text-center bg-orange-100 rounded-md dark:bg-orange-900/30">
+              <p className="text-xs text-orange-800 dark:text-orange-300">Paused</p>
+              <p className="text-lg font-semibold text-orange-800 dark:text-orange-300">
+                {systemStats.pausedJobs}
+              </p>
+            </div>
+            <div className="p-2 text-center bg-purple-100 rounded-md dark:bg-purple-900/30">
+              <p className="text-xs text-purple-800 dark:text-purple-300">Waiting Children</p>
+              <p className="text-lg font-semibold text-purple-800 dark:text-purple-300">
+                {systemStats.waitingChildrenJobs}
               </p>
             </div>
           </div>

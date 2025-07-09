@@ -24,7 +24,7 @@
  *               date: "2025-06-28"
  *         status:
  *           type: string
- *           enum: [waiting, active, completed, failed, delayed]
+ *           enum: [active, delayed, completed, failed, paused, waiting-children]
  *           description: Current job status
  *           example: "active"
  *         progress:
@@ -73,7 +73,7 @@
  *           example: "dataExport"
  *         status:
  *           type: string
- *           enum: [waiting, active, completed, failed, delayed]
+ *           enum: [active, delayed, completed, failed, paused, waiting-children]
  *           description: Current job status
  *           example: "active"
  *         progress:

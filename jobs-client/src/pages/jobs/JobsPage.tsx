@@ -14,15 +14,17 @@ import {
 } from '@/features/jobs/jobsSlice';
 import { useToast } from '@/components/ui/use-toast';
 
-// This interface represents the UI job model (different from API model in jobsSlice.ts)
+// This interface represents the UI job model (aligned with BullMQ statuses)
 interface UIJob {
   id: string;
   name: string;
-  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+  status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
   progress: number;
-  createdAt: string;
-  startedAt?: string;
-  completedAt?: string;
+  timestamp: {
+    created: number;
+    started?: number;
+    finished?: number;
+  };
   duration?: number;
   result?: any;
   error?: string;
@@ -44,6 +46,9 @@ export default function JobsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [totalJobs, setTotalJobs] = useState(0);
+  
+  // Subscribe to the jobs state in Redux to get real-time updates
+  const reduxJobs = useAppSelector((state) => state.jobs.jobs);
   const [filter, setFilter] = useState<JobsFilter>({
     status: 'all',
     search: '',
@@ -53,6 +58,64 @@ export default function JobsPage() {
     sortOrder: 'desc',
   });
   
+  // Helper function to map API job to UI job
+  const mapApiJobToUiJob = (apiJob: any): UIJob => {
+    // Map API state to UI status - use BullMQ statuses directly
+    let uiStatus: UIJob['status'] = 'active';
+    // Check if state exists, otherwise fall back to status for backward compatibility
+    // Using type assertion since 'state' might not be in the interface but exists in the API response
+    const apiState = (apiJob as any).state || apiJob.status;
+    
+    // Handle legacy status names and map to BullMQ statuses
+    switch (apiState) {
+      case 'waiting':
+        uiStatus = 'active'; // Map legacy 'waiting' to 'active'
+        break;
+      case 'active':
+        uiStatus = 'active';
+        break;
+      case 'completed':
+        uiStatus = 'completed';
+        break;
+      case 'failed':
+        uiStatus = 'failed';
+        break;
+      case 'delayed':
+        uiStatus = 'delayed';
+        break;
+      case 'paused':
+        uiStatus = 'paused';
+        break;
+      case 'waiting-children':
+        uiStatus = 'waiting-children';
+        break;
+      default:
+        uiStatus = 'active';
+    }
+    
+    // Calculate duration for completed jobs using timestamp.finished - timestamp.started
+    let duration = undefined;
+    if (apiJob.timestamp && apiJob.timestamp.finished && apiJob.timestamp.started && apiState === 'completed') {
+      duration = Math.floor((apiJob.timestamp.finished - apiJob.timestamp.started) / 1000); // Convert ms to seconds
+    }
+    
+    return {
+      id: apiJob.id,
+      name: apiJob.name,
+      status: uiStatus,
+      progress: apiJob.progress || 0,
+      timestamp: {
+        created: apiJob.timestamp?.created,
+        started: apiJob.timestamp?.started,
+        finished: apiJob.timestamp?.finished
+      },
+      duration,
+      result: apiJob.result,
+      error: apiJob.error || apiJob.failedReason || undefined
+    };
+  };
+
+  // Effect to fetch jobs when filter changes
   useEffect(() => {
     const fetchJobsList = async () => {
       setIsLoading(true);
@@ -70,58 +133,7 @@ export default function JobsPage() {
         const result = await dispatch(fetchJobs()).unwrap();
         
         // Map API response to component state
-        const mappedJobs = result.jobs.map(apiJob => {
-          // Calculate duration if completedAt exists (assuming processingTime is in ms)
-          let duration = undefined;
-          if (apiJob.processingTime) {
-            duration = Math.floor(apiJob.processingTime / 1000); // Convert ms to seconds
-          }
-          
-          // Map API state to UI status
-          let uiStatus: UIJob['status'] = 'pending';
-          // Check if state exists, otherwise fall back to status for backward compatibility
-          // Using type assertion since 'state' might not be in the interface but exists in the API response
-          const apiState = (apiJob as any).state || apiJob.status;
-          
-          switch (apiState) {
-            case 'waiting':
-              uiStatus = 'pending';
-              break;
-            case 'active':
-              uiStatus = 'running';
-              break;
-            case 'completed':
-              uiStatus = 'completed';
-              break;
-            case 'failed':
-              uiStatus = 'failed';
-              break;
-            case 'delayed':
-              uiStatus = 'pending';
-              break;
-            default:
-              uiStatus = 'pending';
-          }
-          
-          // Determine startedAt (not directly available in API model)
-          // If job is active or completed, we can assume it started at updatedAt
-          const startedAt = apiState === 'active' || apiState === 'completed' || apiState === 'failed'
-            ? apiJob.updatedAt
-            : undefined;
-          
-          return {
-            id: apiJob.id,
-            name: apiJob.name,
-            status: uiStatus,
-            progress: apiJob.progress || 0,
-            createdAt: apiJob.createdAt,
-            startedAt: startedAt,
-            completedAt: apiJob.completedAt || undefined,
-            duration,
-            result: apiJob.result,
-            error: apiJob.error || apiJob.failedReason || undefined
-          };
-        });
+        const mappedJobs = result.jobs.map(mapApiJobToUiJob);
         
         setJobs(mappedJobs);
         setTotalJobs(result.pagination.totalItems);
@@ -135,6 +147,97 @@ export default function JobsPage() {
     fetchJobsList();
   }, [dispatch, filter]);
   
+  // Effect to update UI jobs when Redux jobs state changes (for real-time updates)
+  useEffect(() => {
+    if (reduxJobs.length > 0 && jobs.length > 0) {
+      // Create a map of existing UI jobs for quick lookup
+      const jobsMap = new Map(jobs.map(job => [job.id, job]));
+      
+      // Check if any Redux jobs have updated progress or status
+      let hasUpdates = false;
+      
+      // Create updated jobs array
+      const updatedJobs = jobs.map(uiJob => {
+        // Find corresponding Redux job
+        const reduxJob = reduxJobs.find(j => j.id === uiJob.id);
+        
+        // If Redux job exists, check for updates
+        if (reduxJob) {
+          // Handle progress which could be a number or an object
+          let progressValue = 0;
+          if (typeof reduxJob.progress === 'number') {
+            progressValue = reduxJob.progress;
+          }
+          
+          // Map API state to UI status - use BullMQ statuses directly
+          let uiStatus: UIJob['status'] = 'active';
+          // Check if state exists, otherwise fall back to status for backward compatibility
+          const apiState = (reduxJob as any).state || reduxJob.status;
+          
+          // Special case: If progress is 100%, ensure status is completed
+          if (progressValue === 100 && apiState === 'active') {
+            console.log(`Job ${reduxJob.id} has 100% progress but status is still active, forcing to completed`);
+            uiStatus = 'completed';
+          } else {
+            // Handle legacy status names and map to BullMQ statuses
+            switch (apiState) {
+              case 'waiting':
+                uiStatus = 'active'; // Map legacy 'waiting' to 'active'
+                break;
+              case 'active':
+                uiStatus = 'active';
+                break;
+              case 'completed':
+                uiStatus = 'completed';
+                break;
+              case 'failed':
+                uiStatus = 'failed';
+                break;
+              case 'delayed':
+                uiStatus = 'delayed';
+                break;
+              case 'paused':
+                uiStatus = 'paused';
+                break;
+              case 'waiting-children':
+                uiStatus = 'waiting-children';
+                break;
+              default:
+                uiStatus = 'active';
+            }
+          }
+          
+          // Log status changes for debugging
+          if (uiStatus !== uiJob.status) {
+            console.log(`Job ${reduxJob.id} status changed: ${uiJob.status} -> ${uiStatus}`);
+            console.log(`Job details:`, {
+              apiState,
+              progress: progressValue,
+              reduxStatus: reduxJob.status
+            });
+          }
+          
+          // Check if either progress or status has changed
+          if (progressValue !== uiJob.progress || uiStatus !== uiJob.status) {
+            hasUpdates = true;
+            return {
+              ...uiJob,
+              progress: progressValue,
+              status: uiStatus
+            };
+          }
+        }
+        
+        return uiJob;
+      });
+      
+      // Only update state if there were actual changes
+      if (hasUpdates) {
+        setJobs(updatedJobs);
+      }
+    }
+  }, [reduxJobs, jobs]);
+  
   const handleFilterChange = (key: keyof JobsFilter, value: any) => {
     setFilter({ ...filter, [key]: value, page: key === 'page' ? value : 1 });
   };
@@ -145,8 +248,8 @@ export default function JobsPage() {
       await dispatch(cancelJob(jobId)).unwrap();
       
       toast({
-        title: 'Job Cancelled',
-        description: 'The job has been cancelled successfully',
+        title: 'Job Canceled',
+        description: 'The job has been canceled successfully',
       });
     } catch (err: any) {
       toast({
@@ -175,9 +278,9 @@ export default function JobsPage() {
     }
   };
   
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
+  const formatDate = (timestamp?: number) => {
+    if (!timestamp) return '-';
+    const date = new Date(timestamp);
     return date.toLocaleString();
   };
   
@@ -200,14 +303,16 @@ export default function JobsPage() {
     switch (status) {
       case 'completed':
         return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
-      case 'running':
+      case 'active':
         return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
-      case 'pending':
+      case 'delayed':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
       case 'failed':
         return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-      case 'cancelled':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+      case 'paused':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
+      case 'waiting-children':
+        return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
@@ -217,14 +322,16 @@ export default function JobsPage() {
     switch (status) {
       case 'completed':
         return 'bg-green-500 dark:bg-green-600';
-      case 'running':
+      case 'active':
         return 'bg-blue-500 dark:bg-blue-600';
-      case 'pending':
+      case 'delayed':
         return 'bg-yellow-500 dark:bg-yellow-600';
       case 'failed':
         return 'bg-red-500 dark:bg-red-600';
-      case 'cancelled':
-        return 'bg-gray-500 dark:bg-gray-600';
+      case 'paused':
+        return 'bg-purple-500 dark:bg-purple-600';
+      case 'waiting-children':
+        return 'bg-indigo-500 dark:bg-indigo-600';
       default:
         return 'bg-gray-500 dark:bg-gray-600';
     }
@@ -264,11 +371,12 @@ export default function JobsPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             >
               <option value="all">All</option>
-              <option value="pending">Pending</option>
-              <option value="running">Running</option>
-              <option value="completed">Completed</option>
-              <option value="failed">Failed</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="active">active</option>
+              <option value="delayed">delayed</option>
+              <option value="completed">completed</option>
+              <option value="failed">failed</option>
+              <option value="paused">paused</option>
+              <option value="waiting-children">waiting-children</option>
             </select>
           </div>
           
@@ -282,7 +390,7 @@ export default function JobsPage() {
               onChange={(e) => handleFilterChange('sortBy', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             >
-              <option value="createdAt">Created Date</option>
+              <option value="timestamp.created">Created Date</option>
               <option value="name">Name</option>
               <option value="status">Status</option>
               <option value="duration">Duration</option>
@@ -379,16 +487,16 @@ export default function JobsPage() {
                             <div className="w-full h-2 mr-2 bg-gray-200 rounded-full dark:bg-gray-700">
                               <div
                                 className={`h-2 rounded-full ${getProgressColor(job.status, job.progress)}`}
-                                style={{ width: `${job.progress}%` }}
+                                style={{ width: `${typeof job.progress === 'number' ? job.progress : 0}%` }}
                               ></div>
                             </div>
                             <span className="text-xs text-gray-500 dark:text-gray-400">
-                              {job.progress}%
+                              {typeof job.progress === 'number' ? job.progress : 0}%
                             </span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                          {formatDate(job.createdAt)}
+                          {formatDate(job.timestamp.created)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                           {formatDuration(job.duration)}
@@ -402,7 +510,7 @@ export default function JobsPage() {
                               View
                             </Link>
                             
-                            {job.status === 'pending' || job.status === 'running' ? (
+                            {job.status === 'active' || job.status === 'delayed' || job.status === 'paused' ? (
                               <button
                                 onClick={() => handleCancelJob(job.id)}
                                 className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
@@ -411,7 +519,7 @@ export default function JobsPage() {
                               </button>
                             ) : null}
                             
-                            {job.status === 'failed' || job.status === 'cancelled' ? (
+                            {job.status === 'failed' ? (
                               <button
                                 onClick={() => handleRetryJob(job.id)}
                                 className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"

@@ -455,9 +455,11 @@ sequenceDiagram
 - **Animations**: Subtle transitions for state changes
 - **Status Indicators**:
   - Green for success/completed
-  - Blue for active/in-progress
-  - Yellow for pending/waiting
-  - Red for failed/error
+  - Blue for active
+  - Yellow for delayed
+  - Orange for paused
+  - Purple for waiting-children
+  - Red for failed
 
 ### Responsive Design Strategy
 - Mobile-first approach with progressive enhancement

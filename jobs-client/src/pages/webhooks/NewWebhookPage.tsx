@@ -9,7 +9,7 @@ import { useValidatedForm, getFieldError, hasFieldError } from '@/lib/form-valid
 // Available webhook events
 const AVAILABLE_EVENTS = [
   { id: 'job.created', name: 'Job Created', description: 'Triggered when a new job is created' },
-  { id: 'job.started', name: 'Job Started', description: 'Triggered when a job starts running' },
+  { id: 'job.started', name: 'Job Started', description: 'Triggered when a job becomes active' },
   { id: 'job.completed', name: 'Job Completed', description: 'Triggered when a job completes successfully' },
   { id: 'job.failed', name: 'Job Failed', description: 'Triggered when a job fails' },
   { id: 'job.progress', name: 'Job Progress', description: 'Triggered when a job reports progress' },

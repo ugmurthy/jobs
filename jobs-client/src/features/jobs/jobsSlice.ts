@@ -6,7 +6,7 @@ export interface Job {
   id: string;
   name: string;
   data: Record<string, any>;
-  status: 'waiting' | 'active' | 'completed' | 'failed' | 'delayed';
+  status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
   progress: number;
   result: any;
   error: any;
@@ -311,13 +311,33 @@ export const jobsSlice = createSlice({
       
       // Handle job progress updates
       if (event.type === 'job:progress' && event.payload) {
-        const { jobId, progress } = event.payload;
-        const job = state.jobs.find(job => job.id === jobId);
-        if (job) {
-          job.progress = progress;
+        // Extract jobId and progress from payload, handling different possible structures
+        const jobId = event.payload.jobId || event.payload.id;
+        
+        // Handle progress which could be an object or an integer
+        let progressValue = 0;
+        if (event.payload.progress !== undefined) {
+          // If progress is a number, use it directly
+          if (typeof event.payload.progress === 'number') {
+            progressValue = event.payload.progress;
+          }
+          // If progress is an object, default to 0
+          else if (typeof event.payload.progress === 'object') {
+            progressValue = 0;
+          }
         }
-        if (state.selectedJob && state.selectedJob.id === jobId) {
-          state.selectedJob.progress = progress;
+        
+        if (jobId) {
+          // Update job in the jobs list
+          const job = state.jobs.find(job => job.id === jobId);
+          if (job) {
+            job.progress = progressValue;
+          }
+          
+          // Update selected job if it matches
+          if (state.selectedJob && state.selectedJob.id === jobId) {
+            state.selectedJob.progress = progressValue;
+          }
         }
       }
       
