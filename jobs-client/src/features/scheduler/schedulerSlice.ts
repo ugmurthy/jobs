@@ -2,23 +2,21 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { api } from '@/lib/api';
 
 export interface ScheduledJob {
-  id: string;
+  key: string;
   name: string;
-  data: Record<string, any>;
-  options?: {
-    removeOnComplete?: { count: number };
-    removeOnFail?: { count: number };
-  };
-  nextRun?: string | null;
-  schedule?: {
-    cron?: string;
-    repeat?: {
-      every: number;
-      limit?: number;
+  next: number;
+  iterationCount: number;
+  limit?: number;
+  endDate?: number;
+  tz?: string;
+  pattern?: string;
+  every?: string;
+  template?: {
+    data: Record<string, any>;
+    opts?: {
+      removeOnFail?: { count: number };
+      removeOnComplete?: { count: number };
     };
-    startDate?: string;
-    endDate?: string;
-    tz?: string;
   };
 }
 
@@ -101,15 +99,30 @@ export const fetchScheduledJobs = createAsyncThunk(
         }
       }
       
-      // Ensure each job has the required properties
-      scheduledJobs = scheduledJobs.map(job => ({
-        id: job.id || '',
-        name: job.name || '',
-        data: job.data || {},
-        options: job.options || {},
-        nextRun: job.nextRun || null,
-        schedule: job.schedule || {}
-      }));
+      // Ensure each job has the required properties based on the new structure
+      scheduledJobs = scheduledJobs.map(job => {
+        // Use type assertion to handle both old and new API formats
+        const oldJob = job as any;
+        
+        return {
+          key: job.key || oldJob.id || '',
+          name: job.name || '',
+          next: job.next || oldJob.nextRun || 0,
+          iterationCount: job.iterationCount || 0,
+          limit: job.limit,
+          endDate: job.endDate || (oldJob.schedule?.endDate ? new Date(oldJob.schedule.endDate).getTime() : undefined),
+          tz: job.tz || oldJob.schedule?.tz,
+          pattern: job.pattern || oldJob.schedule?.cron,
+          every: job.every || (oldJob.schedule?.repeat?.every ? oldJob.schedule.repeat.every.toString() : undefined),
+          template: {
+            data: job.template?.data || oldJob.data || {},
+            opts: job.template?.opts || {
+              removeOnFail: oldJob.options?.removeOnFail,
+              removeOnComplete: oldJob.options?.removeOnComplete
+            }
+          }
+        };
+      });
       
       console.log('Processed scheduledJobs:', scheduledJobs);
       
@@ -249,11 +262,17 @@ export const updateScheduledJob = createAsyncThunk(
       await api.delete(`/jobs/schedule/${id}`);
       
       // Create a new job with updated details
+      // Use type assertion to access properties from the old structure
+      const oldJob = currentJob as any;
       const newJobData = {
         name: name || currentJob.name,
-        data: data || currentJob.data,
-        schedule: schedule || currentJob.schedule,
-        options: options || currentJob.options,
+        data: data || oldJob.data || (currentJob.template?.data || {}),
+        schedule: schedule || {
+          cron: currentJob.pattern,
+          endDate: currentJob.endDate ? new Date(currentJob.endDate).toISOString() : undefined,
+          tz: currentJob.tz
+        },
+        options: options || (oldJob.options || currentJob.template?.opts || {})
       };
       
       const response = await api.post<{ schedulerId: string } | any>('/jobs/schedule', newJobData);
@@ -365,9 +384,10 @@ export const runScheduledJobNow = createAsyncThunk(
       const scheduledJob = await api.get<ScheduledJob>(`/jobs/schedule/${schedulerId}`);
       
       // Submit it as a regular job
+      // Use type assertion to access data from template
       const response = await api.post('/jobs/submit', {
         name: scheduledJob.name,
-        data: scheduledJob.data
+        data: scheduledJob.template?.data || {}
       });
       
       return response;
@@ -411,14 +431,14 @@ export const schedulerSlice = createSlice({
       };
       state.pagination.page = 1; // Reset to first page when clearing filters
     },
-    updateNextRun: (state: SchedulerState, action: PayloadAction<{ id: string; nextRun: string }>) => {
-      const { id, nextRun } = action.payload;
-      const job = state.scheduledJobs.find(job => job.id === id);
+    updateNextRun: (state: SchedulerState, action: PayloadAction<{ id: string; next: number }>) => {
+      const { id, next } = action.payload;
+      const job = state.scheduledJobs.find(job => job.key === id);
       if (job) {
-        job.nextRun = nextRun;
+        job.next = next;
       }
-      if (state.selectedScheduledJob && state.selectedScheduledJob.id === id) {
-        state.selectedScheduledJob.nextRun = nextRun;
+      if (state.selectedScheduledJob && state.selectedScheduledJob.key === id) {
+        state.selectedScheduledJob.next = next;
       }
     },
     // Remove updateLastRun since lastRun is no longer in the ScheduledJob interface
@@ -483,11 +503,11 @@ export const schedulerSlice = createSlice({
       })
       .addCase(updateScheduledJob.fulfilled, (state, action: PayloadAction<ScheduledJob>) => {
         state.isLoading = false;
-        const index = state.scheduledJobs.findIndex(job => job.id === action.payload.id);
+        const index = state.scheduledJobs.findIndex(job => job.key === action.payload.key);
         if (index !== -1) {
           state.scheduledJobs[index] = action.payload;
         }
-        if (state.selectedScheduledJob && state.selectedScheduledJob.id === action.payload.id) {
+        if (state.selectedScheduledJob && state.selectedScheduledJob.key === action.payload.key) {
           state.selectedScheduledJob = action.payload;
         }
       })
@@ -503,11 +523,11 @@ export const schedulerSlice = createSlice({
       })
       .addCase(toggleScheduledJob.fulfilled, (state, action: PayloadAction<ScheduledJob>) => {
         state.isLoading = false;
-        const index = state.scheduledJobs.findIndex(job => job.id === action.payload.id);
+        const index = state.scheduledJobs.findIndex(job => job.key === action.payload.key);
         if (index !== -1) {
           state.scheduledJobs[index] = action.payload;
         }
-        if (state.selectedScheduledJob && state.selectedScheduledJob.id === action.payload.id) {
+        if (state.selectedScheduledJob && state.selectedScheduledJob.key === action.payload.key) {
           state.selectedScheduledJob = action.payload;
         }
       })
@@ -523,8 +543,8 @@ export const schedulerSlice = createSlice({
       })
       .addCase(deleteScheduledJob.fulfilled, (state, action: PayloadAction<string>) => {
         state.isLoading = false;
-        state.scheduledJobs = state.scheduledJobs.filter(job => job.id !== action.payload);
-        if (state.selectedScheduledJob && state.selectedScheduledJob.id === action.payload) {
+        state.scheduledJobs = state.scheduledJobs.filter(job => job.key !== action.payload);
+        if (state.selectedScheduledJob && state.selectedScheduledJob.key === action.payload) {
           state.selectedScheduledJob = null;
         }
         state.pagination.totalItems -= 1;

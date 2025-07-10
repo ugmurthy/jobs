@@ -2834,3 +2834,494 @@
 {"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 15:50:13"}
 {"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 15:50:13"}
 {"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-09 15:50:43"}
+{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Job events initialized","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Socket events initialized","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Initializing workers...","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"All workers initialized","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-09 15:54:04"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"Filtered 20 schedulers for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"/jobs/schedule : Found 20 jobs scheduled for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"Filtered 20 schedulers for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"/jobs/schedule : Found 20 jobs scheduled for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"Filtered 20 schedulers for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"/jobs/schedule : Found 20 jobs scheduled for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"Filtered 20 schedulers for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"info","message":"/jobs/schedule : Found 20 jobs scheduled for user 1","timestamp":"2025-07-09 15:54:06"}
+{"level":"error","message":"Error 400: Expected ',' or '}' after property value in JSON at position 164 (line 12 column 5)","timestamp":"2025-07-09 15:55:24"}
+{"level":"info","message":"schedulerService : Scheduling job: (myCustomJob) for user (1)","timestamp":"2025-07-09 15:55:38"}
+{"level":"info","message":"Job scheduled: 1-myCustomJob-1752101738632","timestamp":"2025-07-09 15:55:38"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"Filtered 21 schedulers for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"/jobs/schedule : Found 21 jobs scheduled for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"Filtered 21 schedulers for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"/jobs/schedule : Found 21 jobs scheduled for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"Filtered 21 schedulers for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"/jobs/schedule : Found 21 jobs scheduled for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"Filtered 21 schedulers for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"/jobs/schedule : Found 21 jobs scheduled for user 1","timestamp":"2025-07-09 15:55:44"}
+{"level":"info","message":"schedulerService : Scheduling job: (welcomeMessage) for user (1)","timestamp":"2025-07-09 15:59:15"}
+{"level":"info","message":"Job scheduled: 1-welcomeMessage-1752101955098","timestamp":"2025-07-09 15:59:15"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 15:59:25"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 15:59:26"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752102000000 (dataExport)","timestamp":"2025-07-09 16:00:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752102000000 added to jobQueue as job 444","timestamp":"2025-07-09 16:00:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752102000000 completed with result: {\"success\":true,\"jobId\":\"444\"}","timestamp":"2025-07-09 16:00:00"}
+{"level":"info","message":"Job 444 progress: 50%","timestamp":"2025-07-09 16:00:05"}
+{"level":"info","message":"WORKER: webhooks 12460/progress active for 1/444/dataExport","timestamp":"2025-07-09 16:00:05"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 444","timestamp":"2025-07-09 16:00:05"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-09 16:00:05"}
+{"level":"info","message":"WORKER : 12460 : progress : completed!","timestamp":"2025-07-09 16:00:05"}
+{"level":"info","message":"Job 444 progress: 70%","timestamp":"2025-07-09 16:00:07"}
+{"level":"info","message":"WORKER: webhooks 12461/progress active for 1/444/dataExport","timestamp":"2025-07-09 16:00:07"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 444","timestamp":"2025-07-09 16:00:07"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-09 16:00:07"}
+{"level":"info","message":"WORKER : 12461 : progress : completed!","timestamp":"2025-07-09 16:00:07"}
+{"level":"info","message":"Job 444 progress: 100%","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"Job 444 completed with result: [object Object]","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"WORKER: webhooks 12462/progress active for 1/444/dataExport","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 444","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"No webhooks configured for user 1 and event progress","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"WORKER : 12462 : progress : completed!","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"WORKER: webhooks 12463/completed active for 1/444/dataExport","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"sendWebhookNotification : Sending webhook notification for job 444","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"Sending (completed) webhook to (http://localhost:4000/webhook) for job (444)","timestamp":"2025-07-09 16:00:10"}
+{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-09 16:00:10"}
+{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"WORKER : 12463 : completed : completed!","timestamp":"2025-07-09 16:00:10"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:03:35"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:03:35"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:03:49"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:03:49"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:03:49"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:03:49"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:03:49"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:03:49"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:03:49"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:03:49"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752102600000 (dataExport)","timestamp":"2025-07-09 16:10:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752102600000 added to jobQueue as job 445","timestamp":"2025-07-09 16:10:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752102600000 completed with result: {\"success\":true,\"jobId\":\"445\"}","timestamp":"2025-07-09 16:10:00"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752103200000 (dataExport)","timestamp":"2025-07-09 16:20:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752103200000 added to jobQueue as job 446","timestamp":"2025-07-09 16:20:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752103200000 completed with result: {\"success\":true,\"jobId\":\"446\"}","timestamp":"2025-07-09 16:20:00"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:20:33"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:20:33"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:20:33"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:20:33"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:20:33"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:20:33"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:20:34"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:21:08"}
+{"level":"info","message":"Processing scheduled job: repeat:1-welcomeMessage-1751933717381:1752103320000 (welcomeMessage)","timestamp":"2025-07-09 16:22:00"}
+{"level":"info","message":"Scheduled job repeat:1-welcomeMessage-1751933717381:1752103320000 added to jobQueue as job 447","timestamp":"2025-07-09 16:22:00"}
+{"level":"info","message":"Scheduled job repeat:1-welcomeMessage-1751933717381:1752103320000 completed with result: {\"success\":true,\"jobId\":\"447\"}","timestamp":"2025-07-09 16:22:00"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:22:21"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:22:21"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:22:21"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:22:21"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:22:53"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:23:17"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:18"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:29"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:23:40"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:01"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:14"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:24:24"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:24:25"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:27:47"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:27:47"}
+{"level":"info","message":"Fetching dashboard stats for user 1","timestamp":"2025-07-09 16:27:53"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:27:53"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:27:53"}
+{"level":"info","message":"Fetching dashboard stats for user 1","timestamp":"2025-07-09 16:27:53"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:27:53"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:27:53"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:12"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:13"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:18"}
+{"level":"info","message":"Fetching dashboard stats for user 1","timestamp":"2025-07-09 16:28:21"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:28:21"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:28:21"}
+{"level":"info","message":"Fetching dashboard stats for user 1","timestamp":"2025-07-09 16:28:21"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:28:21"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:28:21"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:40"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:40"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:28:46"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:28:46"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:28:46"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:28:46"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:28:46"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:28:46"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:28:46"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:28:46"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:51"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:51"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:28:55"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:28:55"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:28:55"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:28:55"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:28:55"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:28:55"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:28:55"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:28:55"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:57"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:28:57"}
+{"level":"info","message":"Fetching dashboard stats for user 1","timestamp":"2025-07-09 16:28:58"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:28:58"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:28:58"}
+{"level":"info","message":"Fetching dashboard stats for user 1","timestamp":"2025-07-09 16:28:58"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:28:58"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:28:58"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:29:06"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:29:06"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:29:07"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:29:07"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:29:07"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:29:07"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:29:07"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:29:07"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:29:07"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:29:07"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752103800000 (dataExport)","timestamp":"2025-07-09 16:30:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752103800000 added to jobQueue as job 448","timestamp":"2025-07-09 16:30:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752103800000 completed with result: {\"success\":true,\"jobId\":\"448\"}","timestamp":"2025-07-09 16:30:00"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:31:44"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:31:44"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:31:44"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:31:44"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:31:55"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:31:56"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:31:56"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:31:56"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:31:56"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:32:44"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:32:44"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:32:44"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:32:44"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:36:19"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:36:19"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:36:19"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:36:19"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:37:03"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:37:03"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:37:15"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:37:15"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:37:15"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:37:15"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:37:15"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:37:15"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:37:15"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:37:15"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:39:18"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:39:18"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:39:27"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:39:27"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:39:27"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:39:27"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:39:27"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:39:27"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:39:52"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:39:52"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:39:52"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:39:52"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:39:52"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:39:52"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:39:52"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:39:52"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752104400000 (dataExport)","timestamp":"2025-07-09 16:40:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752104400000 added to jobQueue as job 449","timestamp":"2025-07-09 16:40:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752104400000 completed with result: {\"success\":true,\"jobId\":\"449\"}","timestamp":"2025-07-09 16:40:00"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:40:06"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:40:12"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:40:12"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:45:27"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:47:15"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:48:04"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:48:04"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:48:09"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:48:10"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:49:14"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:49:43"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:49:43"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:49:43"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:49:43"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:49:43"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:49:43"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752105000000 (dataExport)","timestamp":"2025-07-09 16:50:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752105000000 added to jobQueue as job 450","timestamp":"2025-07-09 16:50:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752105000000 completed with result: {\"success\":true,\"jobId\":\"450\"}","timestamp":"2025-07-09 16:50:00"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:52:01"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:52:01"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:52:01"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:52:01"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 16:52:01"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 16:52:01"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 16:52:01"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 16:52:01"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:52:26"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 16:52:26"}
+{"level":"info","message":"User 1 disconnected","timestamp":"2025-07-09 16:53:05"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 16:53:05"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752105600000 (dataExport)","timestamp":"2025-07-09 17:00:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752105600000 added to jobQueue as job 451","timestamp":"2025-07-09 17:00:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752105600000 completed with result: {\"success\":true,\"jobId\":\"451\"}","timestamp":"2025-07-09 17:00:00"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752106200000 (dataExport)","timestamp":"2025-07-09 17:17:53"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752106200000 added to jobQueue as job 452","timestamp":"2025-07-09 17:17:53"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752106200000 completed with result: {\"success\":true,\"jobId\":\"452\"}","timestamp":"2025-07-09 17:17:53"}
+{"level":"info","message":"Fetching dashboard stats for user 1","timestamp":"2025-07-09 17:18:00"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:18:00"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:18:00"}
+{"level":"info","message":"Fetching dashboard stats for user 1","timestamp":"2025-07-09 17:18:00"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:18:00"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:18:00"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:18:19"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:18:19"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:18:24"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:18:24"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:18:24"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:18:24"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:18:24"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:18:24"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:18:24"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:18:24"}
+{"level":"info","message":"Processing scheduled job: repeat:1-dataExport-1752099646542:1752106800000 (dataExport)","timestamp":"2025-07-09 17:20:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752106800000 added to jobQueue as job 453","timestamp":"2025-07-09 17:20:00"}
+{"level":"info","message":"Scheduled job repeat:1-dataExport-1752099646542:1752106800000 completed with result: {\"success\":true,\"jobId\":\"453\"}","timestamp":"2025-07-09 17:20:00"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:20:08"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:20:08"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:20:17"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:20:17"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:20:17"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:20:17"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:20:17"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:20:17"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:20:17"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:20:17"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:21:37"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:21:37"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:21:37"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:21:37"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-09 17:22:19"}

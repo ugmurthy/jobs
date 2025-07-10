@@ -64,3 +64,6 @@
 {"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-09 14:57:32"}
 {"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-09 14:57:32"}
 {"level":"error","message":"Error 400: Expected double-quoted property name in JSON at position 166 (line 11 column 3)","timestamp":"2025-07-09 15:20:33"}
+{"level":"error","message":"Error 400: Expected ',' or '}' after property value in JSON at position 164 (line 12 column 5)","timestamp":"2025-07-09 15:55:24"}
+{"level":"error","message":"Error 404: Not Found - /webhook","timestamp":"2025-07-09 16:00:10"}
+{"level":"error","message":"Failed to send webhook to http://localhost:4000/webhook: HTTPError: Response code 404 (Not Found)","timestamp":"2025-07-09 16:00:10"}

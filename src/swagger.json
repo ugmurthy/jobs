@@ -258,11 +258,12 @@
           "status": {
             "type": "string",
             "enum": [
-              "waiting",
               "active",
+              "delayed",
               "completed",
               "failed",
-              "delayed"
+              "paused",
+              "waiting-children"
             ],
             "description": "Current job status",
             "example": "active"
@@ -327,11 +328,12 @@
           "status": {
             "type": "string",
             "enum": [
-              "waiting",
               "active",
+              "delayed",
               "completed",
               "failed",
-              "delayed"
+              "paused",
+              "waiting-children"
             ],
             "description": "Current job status",
             "example": "active"
@@ -1319,15 +1321,25 @@
                           "description": "Total number of jobs",
                           "example": 1250
                         },
-                        "pending": {
+                        "active": {
                           "type": "integer",
-                          "description": "Number of pending jobs",
+                          "description": "Number of active jobs",
+                          "example": 8
+                        },
+                        "delayed": {
+                          "type": "integer",
+                          "description": "Number of delayed jobs",
                           "example": 15
                         },
-                        "running": {
+                        "paused": {
                           "type": "integer",
-                          "description": "Number of running jobs",
-                          "example": 8
+                          "description": "Number of paused jobs",
+                          "example": 2
+                        },
+                        "waiting-children": {
+                          "type": "integer",
+                          "description": "Number of jobs waiting for children",
+                          "example": 1
                         },
                         "completed": {
                           "type": "integer",
@@ -1366,10 +1378,12 @@
                             "type": "string",
                             "description": "Job status",
                             "enum": [
-                              "pending",
-                              "running",
+                              "active",
+                              "delayed",
                               "completed",
-                              "failed"
+                              "failed",
+                              "paused",
+                              "waiting-children"
                             ],
                             "example": "completed"
                           },
@@ -1678,11 +1692,12 @@
             "schema": {
               "type": "string",
               "enum": [
-                "waiting",
                 "active",
+                "delayed",
                 "completed",
                 "failed",
-                "delayed"
+                "paused",
+                "waiting-children"
               ]
             },
             "description": "Filter jobs by status"

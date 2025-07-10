@@ -14,7 +14,7 @@ export const initializeSocketEvents = (io) => {
             logger.info(`User ${userId} requested status for job ${jobId}`);
             // This is just a placeholder - actual implementation would fetch job status
             // and emit it back to the client
-            socket.emit('job-status-response', { jobId, status: 'pending' });
+            socket.emit('job-status-response', { jobId, status: 'active' });
         });
     });
     logger.info('Socket events initialized');

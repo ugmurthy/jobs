@@ -5,6 +5,7 @@ import {
   fetchScheduledJobs,
   toggleScheduledJob,
   runScheduledJobNow,
+  deleteScheduledJob,
   ScheduledJob
 } from '@/features/scheduler/schedulerSlice';
 
@@ -17,47 +18,55 @@ export default function SchedulerPage() {
     dispatch(fetchScheduledJobs());
   }, [dispatch]);
 
-  const formatDate = (dateString?: string | null) => {
-    if (!dateString) return 'Never';
-    const date = new Date(dateString);
-    return date.toLocaleString();
-  };
-
-  const handleToggleSchedule = (id: string, currentStatus: boolean) => {
-    dispatch(toggleScheduledJob({ id, enabled: !currentStatus }));
-  };
-
-  const handleRunNow = (id: string) => {
-    dispatch(runScheduledJobNow(id));
-  };
-
-  const handleEdit = (id: string) => {
-    navigate(`/scheduler/edit/${id}`);
-  };
-
-  // Helper function to extract cron expression from schedule
-  const getCronExpression = (schedule: ScheduledJob['schedule']) => {
-    if (!schedule) {
-      return 'No schedule defined';
+  const formatDate = (timestamp?: number | null) => {
+    if (!timestamp) return 'Never';
+    const date = new Date(timestamp);
+    
+    // Check if the date is in the future
+    if (date > new Date()) {
+      // Format as DD-MMM-YY
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = date.toLocaleString('en-US', { month: 'short' });
+      const year = date.getFullYear().toString().slice(2);
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      
+      return `${day}-${month}-${year} ${hours}:${minutes}`;
     }
     
-    if (schedule.cron) {
-      return schedule.cron;
-    } else if (schedule.repeat) {
-      return `Every ${schedule.repeat.every}ms${schedule.repeat.limit ? ` (limit: ${schedule.repeat.limit})` : ''}`;
+    return 'None';
+  };
+
+  const formatLastRun = (job: ScheduledJob) => {
+    const iterationCount = job.iterationCount?.toString() || '0';
+    const limit = job.limit?.toString();
+    
+    if (limit) {
+      return `${iterationCount}/${limit}`;
     }
-    return 'Custom schedule';
+    
+    return iterationCount;
+  };
+
+  const handleDelete = (key: string) => {
+    if (window.confirm('Are you sure you want to delete this scheduled job?')) {
+      dispatch(deleteScheduledJob(key));
+    }
+  };
+
+  const handleEdit = (key: string) => {
+    navigate(`/scheduler/edit/${key}`);
+  };
+
+  const handleRunNow = (key: string) => {
+    dispatch(runScheduledJobNow(key));
   };
 
   // Helper function to determine if a job is enabled
-  // Note: The API doesn't explicitly have an enabled field, so we're inferring from the schedule
   const isJobEnabled = (job: ScheduledJob) => {
-    // Check if schedule exists and has an endDate
-    if (job.schedule && job.schedule.endDate) {
-      // If the endDate is in the past, the job is disabled
-      if (new Date(job.schedule.endDate) < new Date()) {
-        return false;
-      }
+    // If endDate exists and is in the past, the job is disabled
+    if (job.endDate && new Date(job.endDate) < new Date()) {
+      return false;
     }
     return true;
   };
@@ -90,70 +99,62 @@ export default function SchedulerPage() {
             <thead>
               <tr className="bg-gray-100 dark:bg-gray-800">
                 <th className="p-3 text-left">Name</th>
-                <th className="p-3 text-left">Job Type</th>
                 <th className="p-3 text-left">Cron Expression</th>
                 <th className="p-3 text-left">Next Run</th>
                 <th className="p-3 text-left">Last Run</th>
-                <th className="p-3 text-left">Status</th>
+                <th className="p-3 text-left">End Date</th>
                 <th className="p-3 text-left">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {scheduledJobs.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="p-4 text-center text-gray-500">
+                  <td colSpan={6} className="p-4 text-center text-gray-500">
                     No scheduled jobs found
                   </td>
                 </tr>
               ) : (
                 scheduledJobs.map((job, index) => {
                   const enabled = isJobEnabled(job);
-                  // Use job.id if available, otherwise use index as fallback
-                  const uniqueKey = job.id ? job.id : `job-${index}`;
                   return (
                     <tr
-                      key={uniqueKey}
+                      key={job.key || `job-${index}`}
                       className="hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     >
                       <td className="p-3 font-medium">{job.name}</td>
-                      <td className="p-3">{job.data && job.data.type ? job.data.type : 'Unknown'}</td>
-                      <td className="p-3 font-mono text-sm">{getCronExpression(job.schedule)}</td>
-                      <td className="p-3">{formatDate(job.nextRun)}</td>
-                      <td className="p-3">N/A</td>
-                      <td className="p-3">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            enabled
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                              : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300'
-                          }`}
-                        >
-                          {enabled ? 'Enabled' : 'Disabled'}
-                        </span>
-                      </td>
+                      <td className="p-3 font-mono text-sm">{job.pattern || 'Repeat Job'}</td>
+                      <td className="p-3">{formatDate(job.next)}</td>
+                      <td className="p-3">{formatLastRun(job)}</td>
+                      <td className="p-3">{job.endDate ? formatDate(job.endDate) : ''}</td>
                       <td className="p-3">
                         <div className="flex space-x-2">
                           <button
-                            onClick={() => handleToggleSchedule(job.id, enabled)}
-                            className={`px-2 py-1 text-sm rounded ${
-                              enabled
-                                ? 'text-red-600 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/50'
-                                : 'text-green-600 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-800/50'
-                            }`}
+                            onClick={() => handleEdit(job.key)}
+                            className="p-1 text-blue-600 bg-blue-100 rounded hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/50"
+                            title="Edit"
                           >
-                            {enabled ? 'Disable' : 'Enable'}
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
                           </button>
                           <button
-                            onClick={() => handleEdit(job.id)}
-                            className="px-2 py-1 text-sm text-blue-600 bg-blue-100 rounded hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/50"
+                            onClick={() => handleDelete(job.key)}
+                            className="p-1 text-red-600 bg-red-100 rounded hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/50"
+                            title="Delete"
                           >
-                            Edit
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
                           </button>
                           <button
-                            onClick={() => handleRunNow(job.id)}
-                            className="px-2 py-1 text-sm text-blue-600 bg-blue-100 rounded hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/50"
+                            onClick={() => handleRunNow(job.key)}
+                            className="p-1 text-green-600 bg-green-100 rounded hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-800/50"
+                            title="Run Now"
                           >
-                            Run Now
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                           </button>
                         </div>
                       </td>

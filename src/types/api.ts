@@ -911,7 +911,7 @@ export interface paths {
             parameters: {
                 query?: {
                     /** @description Filter jobs by status */
-                    status?: "waiting" | "active" | "completed" | "failed" | "delayed";
+                    status?: "active" | "delayed" | "completed" | "failed" | "paused" | "waiting-children";
                     /** @description Maximum number of jobs to return */
                     limit?: number;
                     /** @description Number of jobs to skip */
@@ -1588,7 +1588,7 @@ export interface components {
              * @example active
              * @enum {string}
              */
-            status?: "waiting" | "active" | "completed" | "failed" | "delayed";
+            status?: "active" | "delayed" | "completed" | "failed" | "paused" | "waiting-children";
             /**
              * @description Job progress percentage (0-100)
              * @example 75
@@ -1642,7 +1642,7 @@ export interface components {
              * @example active
              * @enum {string}
              */
-            status?: "waiting" | "active" | "completed" | "failed" | "delayed";
+            status?: "active" | "delayed" | "completed" | "failed" | "paused" | "waiting-children";
             /**
              * @description Job progress percentage (0-100)
              * @example 75
