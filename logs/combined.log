@@ -3325,3 +3325,46 @@
 {"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:21:37"}
 {"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:21:37"}
 {"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-09 17:22:19"}
+{"level":"info","message":"Bull/BullMQ initialized","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Job queue, webhook queue, and scheduler queue created","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Express app initialized with middleware","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"API Documentation available at /api-docs","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Socket.IO server initialized","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"All routes registered successfully","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Initializing event handlers...","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Job events initialized","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Socket events initialized","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"All event handlers initialized","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Initializing workers...","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Webhook worker initialized","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Scheduler worker initialized","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"All workers initialized","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Bull Board UI available at http://localhost:4000/admin","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Socket.IO server ready for real-time job notifications","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"Scheduler worker is ready","timestamp":"2025-07-09 17:23:36"}
+{"level":"info","message":"User 1 connected via Socket.IO","timestamp":"2025-07-09 17:23:42"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:23:42"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:23:42"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:23:42"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:23:42"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:24:00"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:24:00"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:24:00"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:24:00"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:24:00"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:24:00"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:24:00"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:24:00"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:24:05"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:24:05"}
+{"level":"info","message":"GET /jobs route hit","timestamp":"2025-07-09 17:25:20"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:25:38"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:25:38"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:25:38"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:25:38"}
+{"level":"info","message":"GET /jobs/schedule route hit","timestamp":"2025-07-09 17:25:38"}
+{"level":"info","message":"Getting scheduled jobs for user 1","timestamp":"2025-07-09 17:25:38"}
+{"level":"info","message":"Filtered 22 schedulers for user 1","timestamp":"2025-07-09 17:25:38"}
+{"level":"info","message":"/jobs/schedule : Found 22 jobs scheduled for user 1","timestamp":"2025-07-09 17:25:38"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-09 17:25:55"}

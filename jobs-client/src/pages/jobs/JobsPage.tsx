@@ -508,10 +508,10 @@ export default function JobsPage() {
                           {formatDuration(job.duration)}
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap">
-                          <div className="flex justify-center space-x-4">
+                          <div className="flex justify-center space-x-2">
                             <Link
                               to={`/jobs/${job.id}`}
-                              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                              className="p-1 text-blue-600 bg-blue-100 rounded hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/50"
                               title="View"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -522,7 +522,7 @@ export default function JobsPage() {
                             
                             <Link
                               to={`/jobs/${job.id}`}
-                              className="text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
+                              className="p-1 text-yellow-600 bg-yellow-100 rounded hover:bg-yellow-200 dark:bg-yellow-900/30 dark:hover:bg-yellow-800/50"
                               title="Edit"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -531,7 +531,7 @@ export default function JobsPage() {
                             </Link>
                             
                             <button
-                              className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                              className="p-1 text-red-600 bg-red-100 rounded hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/50"
                               title="Delete"
                               onClick={() => {
                                 // Add delete functionality here
@@ -549,7 +549,7 @@ export default function JobsPage() {
                             {job.status === 'active' || job.status === 'delayed' || job.status === 'paused' ? (
                               <button
                                 onClick={() => handleCancelJob(job.id)}
-                                className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                className="p-1 text-red-600 bg-red-100 rounded hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/50"
                                 title="Cancel"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -561,7 +561,7 @@ export default function JobsPage() {
                             {job.status === 'failed' ? (
                               <button
                                 onClick={() => handleRetryJob(job.id)}
-                                className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
+                                className="p-1 text-green-600 bg-green-100 rounded hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-800/50"
                                 title="Retry"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
