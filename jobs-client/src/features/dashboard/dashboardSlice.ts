@@ -15,7 +15,7 @@ export interface JobStats {
 export interface RecentJob {
   id: string;
   name: string;
-  status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
+  status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children' | 'waiting';
   createdAt: string;
   completedAt?: string;
   duration?: number;

@@ -29,10 +29,8 @@ router.get('/stats', authenticate, async (req, res) => {
             const state = job.opts?.delay && job.opts.delay > Date.now();
             return state;
         }).length;
-        const paused = userJobs.filter((job) => {
-            // Check if job is in paused state - this would need to be determined by queue state
-            return false; // Placeholder - would need actual paused job detection
-        }).length;
+        const paused = (await jobQueue.getJobs(['paused'])).filter((job) => job.data.userId === userId).length;
+        const waiting = (await jobQueue.getJobs(['waiting'])).filter((job) => job.data.userId === userId).length;
         const waitingChildren = userJobs.filter((job) => {
             // Check if job is waiting for children - this would need to be determined by job dependencies
             return false; // Placeholder - would need actual waiting-children detection
@@ -64,8 +62,11 @@ router.get('/stats', authenticate, async (req, res) => {
                 case 'waiting-children':
                     status = 'waiting-children';
                     break;
+                case 'waiting':
+                    status = 'waiting';
+                    break;
                 default:
-                    status = 'active'; // Default to active for waiting jobs
+                    status = 'active'; // Default to active for unknown jobs
             }
             const createdAt = new Date(job.timestamp).toISOString();
             const completedAt = job.finishedOn ? new Date(job.finishedOn).toISOString() : undefined;
@@ -116,6 +117,7 @@ router.get('/stats', authenticate, async (req, res) => {
                 failed,
                 paused,
                 'waiting-children': waitingChildren,
+                waiting,
                 completionRate
             },
             recentJobs,

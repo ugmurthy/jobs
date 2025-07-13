@@ -16,29 +16,35 @@ export const USER_ROLES = {
 
 // Job statuses
 export const JOB_STATUS = {
-  WAITING: 'waiting',
-  ACTIVE: 'active',
   COMPLETED: 'completed',
   FAILED: 'failed',
   DELAYED: 'delayed',
+  ACTIVE: 'active',
+  WAITING: 'waiting',
+  PAUSED: 'paused',
+  STUCK: 'stuck',
 };
 
 // Job status colors
 export const JOB_STATUS_COLORS = {
-  waiting: 'bg-blue-100 text-blue-800',
-  active: 'bg-yellow-100 text-yellow-800',
   completed: 'bg-green-100 text-green-800',
   failed: 'bg-red-100 text-red-800',
   delayed: 'bg-purple-100 text-purple-800',
+  active: 'bg-yellow-100 text-yellow-800',
+  waiting: 'bg-blue-100 text-blue-800',
+  paused: 'bg-gray-100 text-gray-800',
+  stuck: 'bg-pink-100 text-pink-800',
 };
 
 // Job status icons
 export const JOB_STATUS_ICONS = {
-  waiting: 'clock',
-  active: 'loader-2',
   completed: 'check-circle',
   failed: 'x-circle',
   delayed: 'hourglass',
+  active: 'loader-2',
+  waiting: 'clock',
+  paused: 'pause-circle',
+  stuck: 'alert-triangle',
 };
 
 // Webhook events

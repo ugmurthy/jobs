@@ -38,6 +38,8 @@ export default function DashboardPage() {
         return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
       case 'active':
         return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
+      case 'waiting':
+        return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300';
       case 'delayed':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
       case 'waiting-children':

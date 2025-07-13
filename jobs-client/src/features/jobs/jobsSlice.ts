@@ -6,7 +6,7 @@ export interface Job {
   id: string;
   name: string;
   data: Record<string, any>;
-  status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
+  status: 'completed' | 'failed' | 'delayed' | 'active' | 'waiting' | 'paused' | 'stuck';
   progress: number;
   result: any;
   error: any;
@@ -74,19 +74,20 @@ const initialState: JobsState = {
 
 // Async thunks
 export const fetchJobs = createAsyncThunk<
-  { jobs: Job[]; pagination: JobsState['pagination'] },
-  void,
+  { jobs: Job[]; pagination: JobsState['pagination']; append: boolean },
+  { append?: boolean } | void,
   { state: { jobs: JobsState }, rejectValue: string }
 >(
   'jobs/fetchJobs',
-  async (_, { getState, rejectWithValue }) => {
+  async (args, { getState, rejectWithValue }) => {
+    const append = args?.append || false;
     try {
       const state = getState();
       const { pagination, filters } = state.jobs;
       
       const params = {
+        page: pagination.page,
         limit: pagination.limit,
-        offset: (pagination.page - 1) * pagination.limit,
         status: filters.status,
         search: filters.search,
         sortBy: filters.sortBy,
@@ -95,16 +96,17 @@ export const fetchJobs = createAsyncThunk<
         endDate: filters.dateRange.end,
       };
       
-      const response = await api.get<{ total: number; jobs: Job[] }>('/jobs', { params });
+      const response = await api.get<{ jobs: Job[]; pagination: { total: number; pages: number; } }>('/jobs', { params });
       
       // Transform the response to match the expected format
       return {
         jobs: response.jobs,
         pagination: {
           ...pagination,
-          totalItems: response.total,
-          totalPages: Math.ceil(response.total / pagination.limit)
-        }
+          totalItems: response.pagination.total,
+          totalPages: response.pagination.pages,
+        },
+        append,
       };
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch jobs');
@@ -235,6 +237,7 @@ export const deleteJob = createAsyncThunk<
     }
   }
 );
+
 
 export const jobsSlice = createSlice({
   name: 'jobs',
@@ -404,9 +407,13 @@ export const jobsSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchJobs.fulfilled, (state, action: PayloadAction<{ jobs: Job[]; pagination: JobsState['pagination'] }>) => {
+      .addCase(fetchJobs.fulfilled, (state, action: PayloadAction<{ jobs: Job[]; pagination: JobsState['pagination']; append: boolean }>) => {
         state.isLoading = false;
-        state.jobs = action.payload.jobs;
+        if (action.payload.append) {
+          state.jobs.push(...action.payload.jobs);
+        } else {
+          state.jobs = action.payload.jobs;
+        }
         state.pagination = action.payload.pagination;
       })
       .addCase(fetchJobs.rejected, (state, action) => {
@@ -504,7 +511,8 @@ export const jobsSlice = createSlice({
       .addCase(deleteJob.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
-      });
+      })
+
   },
 });
 

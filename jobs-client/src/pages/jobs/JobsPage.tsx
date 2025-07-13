@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   fetchJobs,
   cancelJob,
+  deleteJob,
   retryJob,
   setStatusFilter,
   setSearchFilter,
@@ -13,12 +14,14 @@ import {
   setPage
 } from '@/features/jobs/jobsSlice';
 import { useToast } from '@/components/ui/use-toast';
+import { JOB_STATUS, JOB_STATUS_COLORS } from '@/lib/constants';
+import type { Job as JobType } from '@/features/jobs/jobsSlice';
 
 // This interface represents the UI job model (aligned with BullMQ statuses)
 interface UIJob {
   id: string;
   name: string;
-  status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
+  status: JobType['status'];
   progress: number;
   timestamp: {
     created: number;
@@ -46,9 +49,13 @@ export default function JobsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [totalJobs, setTotalJobs] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  const observer = useRef<IntersectionObserver>();
   
   // Subscribe to the jobs state in Redux to get real-time updates
   const reduxJobs = useAppSelector((state) => state.jobs.jobs);
+  const pagination = useAppSelector((state) => state.jobs.pagination);
   const [filter, setFilter] = useState<JobsFilter>({
     status: 'all',
     search: '',
@@ -61,36 +68,13 @@ export default function JobsPage() {
   // Helper function to map API job to UI job
   const mapApiJobToUiJob = (apiJob: any): UIJob => {
     // Map API state to UI status - use BullMQ statuses directly
-    let uiStatus: UIJob['status'] = 'active';
+    let uiStatus: UIJob['status'] = 'waiting';
     // Check if state exists, otherwise fall back to status for backward compatibility
     // Using type assertion since 'state' might not be in the interface but exists in the API response
     const apiState = (apiJob as any).state || apiJob.status;
     
-    // Handle legacy status names and map to BullMQ statuses
-    switch (apiState) {
-      case 'waiting':
-        uiStatus = 'active'; // Map legacy 'waiting' to 'active'
-        break;
-      case 'active':
-        uiStatus = 'active';
-        break;
-      case 'completed':
-        uiStatus = 'completed';
-        break;
-      case 'failed':
-        uiStatus = 'failed';
-        break;
-      case 'delayed':
-        uiStatus = 'delayed';
-        break;
-      case 'paused':
-        uiStatus = 'paused';
-        break;
-      case 'waiting-children':
-        uiStatus = 'waiting-children';
-        break;
-      default:
-        uiStatus = 'active';
+    if (Object.values(JOB_STATUS).includes(apiState)) {
+      uiStatus = apiState;
     }
     
     // Calculate duration for completed jobs using timestamp.finished - timestamp.started
@@ -129,23 +113,44 @@ export default function JobsPage() {
         dispatch(setLimit(filter.limit));
         dispatch(setPage(filter.page));
         
-        // Use the actual fetchJobs action
-        const result = await dispatch(fetchJobs()).unwrap();
-        
-        // Map API response to component state
-        const mappedJobs = result.jobs.map(mapApiJobToUiJob);
-        
-        setJobs(mappedJobs);
-        setTotalJobs(result.pagination.totalItems);
-        setIsLoading(false);
+        // Use the actual fetchJobs action for the initial load
+        if (filter.page === 1) {
+            const result = await dispatch(fetchJobs()).unwrap();
+            const mappedJobs = result.jobs.map(mapApiJobToUiJob);
+            setJobs(mappedJobs);
+            setTotalJobs(result.pagination.totalItems);
+            setHasMore(result.pagination.page < result.pagination.totalPages);
+        }
       } catch (err: any) {
         setError(err.message || 'Failed to fetch jobs');
+      } finally {
         setIsLoading(false);
       }
     };
     
     fetchJobsList();
-  }, [dispatch, filter]);
+  }, [dispatch, filter.status, filter.search, filter.sortBy, filter.sortOrder, filter.limit]);
+
+  const lastJobElementRef = useCallback((node: any) => {
+    if (isLoading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(async (entries) => {
+      if (entries[0].isIntersecting && hasMore) {
+        handleFilterChange('page', filter.page + 1);
+        setIsLoading(true);
+        try {
+            const result = await dispatch(fetchJobs({ append: true })).unwrap();
+            setJobs(prevJobs => [...prevJobs, ...result.jobs.map(mapApiJobToUiJob)]);
+            setHasMore(result.pagination.page < result.pagination.totalPages);
+        } catch (err: any) {
+            setError(err.message || 'Failed to load more jobs');
+        } finally {
+            setIsLoading(false);
+        }
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [isLoading, hasMore, dispatch, filter]);
   
   // Effect to update UI jobs when Redux jobs state changes (for real-time updates)
   useEffect(() => {
@@ -169,43 +174,18 @@ export default function JobsPage() {
             progressValue = reduxJob.progress;
           }
           
-          // Map API state to UI status - use BullMQ statuses directly
-          let uiStatus: UIJob['status'] = 'active';
-          // Check if state exists, otherwise fall back to status for backward compatibility
-          const apiState = (reduxJob as any).state || reduxJob.status;
-          
-          // Special case: If progress is 100%, ensure status is completed
-          if (progressValue === 100 && apiState === 'active') {
-            console.log(`Job ${reduxJob.id} has 100% progress but status is still active, forcing to completed`);
-            uiStatus = 'completed';
-          } else {
-            // Handle legacy status names and map to BullMQ statuses
-            switch (apiState) {
-              case 'waiting':
-                uiStatus = 'active'; // Map legacy 'waiting' to 'active'
-                break;
-              case 'active':
-                uiStatus = 'active';
-                break;
-              case 'completed':
-                uiStatus = 'completed';
-                break;
-              case 'failed':
-                uiStatus = 'failed';
-                break;
-              case 'delayed':
-                uiStatus = 'delayed';
-                break;
-              case 'paused':
-                uiStatus = 'paused';
-                break;
-              case 'waiting-children':
-                uiStatus = 'waiting-children';
-                break;
-              default:
-                uiStatus = 'active';
-            }
-          }
+         // Map API state to UI status - use BullMQ statuses directly
+         let uiStatus: UIJob['status'] = 'waiting';
+         // Check if state exists, otherwise fall back to status for backward compatibility
+         const apiState = (reduxJob as any).state || reduxJob.status;
+
+         // Special case: If progress is 100%, ensure status is completed
+         if (progressValue === 100 && apiState === 'active') {
+           console.log(`Job ${reduxJob.id} has 100% progress but status is still active, forcing to completed`);
+           uiStatus = 'completed';
+         } else if (Object.values(JOB_STATUS).includes(apiState)) {
+           uiStatus = apiState;
+         }
           
           // Log status changes for debugging
           if (uiStatus !== uiJob.status) {
@@ -239,7 +219,13 @@ export default function JobsPage() {
   }, [reduxJobs, jobs]);
   
   const handleFilterChange = (key: keyof JobsFilter, value: any) => {
-    setFilter({ ...filter, [key]: value, page: key === 'page' ? value : 1 });
+    if (key !== 'page') {
+      setJobs([]);
+      setFilter({ ...filter, [key]: value, page: 1 });
+    } else {
+        dispatch(setPage(value));
+        setFilter({ ...filter, page: value });
+    }
   };
   
   const handleCancelJob = async (jobId: string) => {
@@ -277,6 +263,22 @@ export default function JobsPage() {
       });
     }
   };
+  const handleDeleteJob = async (jobId: string) => {
+    try {
+      await dispatch(deleteJob(jobId)).unwrap();
+      setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
+      toast({
+        title: 'Job Deleted',
+        description: `Job ${jobId} has been successfully deleted.`,
+      });
+    } catch (err: any) {
+      toast({
+        title: 'Error Deleting Job',
+        description: err.message || 'An unexpected error occurred.',
+        variant: 'destructive',
+      });
+    }
+  };
   
   const formatDate = (timestamp?: number) => {
     if (!timestamp) return '-';
@@ -299,39 +301,27 @@ export default function JobsPage() {
     }
   };
   
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
-      case 'active':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
-      case 'delayed':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
-      case 'failed':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-      case 'paused':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
-      case 'waiting-children':
-        return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300';
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
-    }
+  const getStatusColor = (status: JobType['status']) => {
+    return JOB_STATUS_COLORS[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
   };
   
-  const getProgressColor = (status: string, progress: number) => {
-    switch (status) {
+  const getProgressColor = (status: JobType['status'], progress: number) => {
+    const colorKey = status.toLowerCase();
+    switch (colorKey) {
       case 'completed':
         return 'bg-green-500 dark:bg-green-600';
       case 'active':
+        return 'bg-yellow-500 dark:bg-yellow-600';
+       case 'waiting':
         return 'bg-blue-500 dark:bg-blue-600';
       case 'delayed':
-        return 'bg-yellow-500 dark:bg-yellow-600';
+        return 'bg-purple-500 dark:bg-purple-600';
       case 'failed':
         return 'bg-red-500 dark:bg-red-600';
       case 'paused':
-        return 'bg-purple-500 dark:bg-purple-600';
-      case 'waiting-children':
-        return 'bg-indigo-500 dark:bg-indigo-600';
+        return 'bg-gray-500 dark:bg-gray-600';
+      case 'stuck':
+         return 'bg-pink-500 dark:bg-pink-600';
       default:
         return 'bg-gray-500 dark:bg-gray-600';
     }
@@ -371,12 +361,9 @@ export default function JobsPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             >
               <option value="all">All</option>
-              <option value="active">active</option>
-              <option value="delayed">delayed</option>
-              <option value="completed">completed</option>
-              <option value="failed">failed</option>
-              <option value="paused">paused</option>
-              <option value="waiting-children">waiting-children</option>
+              {Object.entries(JOB_STATUS).map(([key, value]) => (
+                <option key={value} value={value}>{key.charAt(0) + key.slice(1).toLowerCase()}</option>
+              ))}
             </select>
           </div>
           
@@ -469,8 +456,8 @@ export default function JobsPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                    {jobs.map((job) => (
-                      <tr key={job.id}>
+                    {jobs.map((job, index) => (
+                      <tr key={job.id} ref={index === jobs.length - 1 ? lastJobElementRef : null}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Link
                             to={`/jobs/${job.id}`}
@@ -521,7 +508,7 @@ export default function JobsPage() {
                             </Link>
                             
                             <Link
-                              to={`/jobs/${job.id}`}
+                              to={`/jobs/edit/${job.id}`}
                               className="p-1 text-yellow-600 bg-yellow-100 rounded hover:bg-yellow-200 dark:bg-yellow-900/30 dark:hover:bg-yellow-800/50"
                               title="Edit"
                             >
@@ -533,20 +520,14 @@ export default function JobsPage() {
                             <button
                               className="p-1 text-red-600 bg-red-100 rounded hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/50"
                               title="Delete"
-                              onClick={() => {
-                                // Add delete functionality here
-                                toast({
-                                  title: 'Delete Job',
-                                  description: `Job ${job.id} deleted successfully`,
-                                });
-                              }}
+                              onClick={() => handleDeleteJob(job.id)}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                               </svg>
                             </button>
                             
-                            {job.status === 'active' || job.status === 'delayed' || job.status === 'paused' ? (
+                            {(job.status === 'active' || job.status === 'delayed' || job.status === 'paused' || job.status === 'waiting') ? (
                               <button
                                 onClick={() => handleCancelJob(job.id)}
                                 className="p-1 text-red-600 bg-red-100 rounded hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/50"
@@ -579,32 +560,9 @@ export default function JobsPage() {
             )}
           </div>
           
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-6">
-              <div className="text-sm text-gray-700 dark:text-gray-300">
-                Showing <span className="font-medium">{(filter.page - 1) * filter.limit + 1}</span> to{' '}
-                <span className="font-medium">
-                  {Math.min(filter.page * filter.limit, totalJobs)}
-                </span>{' '}
-                of <span className="font-medium">{totalJobs}</span> results
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleFilterChange('page', Math.max(1, filter.page - 1))}
-                  disabled={filter.page === 1}
-                  className="px-3 py-1 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={() => handleFilterChange('page', Math.min(totalPages, filter.page + 1))}
-                  disabled={filter.page === totalPages}
-                  className="px-3 py-1 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-                >
-                  Next
-                </button>
-              </div>
+          {isLoading && (
+            <div className="flex items-center justify-center p-6">
+              <div className="text-lg">Loading more jobs...</div>
             </div>
           )}
         </>

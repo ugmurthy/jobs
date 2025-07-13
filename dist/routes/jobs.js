@@ -125,12 +125,12 @@ router.get('/', authenticate, async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
         // Filter parameters
-        const status = req.query.status; // 'active', 'delayed', 'completed', 'failed', 'paused', 'waiting-children'
+        const status = req.query.status; // 'completed', 'failed', 'delayed', 'active', 'waiting', 'paused', 'stuck'
         // Get jobs from the queue
         let jobs;
+        const validStatuses = ['completed', 'failed', 'delayed', 'active', 'waiting', 'paused', 'stuck'];
         if (status) {
             // Map string status to JobType
-            const validStatuses = ['active', 'delayed', 'completed', 'failed', 'paused', 'waiting-children'];
             if (validStatuses.includes(status)) {
                 jobs = await jobQueue.getJobs([status]);
             }
@@ -140,7 +140,7 @@ router.get('/', authenticate, async (req, res) => {
             }
         }
         else {
-            jobs = await jobQueue.getJobs(['active', 'delayed', 'completed', 'failed', 'paused', 'waiting-children']);
+            jobs = await jobQueue.getJobs(validStatuses);
         }
         // Filter jobs by user ID
         const filteredJobs = jobs.filter((job) => job.data.userId === userId);

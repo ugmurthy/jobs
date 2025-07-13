@@ -45,10 +45,8 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
       const state = job.opts?.delay && job.opts.delay > Date.now();
       return state;
     }).length;
-    const paused = userJobs.filter((job: any) => {
-      // Check if job is in paused state - this would need to be determined by queue state
-      return false; // Placeholder - would need actual paused job detection
-    }).length;
+    const paused = (await jobQueue.getJobs(['paused'])).filter((job: any) => job.data.userId === userId).length;
+    const waiting = (await jobQueue.getJobs(['waiting'])).filter((job: any) => job.data.userId === userId).length;
     const waitingChildren = userJobs.filter((job: any) => {
       // Check if job is waiting for children - this would need to be determined by job dependencies
       return false; // Placeholder - would need actual waiting-children detection
@@ -62,7 +60,7 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
         .slice(0, 5)
         .map(async (job: any) => {
           const state = await job.getState();
-          let status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children';
+          let status: 'active' | 'delayed' | 'completed' | 'failed' | 'paused' | 'waiting-children' | 'waiting';
           
           switch (state) {
             case 'active':
@@ -83,8 +81,11 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
             case 'waiting-children':
               status = 'waiting-children';
               break;
+            case 'waiting':
+              status = 'waiting';
+              break;
             default:
-              status = 'active'; // Default to active for waiting jobs
+              status = 'active'; // Default to active for unknown jobs
           }
           
           const createdAt = new Date(job.timestamp).toISOString();
@@ -145,6 +146,7 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
         failed,
         paused,
         'waiting-children': waitingChildren,
+        waiting,
         completionRate
       },
       recentJobs,

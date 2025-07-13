@@ -15,6 +15,7 @@ import ApiKeyLoginPage from '@/pages/auth/ApiKeyLoginPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import JobsPage from '@/pages/jobs/JobsPage';
 import NewJobPage from '@/pages/jobs/NewJobPage';
+import EditJobPage from '@/pages/jobs/EditJobPage';
 import JobDetailPage from '@/pages/jobs/JobDetailPage';
 import SchedulerPage from '@/pages/scheduler/SchedulerPage';
 import NewSchedulePage from '@/pages/scheduler/NewSchedulePage';
@@ -57,6 +58,7 @@ function App() {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/jobs" element={<JobsPage />} />
                 <Route path="/jobs/new" element={<NewJobPage />} />
+                <Route path="/jobs/edit/:jobId" element={<EditJobPage />} />
                 <Route path="/jobs/:jobId" element={<JobDetailPage />} />
                 <Route path="/scheduler" element={<SchedulerPage />} />
                 <Route path="/scheduler/new" element={<NewSchedulePage />} />
