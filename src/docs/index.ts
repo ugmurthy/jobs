@@ -16,7 +16,7 @@ export const setupApiDocs = (app: express.Application): void => {
     res.send(swaggerSpec);
   });
   
-  console.log('API Documentation initialized at /api-docs');
+  
 };
 
 // Export everything from submodules for easy imports

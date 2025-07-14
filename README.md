@@ -15,6 +15,11 @@ A modern, modular backend service for job queue management with robust authentic
 
 JobRunner is a powerful Node.js/TypeScript service designed to handle asynchronous job processing with a focus on reliability, scalability, and developer experience. It provides a comprehensive API for job submission, monitoring, and management, with real-time updates via WebSockets and a visual dashboard for queue monitoring.
 
+## Changelog
+
+### Version 0.0.2
+*   _Add your changelog items here_
+
 ### Key Features
 
 - **Modular Architecture**: Clean separation of concerns for improved maintainability
@@ -30,6 +35,10 @@ JobRunner is a powerful Node.js/TypeScript service designed to handle asynchrono
 - **Bull Board UI**: Visual dashboard for monitoring and managing job queues
 - **TypeScript**: Full type safety throughout the codebase
 
+## Frontend Client
+
+This project includes a frontend client located in the [`jobs-client/`](jobs-client/) directory. For detailed information on the frontend, including setup and usage, please see the [frontend README](jobs-client/README.md).
+
 ## Installation
 
 ### Prerequisites
@@ -38,38 +47,16 @@ JobRunner is a powerful Node.js/TypeScript service designed to handle asynchrono
 - Redis server (see [Redis Setup Guide](REDIS.md) for installation instructions)
 - TypeScript
 
-### Using pnpm (Recommended)
+### Instructions
 
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/jobrunner.git
 cd jobrunner
 
-# Install dependencies
+# Install dependencies (use pnpm or npm)
 pnpm install
-
-# Create environment file
-cp .env.example .env
-# Edit .env with your configuration
-
-# Start Redis (if not already running)
-pnpm run redis-start
-
-# Build the TypeScript code
-pnpm run build
-
-# Start the server
-pnpm start
-```
-
-### Using npm
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/jobrunner.git
-cd jobrunner
-
-# Install dependencies
+# or
 npm install
 
 # Create environment file
@@ -77,12 +64,18 @@ cp .env.example .env
 # Edit .env with your configuration
 
 # Start Redis (if not already running)
+pnpm run redis-start
+# or
 npm run redis-start
 
 # Build the TypeScript code
+pnpm run build
+# or
 npm run build
 
 # Start the server
+pnpm start
+# or
 npm start
 ```
 

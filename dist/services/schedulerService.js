@@ -1,24 +1,19 @@
 import { logger } from '@ugm/logger';
-import { jobScheduler, defaultOptions } from '../config/bull.js';
+import { getJobScheduler, defaultOptions } from '../config/bull.js';
 class SchedulerService {
     /**
      * Schedule a new job
      */
-    async scheduleJob(submission, userId) {
+    async scheduleJob(queueName, submission, userId) {
         logger.debug(`===================`);
-        logger.info(`schedulerService : Scheduling job: (${submission.name}) for user (${userId})`);
-        // Add user ID to job data
+        logger.info(`schedulerService : Scheduling job: (${submission.name}) for user (${userId}) in queue (${queueName})`);
         const jobData = {
             ...submission.data,
             userId
         };
-        // Use provided options or default options
         const options = submission.options || defaultOptions;
-        // Create a unique ID for the scheduler
         const schedulerId = `${userId}-${submission.name}-${Date.now()}`;
-        // Extract scheduling options
         const { cron, repeat, startDate, endDate, tz } = submission.schedule;
-        // Create repeat options for the scheduler
         const repeatOpts = {};
         if (cron) {
             repeatOpts.pattern = cron;
@@ -34,27 +29,26 @@ class SchedulerService {
             repeatOpts.startDate = startDate;
         if (endDate)
             repeatOpts.endDate = endDate;
-        // Schedule the job
+        const jobScheduler = getJobScheduler(queueName);
         const job = await jobScheduler.upsertJobScheduler(schedulerId, repeatOpts, submission.name, jobData, options, { override: true });
         logger.debug(`repeatOpts ${JSON.stringify(repeatOpts)}`);
         logger.debug(`submission.name ${submission.name}`);
         logger.debug(`jobData ${JSON.stringify(jobData)}`);
         logger.debug(`options : ${JSON.stringify(options)}`);
-        logger.info(`Job scheduled: ${schedulerId}`);
+        logger.info(`Job scheduled: ${schedulerId} in queue ${queueName}`);
         logger.debug(`==================`);
         return schedulerId;
     }
     /**
      * Get all scheduled jobs for a user
      */
-    async getUserScheduledJobs(userId) {
-        logger.info(`Getting scheduled jobs for user ${userId}`);
+    async getUserScheduledJobs(queueName, userId) {
+        logger.info(`Getting scheduled jobs for user ${userId} from queue ${queueName}`);
         try {
-            // Get all schedulers
-            logger.debug(`Calling schedulerService.getJobSchedulers()`);
+            const jobScheduler = getJobScheduler(queueName);
+            logger.debug(`Calling schedulerService.getJobSchedulers() from queue ${queueName}`);
             const schedulers = await jobScheduler.getJobSchedulers();
-            // Log the retrieved schedulers for debugging
-            logger.debug(`Retrieved ${schedulers.length} scheduled jobs`);
+            logger.debug(`Retrieved ${schedulers.length} scheduled jobs from queue ${queueName}`);
             if (schedulers.length > 0) {
                 logger.debug(`First scheduler ID: ${schedulers[0]?.key || 'undefined'}`);
             }
@@ -88,11 +82,12 @@ class SchedulerService {
     /**
      * Get a specific scheduled job
      */
-    async getScheduledJob(schedulerId, userId) {
-        logger.info(`Getting scheduled job ${schedulerId}`);
+    async getScheduledJob(queueName, schedulerId, userId) {
+        logger.info(`Getting scheduled job ${schedulerId} from queue ${queueName}`);
+        const jobScheduler = getJobScheduler(queueName);
         const scheduler = await jobScheduler.getScheduler(schedulerId);
         if (!scheduler) {
-            logger.warn(`Scheduled job ${schedulerId} not found`);
+            logger.warn(`Scheduled job ${schedulerId} not found in queue ${queueName}`);
             return null;
         }
         // Ensure user can only access their own scheduled jobs
@@ -106,16 +101,15 @@ class SchedulerService {
     /**
      * Remove a scheduled job
      */
-    async removeScheduledJob(schedulerId, userId) {
-        logger.info(`Removing scheduled job ${schedulerId}`);
-        // First check if the scheduler exists and belongs to the user
-        const scheduler = await this.getScheduledJob(schedulerId, userId);
+    async removeScheduledJob(queueName, schedulerId, userId) {
+        logger.info(`Removing scheduled job ${schedulerId} from queue ${queueName}`);
+        const scheduler = await this.getScheduledJob(queueName, schedulerId, userId);
         if (!scheduler) {
             return false;
         }
-        // Remove the scheduler
+        const jobScheduler = getJobScheduler(queueName);
         await jobScheduler.removeJobScheduler(schedulerId);
-        logger.info(`Scheduled job ${schedulerId} removed`);
+        logger.info(`Scheduled job ${schedulerId} removed from queue ${queueName}`);
         return true;
     }
 }

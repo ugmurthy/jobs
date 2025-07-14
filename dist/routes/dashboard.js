@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { logger } from '@ugm/logger';
-import { jobQueue } from '../config/bull.js';
+import { getQueue } from '../config/bull.js';
 import prisma from '../lib/prisma.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 import schedulerService from '../services/schedulerService.js';
@@ -16,6 +16,7 @@ router.get('/stats', authenticate, async (req, res) => {
             return;
         }
         logger.info(`Fetching dashboard stats for user ${userId}`);
+        const jobQueue = getQueue('jobQueue');
         // Get all jobs from the queue
         const allJobs = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children']);
         // Filter jobs by user ID
@@ -83,7 +84,7 @@ router.get('/stats', authenticate, async (req, res) => {
             };
         }));
         // Get scheduler statistics
-        const scheduledJobs = await schedulerService.getUserScheduledJobs(userId);
+        const scheduledJobs = await schedulerService.getUserScheduledJobs('schedQueue', userId);
         // Since we don't have direct access to 'active' property in JobSchedulerJson,
         // we'll assume all returned jobs are active for now
         const activeSchedules = scheduledJobs.length;

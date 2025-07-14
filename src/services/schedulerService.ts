@@ -1,5 +1,5 @@
 import { logger } from '@ugm/logger';
-import { jobScheduler, jobQueue, defaultOptions } from '../config/bull.js';
+import { getJobScheduler, defaultOptions } from '../config/bull.js';
 import { JobSchedulerJson } from 'bullmq';
 
 export interface ScheduleOptions {
@@ -24,28 +24,20 @@ class SchedulerService {
   /**
    * Schedule a new job
    */
-  async scheduleJob(submission: ScheduledJobSubmission, userId: number): Promise<string> {
+  async scheduleJob(queueName: string, submission: ScheduledJobSubmission, userId: number): Promise<string> {
     logger.debug(`===================`)
-    logger.info(`schedulerService : Scheduling job: (${submission.name}) for user (${userId})`);
+    logger.info(`schedulerService : Scheduling job: (${submission.name}) for user (${userId}) in queue (${queueName})`);
     
-    // Add user ID to job data
     const jobData = {
       ...submission.data,
       userId
     };
     
-    // Use provided options or default options
     const options = submission.options || defaultOptions;
-    
-    // Create a unique ID for the scheduler
     const schedulerId = `${userId}-${submission.name}-${Date.now()}`;
-    
-    // Extract scheduling options
     const { cron, repeat, startDate, endDate, tz } = submission.schedule;
     
-    // Create repeat options for the scheduler
     const repeatOpts: any = {};
-    
     if (cron) {
       repeatOpts.pattern = cron;
       if (tz) repeatOpts.tz = tz;
@@ -57,7 +49,7 @@ class SchedulerService {
     if (startDate) repeatOpts.startDate = startDate;
     if (endDate) repeatOpts.endDate = endDate;
     
-    // Schedule the job
+    const jobScheduler = getJobScheduler(queueName);
     const job = await jobScheduler.upsertJobScheduler(
       schedulerId,
       repeatOpts,
@@ -71,7 +63,7 @@ class SchedulerService {
     logger.debug(`submission.name ${submission.name}`)
     logger.debug(`jobData ${JSON.stringify(jobData)}`)
     logger.debug(`options : ${JSON.stringify(options)}`);
-    logger.info(`Job scheduled: ${schedulerId}`);
+    logger.info(`Job scheduled: ${schedulerId} in queue ${queueName}`);
     logger.debug(`==================`)
     return schedulerId;
   }
@@ -79,16 +71,15 @@ class SchedulerService {
   /**
    * Get all scheduled jobs for a user
    */
-  async getUserScheduledJobs(userId: number): Promise<JobSchedulerJson<any>[]> {
-    logger.info(`Getting scheduled jobs for user ${userId}`);
+  async getUserScheduledJobs(queueName: string, userId: number): Promise<JobSchedulerJson<any>[]> {
+    logger.info(`Getting scheduled jobs for user ${userId} from queue ${queueName}`);
     
     try {
-      // Get all schedulers
-      logger.debug(`Calling schedulerService.getJobSchedulers()`);
+      const jobScheduler = getJobScheduler(queueName);
+      logger.debug(`Calling schedulerService.getJobSchedulers() from queue ${queueName}`);
       const schedulers = await jobScheduler.getJobSchedulers();
       
-      // Log the retrieved schedulers for debugging
-      logger.debug(`Retrieved ${schedulers.length} scheduled jobs`);
+      logger.debug(`Retrieved ${schedulers.length} scheduled jobs from queue ${queueName}`);
       if (schedulers.length > 0) {
         logger.debug(`First scheduler ID: ${schedulers[0]?.key || 'undefined'}`);
       }
@@ -125,13 +116,14 @@ class SchedulerService {
   /**
    * Get a specific scheduled job
    */
-  async getScheduledJob(schedulerId: string, userId: number): Promise<JobSchedulerJson<any> | null> {
-    logger.info(`Getting scheduled job ${schedulerId}`);
+  async getScheduledJob(queueName: string, schedulerId: string, userId: number): Promise<JobSchedulerJson<any> | null> {
+    logger.info(`Getting scheduled job ${schedulerId} from queue ${queueName}`);
     
+    const jobScheduler = getJobScheduler(queueName);
     const scheduler = await jobScheduler.getScheduler(schedulerId);
     
     if (!scheduler) {
-      logger.warn(`Scheduled job ${schedulerId} not found`);
+      logger.warn(`Scheduled job ${schedulerId} not found in queue ${queueName}`);
       return null;
     }
     
@@ -148,19 +140,18 @@ class SchedulerService {
   /**
    * Remove a scheduled job
    */
-  async removeScheduledJob(schedulerId: string, userId: number): Promise<boolean> {
-    logger.info(`Removing scheduled job ${schedulerId}`);
+  async removeScheduledJob(queueName: string, schedulerId: string, userId: number): Promise<boolean> {
+    logger.info(`Removing scheduled job ${schedulerId} from queue ${queueName}`);
     
-    // First check if the scheduler exists and belongs to the user
-    const scheduler = await this.getScheduledJob(schedulerId, userId);
+    const scheduler = await this.getScheduledJob(queueName, schedulerId, userId);
     
     if (!scheduler) {
       return false;
     }
     
-    // Remove the scheduler
+    const jobScheduler = getJobScheduler(queueName);
     await jobScheduler.removeJobScheduler(schedulerId);
-    logger.info(`Scheduled job ${schedulerId} removed`);
+    logger.info(`Scheduled job ${schedulerId} removed from queue ${queueName}`);
     
     return true;
   }

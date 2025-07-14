@@ -3,7 +3,7 @@ import { logger } from '@ugm/logger';
 import { authenticateToken } from '../middleware/auth.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 import userService from '../services/userService.js';
-import { jobQueue, defaultOptions } from '../config/bull.js';
+import { getQueue, defaultOptions } from '../config/bull.js';
 import prisma from '../lib/prisma.js';
 import { notFoundHandler, errorHandler } from '../middleware/error.js';
 
@@ -15,6 +15,7 @@ import adminRoutes from './admin.js';
 import schedulerRoutes from './scheduler.js';
 import apiKeyRoutes from './apiKeys.js';
 import dashboardRoutes from './dashboard.js';
+import queueRoutes from './queues.js';
 
 /**
  * Register all application routes
@@ -50,8 +51,8 @@ export const registerRoutes = (app: Express): void => {
 
   // Register route modules with their prefixes
   app.use('/auth', authRoutes);
-  // Register scheduler routes before jobs routes to ensure they take precedence
-  app.use('/jobs', schedulerRoutes); // Add scheduler routes under /jobs prefix
+  app.use('/queues', authenticate, queueRoutes);
+  app.use('/jobs', schedulerRoutes);
   app.use('/jobs', authenticate, jobsRoutes);
   app.use('/webhooks', authenticate, webhooksRoutes);
   app.use('/admin', authenticate, adminRoutes);
@@ -197,6 +198,8 @@ export const registerRoutes = (app: Express): void => {
       userId: req.user?.userId
     };
     
+    //This is a legacy route, so we assume the default jobQueue
+    const jobQueue = getQueue('jobQueue');
     const job = await jobQueue.add(requestedJob.name, jobData, jobOptions);
     logger.debug(`/submit-job: jobData: ${JSON.stringify(jobData)}`);
     logger.info(`/submit-job: JOB SCHEDULED : ${job.id}/${requestedJob.name}`);

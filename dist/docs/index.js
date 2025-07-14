@@ -12,7 +12,6 @@ export const setupApiDocs = (app) => {
         res.setHeader('Content-Type', 'application/json');
         res.send(swaggerSpec);
     });
-    console.log('API Documentation initialized at /api-docs');
 };
 // Export everything from submodules for easy imports
 export * from './config/index.js';

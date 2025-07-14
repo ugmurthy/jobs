@@ -1476,11 +1476,22 @@
         }
       }
     },
-    "/jobs/submit": {
+    "/jobs/{queueName}/submit": {
       "post": {
         "summary": "Submit a new job",
         "tags": [
           "Jobs"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "queueName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the queue to submit the job to"
+          }
         ],
         "security": [
           {
@@ -1534,7 +1545,7 @@
         }
       }
     },
-    "/jobs/{jobId}": {
+    "/jobs/{queueName}/job/{jobId}": {
       "get": {
         "summary": "Get status of a specific job",
         "tags": [
@@ -1549,6 +1560,15 @@
           }
         ],
         "parameters": [
+          {
+            "in": "path",
+            "name": "queueName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the queue"
+          },
           {
             "in": "path",
             "name": "jobId",
@@ -1606,6 +1626,15 @@
           }
         ],
         "parameters": [
+          {
+            "in": "path",
+            "name": "queueName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the queue"
+          },
           {
             "in": "path",
             "name": "jobId",
@@ -1671,7 +1700,7 @@
         }
       }
     },
-    "/jobs": {
+    "/jobs/{queueName}": {
       "get": {
         "summary": "Get all jobs for the authenticated user",
         "tags": [
@@ -1686,6 +1715,15 @@
           }
         ],
         "parameters": [
+          {
+            "in": "path",
+            "name": "queueName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the queue"
+          },
           {
             "in": "query",
             "name": "status",
@@ -1757,7 +1795,7 @@
         }
       }
     },
-    "/jobs/schedule": {
+    "/jobs/{queueName}/schedule": {
       "post": {
         "summary": "Schedule a new job",
         "description": "Schedule a job to run at specified times using cron expressions or intervals",
@@ -1770,6 +1808,17 @@
           },
           {
             "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "queueName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the queue"
           }
         ],
         "requestBody": {
@@ -1836,6 +1885,17 @@
             "apiKeyAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "queueName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the queue"
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of scheduled jobs",
@@ -1868,7 +1928,7 @@
         }
       }
     },
-    "/jobs/schedule/{schedulerId}": {
+    "/jobs/{queueName}/schedule/{schedulerId}": {
       "get": {
         "summary": "Get a specific scheduled job",
         "description": "Get details of a specific scheduled job",
@@ -1884,6 +1944,15 @@
           }
         ],
         "parameters": [
+          {
+            "in": "path",
+            "name": "queueName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the queue"
+          },
           {
             "in": "path",
             "name": "schedulerId",
@@ -1944,6 +2013,15 @@
         "parameters": [
           {
             "in": "path",
+            "name": "queueName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the queue"
+          },
+          {
+            "in": "path",
             "name": "schedulerId",
             "schema": {
               "type": "string"
@@ -1981,6 +2059,57 @@
           },
           "404": {
             "description": "Scheduled job not found or unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/queues": {
+      "get": {
+        "summary": "Get a list of available queue names",
+        "tags": [
+          "Queues"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of queue names.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "queues": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "jobQueue",
+                        "webhooks",
+                        "schedQueue"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -2295,6 +2424,10 @@
     {
       "name": "Jobs",
       "description": "Job management and processing"
+    },
+    {
+      "name": "Queues",
+      "description": "Operations related to job queues"
     },
     {
       "name": "Webhooks",

@@ -1,5 +1,4 @@
 import { Server as SocketIOServer } from 'socket.io';
-import { QueueEvents } from 'bullmq';
 import { logger } from '@ugm/logger';
 import { initializeJobEvents } from './jobEvents.js';
 import { initializeSocketEvents } from './socketEvents.js';
@@ -7,11 +6,11 @@ import { initializeSocketEvents } from './socketEvents.js';
 /**
  * Initialize all event handlers
  */
-export const initializeEvents = (io: SocketIOServer, queueEvents: QueueEvents): void => {
+export const initializeEvents = (io: SocketIOServer): void => {
   logger.info('Initializing event handlers...');
   
-  // Initialize job events
-  initializeJobEvents(io, queueEvents);
+  // Initialize job events for all allowed queues
+  initializeJobEvents(io);
   
   // Initialize socket events
   initializeSocketEvents(io);

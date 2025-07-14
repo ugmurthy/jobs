@@ -726,7 +726,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/jobs/submit": {
+    "/jobs/{queueName}/submit": {
         parameters: {
             query?: never;
             header?: never;
@@ -740,7 +740,10 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    /** @description The name of the queue to submit the job to */
+                    queueName: string;
+                };
                 cookie?: never;
             };
             requestBody: {
@@ -784,7 +787,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/jobs/{jobId}": {
+    "/jobs/{queueName}/job/{jobId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -797,6 +800,8 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description The name of the queue */
+                    queueName: string;
                     /** @description ID of the job to get */
                     jobId: string;
                 };
@@ -841,6 +846,8 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description The name of the queue */
+                    queueName: string;
                     /** @description ID of the job to delete */
                     jobId: string;
                 };
@@ -899,7 +906,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/jobs": {
+    "/jobs/{queueName}": {
         parameters: {
             query?: never;
             header?: never;
@@ -918,7 +925,10 @@ export interface paths {
                     offset?: number;
                 };
                 header?: never;
-                path?: never;
+                path: {
+                    /** @description The name of the queue */
+                    queueName: string;
+                };
                 cookie?: never;
             };
             requestBody?: never;
@@ -955,7 +965,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/jobs/schedule": {
+    "/jobs/{queueName}/schedule": {
         parameters: {
             query?: never;
             header?: never;
@@ -970,7 +980,10 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    /** @description The name of the queue */
+                    queueName: string;
+                };
                 cookie?: never;
             };
             requestBody?: never;
@@ -1006,7 +1019,10 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    /** @description The name of the queue */
+                    queueName: string;
+                };
                 cookie?: never;
             };
             requestBody: {
@@ -1056,7 +1072,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/jobs/schedule/{schedulerId}": {
+    "/jobs/{queueName}/schedule/{schedulerId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1072,6 +1088,8 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description The name of the queue */
+                    queueName: string;
                     /** @description ID of the scheduled job */
                     schedulerId: string;
                 };
@@ -1119,6 +1137,8 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description The name of the queue */
+                    queueName: string;
                     /** @description ID of the scheduled job */
                     schedulerId: string;
                 };
@@ -1158,6 +1178,58 @@ export interface paths {
                 };
             };
         };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/queues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a list of available queue names */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A list of queue names. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example [
+                             *       "jobQueue",
+                             *       "webhooks",
+                             *       "schedQueue"
+                             *     ] */
+                            queues?: string[];
+                        };
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;

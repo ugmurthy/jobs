@@ -1,35 +1,33 @@
 import { Router } from 'express';
 import { logger } from '@ugm/logger';
-//import { authenticate } from '../middleware/auth.js';
 import schedulerService from '../services/schedulerService.js';
 import { authenticate } from '../middleware/combinedAuth.js';
+import { validateQueue } from '../middleware/validateQueue.js';
 const router = Router();
 logger.level = 'info';
 /**
  * Schedule a new job
  */
-router.post('/schedule', authenticate, async (req, res) => {
+router.post('/:queueName/schedule', authenticate, validateQueue, async (req, res) => {
     try {
+        const { queueName } = req.params;
         const { name, data, schedule, options } = req.body;
         const userId = req.user?.userId;
         if (!userId) {
             res.status(401).json({ message: 'Not authenticated' });
             return;
         }
-        // Validate required fields
         if (!name || !data || !schedule) {
             res.status(400).json({ message: 'Missing required fields: name, data, or schedule' });
             return;
         }
-        // Validate schedule options
         if (!schedule.cron && (!schedule.repeat || !schedule.repeat.every)) {
             res.status(400).json({
                 message: 'Invalid schedule options: must provide either cron expression or repeat.every'
             });
             return;
         }
-        // Schedule the job
-        const schedulerId = await schedulerService.scheduleJob({ name, data, schedule, options }, userId);
+        const schedulerId = await schedulerService.scheduleJob(queueName, { name, data, schedule, options }, userId);
         res.json({ schedulerId });
     }
     catch (error) {
@@ -40,10 +38,11 @@ router.post('/schedule', authenticate, async (req, res) => {
 /**
  * Get all scheduled jobs for the authenticated user
  */
-router.get('/schedule', authenticate, async (req, res) => {
-    logger.info('GET /jobs/schedule route hit');
+router.get('/:queueName/schedule', authenticate, validateQueue, async (req, res) => {
+    logger.info(`GET /jobs/schedule route hit for queue ${req.params.queueName}`);
     logger.debug(`/jobs/schedule request user: ${JSON.stringify(req.user)}`);
     try {
+        const { queueName } = req.params;
         const userId = req.user?.userId;
         logger.debug(`User ID from request: ${userId}`);
         if (!userId) {
@@ -51,10 +50,9 @@ router.get('/schedule', authenticate, async (req, res) => {
             res.status(401).json({ message: 'Not authenticated' });
             return;
         }
-        logger.debug(`Fetching scheduled jobs for user ${userId}`);
-        const scheduledJobs = await schedulerService.getUserScheduledJobs(userId);
-        logger.info(`/jobs/schedule : Found ${scheduledJobs.length} jobs scheduled for user ${userId}`);
-        // Always return an object with scheduledJobs array, even if empty
+        logger.debug(`Fetching scheduled jobs for user ${userId} in queue ${queueName}`);
+        const scheduledJobs = await schedulerService.getUserScheduledJobs(queueName, userId);
+        logger.info(`/jobs/schedule : Found ${scheduledJobs.length} jobs scheduled for user ${userId} in queue ${queueName}`);
         res.json({ scheduledJobs });
     }
     catch (error) {
@@ -65,15 +63,15 @@ router.get('/schedule', authenticate, async (req, res) => {
 /**
  * Get a specific scheduled job
  */
-router.get('/schedule/:schedulerId', authenticate, async (req, res) => {
+router.get('/:queueName/schedule/:schedulerId', authenticate, validateQueue, async (req, res) => {
     try {
-        const { schedulerId } = req.params;
+        const { queueName, schedulerId } = req.params;
         const userId = req.user?.userId;
         if (!userId) {
             res.status(401).json({ message: 'Not authenticated' });
             return;
         }
-        const scheduledJob = await schedulerService.getScheduledJob(schedulerId, userId);
+        const scheduledJob = await schedulerService.getScheduledJob(queueName, schedulerId, userId);
         if (!scheduledJob) {
             res.status(404).json({ message: 'Scheduled job not found' });
             return;
@@ -88,15 +86,15 @@ router.get('/schedule/:schedulerId', authenticate, async (req, res) => {
 /**
  * Remove a scheduled job
  */
-router.delete('/schedule/:schedulerId', authenticate, async (req, res) => {
+router.delete('/:queueName/schedule/:schedulerId', authenticate, validateQueue, async (req, res) => {
     try {
-        const { schedulerId } = req.params;
+        const { queueName, schedulerId } = req.params;
         const userId = req.user?.userId;
         if (!userId) {
             res.status(401).json({ message: 'Not authenticated' });
             return;
         }
-        const removed = await schedulerService.removeScheduledJob(schedulerId, userId);
+        const removed = await schedulerService.removeScheduledJob(queueName, schedulerId, userId);
         if (!removed) {
             res.status(404).json({ message: 'Scheduled job not found or unauthorized' });
             return;

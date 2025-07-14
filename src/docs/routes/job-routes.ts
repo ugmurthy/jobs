@@ -7,10 +7,17 @@
 
 /**
  * @openapi
- * /jobs/submit:
+ * /jobs/{queueName}/submit:
  *   post:
  *     summary: Submit a new job
  *     tags: [Jobs]
+ *     parameters:
+ *       - in: path
+ *         name: queueName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The name of the queue to submit the job to
  *     security:
  *       - bearerAuth: []
  *       - apiKeyAuth: []
@@ -40,7 +47,7 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  * 
- * /jobs/{jobId}:
+ * /jobs/{queueName}/job/{jobId}:
  *   get:
  *     summary: Get status of a specific job
  *     tags: [Jobs]
@@ -48,6 +55,12 @@
  *       - bearerAuth: []
  *       - apiKeyAuth: []
  *     parameters:
+ *       - in: path
+ *         name: queueName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The name of the queue
  *       - in: path
  *         name: jobId
  *         schema:
@@ -80,6 +93,12 @@
  *       - bearerAuth: []
  *       - apiKeyAuth: []
  *     parameters:
+ *       - in: path
+ *         name: queueName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The name of the queue
  *       - in: path
  *         name: jobId
  *         schema:
@@ -120,7 +139,7 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  * 
- * /jobs:
+ * /jobs/{queueName}:
  *   get:
  *     summary: Get all jobs for the authenticated user
  *     tags: [Jobs]
@@ -128,6 +147,12 @@
  *       - bearerAuth: []
  *       - apiKeyAuth: []
  *     parameters:
+ *       - in: path
+ *         name: queueName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The name of the queue
  *       - in: query
  *         name: status
  *         schema:
@@ -168,7 +193,7 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *
- * /jobs/schedule:
+ * /jobs/{queueName}/schedule:
  *   post:
  *     summary: Schedule a new job
  *     description: Schedule a job to run at specified times using cron expressions or intervals
@@ -176,6 +201,13 @@
  *     security:
  *       - bearerAuth: []
  *       - apiKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: queueName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The name of the queue
  *     requestBody:
  *       required: true
  *       content:
@@ -213,6 +245,13 @@
  *     security:
  *       - bearerAuth: []
  *       - apiKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: queueName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The name of the queue
  *     responses:
  *       200:
  *         description: List of scheduled jobs
@@ -232,7 +271,7 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *
- * /jobs/schedule/{schedulerId}:
+ * /jobs/{queueName}/schedule/{schedulerId}:
  *   get:
  *     summary: Get a specific scheduled job
  *     description: Get details of a specific scheduled job
@@ -241,6 +280,12 @@
  *       - bearerAuth: []
  *       - apiKeyAuth: []
  *     parameters:
+ *       - in: path
+ *         name: queueName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The name of the queue
  *       - in: path
  *         name: schedulerId
  *         schema:
@@ -274,6 +319,12 @@
  *       - bearerAuth: []
  *       - apiKeyAuth: []
  *     parameters:
+ *       - in: path
+ *         name: queueName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The name of the queue
  *       - in: path
  *         name: schedulerId
  *         schema:

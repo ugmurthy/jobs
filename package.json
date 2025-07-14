@@ -1,6 +1,6 @@
 {
 	"name": "runner",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "backend module to run jobs",
 	"main": "index.ts",
 	"type": "module",
@@ -16,7 +16,7 @@
 		"build": "tsc",
 		"generate-types": "openapi-typescript src/swagger.json --output src/types/api.ts",
 		"postgenerate-docs": "pnpm run generate-types",
-		"dev": "pnpm run build && pnpm start"
+		"dev":  "pnpm run build && pnpm start"
 	},
 	"dependencies": {
 		"@bull-board/api": "^6.10.1",

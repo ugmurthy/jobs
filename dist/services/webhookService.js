@@ -128,20 +128,6 @@ class WebhookService {
                     ]
                 }
             });
-            // Legacy support for webhookUrl field
-            if (webhooks.length === 0 && user.webhookUrl && payload.eventType === 'completed') {
-                webhooks.push({
-                    id: 0,
-                    url: user.webhookUrl,
-                    eventType: 'completed',
-                    active: true,
-                    userId: payload.userId,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    description: 'Legacy webhook'
-                });
-            }
-            console.debug(`sendWebhookNotification : webhooks for userId (${payload.userId}) \n(${JSON.stringify(webhooks)})`);
             if (webhooks.length === 0) {
                 logger.info(`No webhooks configured for user ${payload.userId} and event ${payload.eventType}`);
                 return [false];

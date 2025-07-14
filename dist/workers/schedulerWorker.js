@@ -1,7 +1,7 @@
 import { Worker } from 'bullmq';
 import { logger } from '@ugm/logger';
 import redisOptions from '../config/redis.js';
-import { jobQueue, defaultOptions } from '../config/bull.js';
+import { getQueue, defaultOptions } from '../config/bull.js';
 /**
  * Initialize the scheduler worker
  *
@@ -17,7 +17,8 @@ export const initializeSchedulerWorker = () => {
             const { name, data } = job;
             const options = job.data;
             logger.info(`Processing scheduled job: ${job.id} (${name})`);
-            // Add the job to the jobQueue for actual execution
+            // The queue the job should be added to is the 'jobQueue'
+            const jobQueue = getQueue('jobQueue');
             const jobOptions = options || defaultOptions;
             const actualJob = await jobQueue.add(name, data, jobOptions);
             logger.info(`Scheduled job ${job.id} added to jobQueue as job ${actualJob.id}`);
