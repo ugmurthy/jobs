@@ -18,7 +18,7 @@ JobRunner is a powerful Node.js/TypeScript service designed to handle asynchrono
 ## Changelog
 
 ### Version 0.0.2
-*   _Add your changelog items here_
+*   All routes relating jobs and schedule now include queueName as parameter
 
 ### Key Features
 
@@ -162,61 +162,51 @@ src/
 
 ## API Endpoints
 
-### Authentication Routes
-
-- `POST /auth/register` - User registration
-- `POST /auth/login` - User login
-- `POST /auth/logout` - User logout (requires authentication)
-- `POST /auth/refresh-token` - Refresh access token
-- `POST /auth/request-password-reset` - Request password reset
-- `POST /auth/reset-password` - Reset password
-- `GET /auth/protected` - Protected route example (requires authentication)
-
-### Job Management Routes
-
-- `POST /jobs/submit` - Submit a job (requires authentication)
-- `GET /jobs/:jobId` - Get status of a specific job (requires authentication)
-- `GET /jobs` - Get all jobs for the authenticated user (requires authentication)
-- `DELETE /jobs/:jobId` - Delete a specific job (requires authentication)
-
-### Job Scheduler Routes
-
-- `POST /jobs/schedule` - Schedule a job for future execution (requires authentication)
-- `GET /jobs/schedule` - Get all scheduled jobs for the authenticated user (requires authentication)
-- `GET /jobs/schedule/:schedulerId` - Get status of a specific scheduled job (requires authentication)
-- `DELETE /jobs/schedule/:schedulerId` - Remove a scheduled job (requires authentication)
-
-### Webhook Routes
-
-- `GET /webhooks` - Get all webhooks for the authenticated user (requires authentication)
-- `POST /webhooks` - Add a new webhook (requires authentication)
-- `PUT /webhooks/:id` - Update a webhook (requires authentication)
-- `DELETE /webhooks/:id` - Delete a webhook (requires authentication)
-- `PUT /webhooks/url` - Update webhook URL (legacy) (requires authentication)
-- `POST /webhooks/:id` - Protected webhook notification route
-
-### API Key Management Routes
-
-- `GET /api-keys` - List all API keys for the authenticated user (requires authentication)
-- `POST /api-keys` - Create a new API key (requires authentication)
-- `DELETE /api-keys/:id` - Revoke an API key (requires authentication)
-- `PUT /api-keys/:id` - Update an API key (name, permissions, etc.) (requires authentication)
-
 ### Admin Routes
 
-- `GET /admin` - Bull Board UI
-- `GET /admin/dashboard` - Admin dashboard (requires authentication)
+- `GET /admin` - Bull Board UI for queue monitoring
+- `GET /admin/dashboard` - Admin dashboard
 
-### Legacy Routes (for backward compatibility)
+### API Keys Routes
 
-- `GET /` - Root route that returns a simple message
-- `POST /register` - User registration
-- `POST /login` - User login
-- `POST /logout` - User logout (requires authentication)
-- `POST /refresh-token` - Refresh access token
-- `POST /request-password-reset` - Request password reset
-- `POST /reset-password` - Reset password
-- `POST /submit-job` - Submit a job (requires authentication)
+- `GET /api-keys` - List all API keys for the authenticated user
+- `POST /api-keys` - Create a new API key
+- `PUT /api-keys/{id}` - Update an API key
+- `DELETE /api-keys/{id}` - Revoke an API key
+
+### Authentication Routes
+
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login with username and password
+- `POST /auth/logout` - Logout the current user
+- `POST /auth/refresh-token` - Refresh access token
+
+### Dashboard Routes
+
+- `GET /dashboard/stats` - Get dashboard statistics
+
+### Jobs Routes
+
+- `POST /jobs/{queueName}/submit` - Submit a new job
+- `GET /jobs/{queueName}/job/{jobId}` - Get status of a specific job
+- `DELETE /jobs/{queueName}/job/{jobId}` - Delete a specific job
+- `GET /jobs/{queueName}` - Get all jobs for the authenticated user
+- `POST /jobs/{queueName}/schedule` - Schedule a new job
+- `GET /jobs/{queueName}/schedule` - Get all scheduled jobs
+- `GET /jobs/{queueName}/schedule/{schedulerId}` - Get a specific scheduled job
+- `DELETE /jobs/{queueName}/schedule/{schedulerId}` - Remove a scheduled job
+
+### Queues Routes
+
+- `GET /queues` - Get a list of available queue names
+
+### Webhooks Routes
+
+- `GET /webhooks` - Get all webhooks for the authenticated user
+- `POST /webhooks` - Add a new webhook
+- `PUT /webhooks/{id}` - Update a webhook
+- `DELETE /webhooks/{id}` - Delete a webhook
+- `POST /webhooks/{id}` - Protected webhook notification route
 
 ## Authentication
 
