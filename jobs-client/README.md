@@ -26,7 +26,6 @@ A modern, responsive web client for managing jobs and scheduled tasks.
 - **Job Control**:
   - Enable/disable scheduled jobs
   - Run scheduled jobs immediately
-  - Edit existing schedules
   - Delete scheduled jobs
 - **Advanced Options**:
   - Set job priority
@@ -114,19 +113,52 @@ VITE_API_BASE_URL=/api
 
 ## API Integration
 
-The client integrates with the following API endpoints:
+The client integrates with the following API endpoints, organized by resource:
 
-- **Jobs API**:
-  - GET /jobs - List all jobs
-  - GET /jobs/{jobId} - Get job details
-  - POST /jobs/submit - Submit a new job
-  - GET /jobs/{jobId}/logs - Get job logs
+### Admin
 
-- **Scheduler API**:
-  - GET /jobs/schedule - List scheduled jobs
-  - POST /jobs/schedule - Create scheduled job
-  - GET /jobs/schedule/{schedulerId} - Get scheduled job details
-  - DELETE /jobs/schedule/{schedulerId} - Delete scheduled job
+- `GET /admin`: Displays the Bull Board UI for queue monitoring.
+- `GET /admin/dashboard`: Retrieves administrative dashboard data.
+
+### API Keys
+
+- `GET /api-keys`: Lists all API keys for the authenticated user.
+- `POST /api-keys`: Creates a new API key.
+- `PUT /api-keys/{id}`: Updates a specific API key.
+- `DELETE /api-keys/{id}`: Revokes an API key.
+
+### Authentication
+
+- `POST /auth/register`: Registers a new user.
+- `POST /auth/login`: Authenticates a user and returns a token.
+- `POST /auth/logout`: Logs out the current user.
+- `POST /auth/refresh-token`: Refreshes an expired access token.
+
+### Dashboard
+
+- `GET /dashboard/stats`: Retrieves statistics for the main dashboard.
+
+### Jobs
+
+- `GET /jobs/{queueName}`: Get all jobs with optional status filtering.
+- `POST /jobs/{queueName}/submit`: Submits a new job to a queue.
+- `GET /jobs/{queueName}/job/{jobId}`: Retrieves details for a specific job.
+- `DELETE /jobs/{queueName}/job/{jobId}`: Deletes a specific job.
+
+### Scheduler
+
+- `GET /jobs/{queueName}/schedule`: Lists all scheduled jobs.
+- `POST /jobs/{queueName}/schedule`: Creates a new scheduled job.
+- `GET /jobs/{queueName}/schedule/{schedulerId}`: Retrieves a specific scheduled job.
+- `DELETE /jobs/{queueName}/schedule/{schedulerId}`: Deletes a scheduled job.
+
+### Webhooks
+
+- `GET /webhooks`: Lists all webhooks.
+- `POST /webhooks`: Creates a new webhook.
+- `PUT /webhooks/{id}`: Updates an existing webhook.
+- `DELETE /webhooks/{id}`: Deletes a webhook.
+- `POST /webhooks/{id}`: Serves as a notification endpoint for a protected webhook.
 
 ## Error Handling
 

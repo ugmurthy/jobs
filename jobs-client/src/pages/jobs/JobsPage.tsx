@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
@@ -63,7 +63,7 @@ export default function JobsPage() {
     search: '',
     page: 1,
     limit: 10,
-    sortBy: 'createdAt',
+    sortBy: 'id',
     sortOrder: 'desc',
   });
   
@@ -336,6 +336,36 @@ export default function JobsPage() {
   
   const totalPages = Math.ceil(totalJobs / filter.limit);
   
+  // Helper to get nested properties for sorting
+  const getNested = (obj: any, path: string) => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  };
+
+  const sortedJobs = useMemo(() => {
+    return [...jobs].sort((a, b) => {
+      // Secondary sort: completed jobs go to the bottom
+      if (a.status === 'completed' && b.status !== 'completed') {
+        return 1;
+      }
+      if (a.status !== 'completed' && b.status === 'completed') {
+        return -1;
+      }
+
+      // Primary sort based on selected filter
+      const aValue = getNested(a, filter.sortBy);
+      const bValue = getNested(b, filter.sortBy);
+
+      let comparison = 0;
+      if (aValue > bValue) {
+        comparison = 1;
+      } else if (aValue < bValue) {
+        comparison = -1;
+      }
+
+      return filter.sortOrder === 'desc' ? comparison * -1 : comparison;
+    });
+  }, [jobs, filter.sortBy, filter.sortOrder]);
+  
   return (
     <div className="container p-6 mx-auto">
       <div className="flex flex-col items-start justify-between mb-6 md:flex-row md:items-center">
@@ -388,6 +418,7 @@ export default function JobsPage() {
               onChange={(e) => handleFilterChange('sortBy', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             >
+              <option value="id">ID</option>
               <option value="timestamp.created">Created Date</option>
               <option value="name">Name</option>
               <option value="status">Status</option>
@@ -467,7 +498,7 @@ export default function JobsPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                    {jobs.map((job, index) => (
+                    {sortedJobs.map((job, index) => (
                       <tr key={job.id} ref={index === jobs.length - 1 ? lastJobElementRef : null}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Link
