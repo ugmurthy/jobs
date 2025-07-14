@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
 import { createJob } from '@/features/jobs/jobsSlice';
 import { jobSubmitSchema, JobSubmitFormValues } from '@/lib/validation';
@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useValidatedForm, getFieldError, hasFieldError } from '@/lib/form-validation';
 
 export default function NewJobPage() {
+  const { queueName } = useParams<{ queueName: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -37,8 +38,17 @@ export default function NewJobPage() {
         }
       }
 
+      if (!queueName) {
+        toast({
+          title: 'Error',
+          description: 'Queue name is not specified.',
+          variant: 'destructive',
+        });
+        return;
+      }
       // Create job with validated data
       const result = await dispatch(createJob({
+        queueName,
         name: data.name,
         data: parsedData,
         options: data.options,
@@ -50,7 +60,7 @@ export default function NewJobPage() {
       });
 
       // Navigate to job details page
-      navigate(`/jobs/${result.id}`);
+      navigate(`/queues/${queueName}/${result.id}`);
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -184,7 +194,7 @@ export default function NewJobPage() {
           <div className="flex justify-end gap-4 pt-6">
             <button
               type="button"
-              onClick={() => navigate('/jobs')}
+              onClick={() => navigate(`/queues/${queueName}`)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
               disabled={isSubmitting}
             >

@@ -37,6 +37,7 @@ export interface SchedulerState {
     sortBy: string;
     sortDirection: 'asc' | 'desc';
   };
+  queueName: string | null;
 }
 
 const initialState: SchedulerState = {
@@ -56,12 +57,13 @@ const initialState: SchedulerState = {
     sortBy: 'createdAt',
     sortDirection: 'desc',
   },
+  queueName: null,
 };
 
 // Async thunks
 export const fetchScheduledJobs = createAsyncThunk(
   'scheduler/fetchScheduledJobs',
-  async (_, { getState, rejectWithValue }) => {
+  async (queueName: string, { getState, rejectWithValue }) => {
     try {
       const state = getState() as { scheduler: SchedulerState };
       const { pagination, filters } = state.scheduler;
@@ -74,36 +76,19 @@ export const fetchScheduledJobs = createAsyncThunk(
         sortDirection: filters.sortDirection,
       };
       
-      // Use the /jobs/schedule endpoint as per the OpenAPI spec
-      const response = await api.get<any>('/jobs/schedule', { params });
+      const response = await api.get<any>(`/jobs/${queueName}/schedule`, { params });
       
-      // Log the response to see its structure
-      console.log('API Response from /jobs/schedule:', response);
+      console.log(`API Response from /jobs/${queueName}/schedule:`, response);
       
-      // Check if response has the expected structure
       let scheduledJobs: ScheduledJob[] = [];
-      
       if (Array.isArray(response)) {
-        // If response is an array, use it directly
         scheduledJobs = response;
-      } else if (response && typeof response === 'object') {
-        // If response is an object, try to find the jobs array
-        if (Array.isArray(response.scheduledJobs)) {
-          scheduledJobs = response.scheduledJobs;
-        } else if (Array.isArray(response.jobs)) {
-          scheduledJobs = response.jobs;
-        } else if (Array.isArray(response.data)) {
-          scheduledJobs = response.data;
-        } else if (Array.isArray(response.items)) {
-          scheduledJobs = response.items;
-        }
+      } else if (response && typeof response === 'object' && Array.isArray(response.scheduledJobs)) {
+        scheduledJobs = response.scheduledJobs;
       }
       
-      // Ensure each job has the required properties based on the new structure
       scheduledJobs = scheduledJobs.map(job => {
-        // Use type assertion to handle both old and new API formats
         const oldJob = job as any;
-        
         return {
           key: job.key || oldJob.id || '',
           name: job.name || '',
@@ -124,9 +109,6 @@ export const fetchScheduledJobs = createAsyncThunk(
         };
       });
       
-      console.log('Processed scheduledJobs:', scheduledJobs);
-      
-      // Transform the response to match the expected format
       return {
         scheduledJobs,
         pagination: {
@@ -143,10 +125,9 @@ export const fetchScheduledJobs = createAsyncThunk(
 
 export const fetchScheduledJobById = createAsyncThunk(
   'scheduler/fetchScheduledJobById',
-  async (schedulerId: string, { rejectWithValue }) => {
+  async ({ queueName, schedulerId }: { queueName: string; schedulerId: string }, { rejectWithValue }) => {
     try {
-      // Use the /jobs/schedule/{schedulerId} endpoint as per the OpenAPI spec
-      const response = await api.get<ScheduledJob>(`/jobs/schedule/${schedulerId}`);
+      const response = await api.get<ScheduledJob>(`/jobs/${queueName}/schedule/${schedulerId}`);
       return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch scheduled job');
@@ -158,11 +139,13 @@ export const createScheduledJob = createAsyncThunk(
   'scheduler/createScheduledJob',
   async (
     {
+      queueName,
       name,
       data,
       schedule,
       options,
     }: {
+      queueName: string;
       name: string;
       data?: Record<string, any>;
       schedule: {
@@ -183,35 +166,20 @@ export const createScheduledJob = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      // Use the /jobs/schedule endpoint as per the OpenAPI spec
-      const response = await api.post<{ schedulerId: string } | any>('/jobs/schedule', {
+      const response = await api.post<{ schedulerId: string } | any>(`/jobs/${queueName}/schedule`, {
         name,
         data,
         schedule,
         options
       });
       
-      // Extract the schedulerId from the response
-      let schedulerId: string | undefined;
-      
-      if (typeof response === 'object' && response !== null) {
-        // Try different possible response formats
-        schedulerId =
-          // It might be directly in schedulerId property
-          (response as any).schedulerId ||
-          // Or it might be in a 'job' or 'schedule' property
-          (response as any).job?.id ||
-          (response as any).schedule?.id ||
-          // Or it might be in an 'id' property
-          (response as any).id;
-      }
+      let schedulerId: string | undefined = response?.schedulerId;
       
       if (!schedulerId) {
         throw new Error('Invalid response format from schedule creation');
       }
       
-      // After creating the scheduled job, fetch its details
-      const scheduledJob = await api.get<ScheduledJob>(`/jobs/schedule/${schedulerId}`);
+      const scheduledJob = await api.get<ScheduledJob>(`/jobs/${queueName}/schedule/${schedulerId}`);
       return scheduledJob;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to create scheduled job');
@@ -219,18 +187,18 @@ export const createScheduledJob = createAsyncThunk(
   }
 );
 
-// Note: The OpenAPI spec doesn't explicitly define an update endpoint for scheduled jobs
-// This is a placeholder implementation that might need to be adjusted
 export const updateScheduledJob = createAsyncThunk(
   'scheduler/updateScheduledJob',
   async (
     {
+      queueName,
       id,
       name,
       data,
       schedule,
       options,
     }: {
+      queueName: string;
       id: string;
       name?: string;
       data?: Record<string, any>;
@@ -252,17 +220,9 @@ export const updateScheduledJob = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      // Since there's no explicit update endpoint in the OpenAPI spec,
-      // we'll delete the existing scheduled job and create a new one
+      await api.delete(`/jobs/${queueName}/schedule/${id}`);
+      const currentJob = await api.get<ScheduledJob>(`/jobs/${queueName}/schedule/${id}`);
       
-      // First, get the current job details
-      const currentJob = await api.get<ScheduledJob>(`/jobs/schedule/${id}`);
-      
-      // Delete the existing job
-      await api.delete(`/jobs/schedule/${id}`);
-      
-      // Create a new job with updated details
-      // Use type assertion to access properties from the old structure
       const oldJob = currentJob as any;
       const newJobData = {
         name: name || currentJob.name,
@@ -275,29 +235,15 @@ export const updateScheduledJob = createAsyncThunk(
         options: options || (oldJob.options || currentJob.template?.opts || {})
       };
       
-      const response = await api.post<{ schedulerId: string } | any>('/jobs/schedule', newJobData);
+      const response = await api.post<{ schedulerId: string } | any>(`/jobs/${queueName}/schedule`, newJobData);
       
-      // Extract the schedulerId from the response
-      let schedulerId: string | undefined;
-      
-      if (typeof response === 'object' && response !== null) {
-        // Try different possible response formats
-        schedulerId =
-          // It might be directly in schedulerId property
-          (response as any).schedulerId ||
-          // Or it might be in a 'job' or 'schedule' property
-          (response as any).job?.id ||
-          (response as any).schedule?.id ||
-          // Or it might be in an 'id' property
-          (response as any).id;
-      }
-      
+      let schedulerId: string | undefined = response?.schedulerId
+
       if (!schedulerId) {
         throw new Error('Invalid response format from schedule update');
       }
       
-      // Get the details of the newly created job
-      const updatedJob = await api.get<ScheduledJob>(`/jobs/schedule/${schedulerId}`);
+      const updatedJob = await api.get<ScheduledJob>(`/jobs/${queueName}/schedule/${schedulerId}`);
       return updatedJob;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to update scheduled job');
@@ -305,52 +251,27 @@ export const updateScheduledJob = createAsyncThunk(
   }
 );
 
-// Note: The OpenAPI spec doesn't explicitly define a toggle endpoint for scheduled jobs
-// This is a placeholder implementation that might need to be adjusted
 export const toggleScheduledJob = createAsyncThunk(
   'scheduler/toggleScheduledJob',
-  async ({ id, enabled }: { id: string; enabled: boolean }, { rejectWithValue }) => {
+  async ({ queueName, id, enabled }: { queueName: string; id: string; enabled: boolean }, { rejectWithValue }) => {
     try {
-      // Since there's no explicit toggle endpoint in the OpenAPI spec,
-      // we'll use the update approach (delete and recreate)
+      const currentJob = await api.get<ScheduledJob>(`/jobs/${queueName}/schedule/${id}`);
+      await api.delete(`/jobs/${queueName}/schedule/${id}`);
       
-      // First, get the current job details
-      const currentJob = await api.get<ScheduledJob>(`/jobs/schedule/${id}`);
-      
-      // Delete the existing job
-      await api.delete(`/jobs/schedule/${id}`);
-      
-      // Create a new job with updated enabled status
-      // Note: The OpenAPI spec doesn't explicitly mention an 'enabled' field,
-      // so we might need to adjust this based on the actual implementation
       const newJobData = {
         ...currentJob,
         enabled
       };
       
-      const response = await api.post<{ schedulerId: string } | any>('/jobs/schedule', newJobData);
+      const response = await api.post<{ schedulerId: string } | any>(`/jobs/${queueName}/schedule`, newJobData);
       
-      // Extract the schedulerId from the response
-      let schedulerId: string | undefined;
-      
-      if (typeof response === 'object' && response !== null) {
-        // Try different possible response formats
-        schedulerId =
-          // It might be directly in schedulerId property
-          (response as any).schedulerId ||
-          // Or it might be in a 'job' or 'schedule' property
-          (response as any).job?.id ||
-          (response as any).schedule?.id ||
-          // Or it might be in an 'id' property
-          (response as any).id;
-      }
-      
+      let schedulerId: string | undefined = response?.schedulerId;
+
       if (!schedulerId) {
         throw new Error('Invalid response format from schedule toggle');
       }
       
-      // Get the details of the newly created job
-      const updatedJob = await api.get<ScheduledJob>(`/jobs/schedule/${schedulerId}`);
+      const updatedJob = await api.get<ScheduledJob>(`/jobs/${queueName}/schedule/${schedulerId}`);
       return updatedJob;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to toggle scheduled job');
@@ -360,10 +281,9 @@ export const toggleScheduledJob = createAsyncThunk(
 
 export const deleteScheduledJob = createAsyncThunk(
   'scheduler/deleteScheduledJob',
-  async (schedulerId: string, { rejectWithValue }) => {
+  async ({ queueName, schedulerId }: { queueName: string; schedulerId: string }, { rejectWithValue }) => {
     try {
-      // Use the /jobs/schedule/{schedulerId} DELETE endpoint as per the OpenAPI spec
-      await api.delete(`/jobs/schedule/${schedulerId}`);
+      await api.delete(`/jobs/${queueName}/schedule/${schedulerId}`);
       return schedulerId;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to delete scheduled job');
@@ -371,23 +291,17 @@ export const deleteScheduledJob = createAsyncThunk(
   }
 );
 
-// Note: The OpenAPI spec doesn't explicitly define a run-now endpoint for scheduled jobs
-// This is a placeholder implementation that might need to be adjusted
+
 export const runScheduledJobNow = createAsyncThunk(
   'scheduler/runScheduledJobNow',
-  async (schedulerId: string, { rejectWithValue }) => {
+  async ({ queueName, schedulerId }: { queueName: string; schedulerId: string }, { rejectWithValue }) => {
     try {
-      // Since there's no explicit run-now endpoint in the OpenAPI spec,
-      // we'll get the scheduled job details and submit it as a regular job
+      const scheduledJob = await api.get<ScheduledJob>(`/jobs/${queueName}/schedule/${schedulerId}`);
       
-      // First, get the scheduled job details
-      const scheduledJob = await api.get<ScheduledJob>(`/jobs/schedule/${schedulerId}`);
-      
-      // Submit it as a regular job
-      // Use type assertion to access data from template
-      const response = await api.post('/jobs/submit', {
+      const response = await api.post(`/jobs/${queueName}/submit`, {
         name: scheduledJob.name,
-        data: scheduledJob.template?.data || {}
+        data: scheduledJob.template?.data || {},
+        options: scheduledJob.template?.opts || {},
       });
       
       return response;
@@ -401,6 +315,9 @@ export const schedulerSlice = createSlice({
   name: 'scheduler',
   initialState,
   reducers: {
+    setQueueName: (state: SchedulerState, action: PayloadAction<string>) => {
+      state.queueName = action.payload;
+    },
     setPage: (state: SchedulerState, action: PayloadAction<number>) => {
       state.pagination.page = action.payload;
     },
@@ -571,6 +488,7 @@ export const schedulerSlice = createSlice({
 });
 
 export const {
+  setQueueName,
   setPage,
   setLimit,
   setEnabledFilter,

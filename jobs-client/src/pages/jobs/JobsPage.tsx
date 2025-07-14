@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   fetchJobs,
@@ -11,7 +11,8 @@ import {
   setSortBy,
   setSortDirection,
   setLimit,
-  setPage
+  setPage,
+  setQueueName
 } from '@/features/jobs/jobsSlice';
 import { useToast } from '@/components/ui/use-toast';
 import { JOB_STATUS, JOB_STATUS_COLORS } from '@/lib/constants';
@@ -43,6 +44,7 @@ interface JobsFilter {
 }
 
 export default function JobsPage() {
+  const { queueName } = useParams<{ queueName: string }>();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [jobs, setJobs] = useState<UIJob[]>([]);
@@ -101,6 +103,8 @@ export default function JobsPage() {
 
   // Effect to fetch jobs when filter changes
   useEffect(() => {
+    if (!queueName) return;
+    dispatch(setQueueName(queueName));
     const fetchJobsList = async () => {
       setIsLoading(true);
       setError(null);
@@ -115,7 +119,7 @@ export default function JobsPage() {
         
         // Use the actual fetchJobs action for the initial load
         if (filter.page === 1) {
-            const result = await dispatch(fetchJobs()).unwrap();
+            const result = await dispatch(fetchJobs({queueName})).unwrap();
             const mappedJobs = result.jobs.map(mapApiJobToUiJob);
             setJobs(mappedJobs);
             setTotalJobs(result.pagination.totalItems);
@@ -129,7 +133,7 @@ export default function JobsPage() {
     };
     
     fetchJobsList();
-  }, [dispatch, filter.status, filter.search, filter.sortBy, filter.sortOrder, filter.limit]);
+  }, [dispatch, filter.status, filter.search, filter.sortBy, filter.sortOrder, filter.limit, queueName]);
 
   const lastJobElementRef = useCallback((node: any) => {
     if (isLoading) return;
@@ -139,7 +143,7 @@ export default function JobsPage() {
         handleFilterChange('page', filter.page + 1);
         setIsLoading(true);
         try {
-            const result = await dispatch(fetchJobs({ append: true })).unwrap();
+            const result = await dispatch(fetchJobs({ queueName: queueName!, append: true })).unwrap();
             setJobs(prevJobs => [...prevJobs, ...result.jobs.map(mapApiJobToUiJob)]);
             setHasMore(result.pagination.page < result.pagination.totalPages);
         } catch (err: any) {
@@ -150,7 +154,7 @@ export default function JobsPage() {
       }
     });
     if (node) observer.current.observe(node);
-  }, [isLoading, hasMore, dispatch, filter]);
+  }, [isLoading, hasMore, dispatch, filter, queueName]);
   
   // Effect to update UI jobs when Redux jobs state changes (for real-time updates)
   useEffect(() => {
@@ -229,9 +233,10 @@ export default function JobsPage() {
   };
   
   const handleCancelJob = async (jobId: string) => {
+    if(!queueName) return;
     try {
       // Use the actual cancelJob action
-      await dispatch(cancelJob(jobId)).unwrap();
+      await dispatch(cancelJob({queueName, jobId})).unwrap();
       
       toast({
         title: 'Job Canceled',
@@ -247,9 +252,10 @@ export default function JobsPage() {
   };
   
   const handleRetryJob = async (jobId: string) => {
+    if(!queueName) return;
     try {
       // Use the actual retryJob action
-      await dispatch(retryJob(jobId)).unwrap();
+      await dispatch(retryJob({queueName, jobId})).unwrap();
       
       toast({
         title: 'Job Retried',
@@ -264,8 +270,9 @@ export default function JobsPage() {
     }
   };
   const handleDeleteJob = async (jobId: string) => {
+    if(!queueName) return;
     try {
-      await dispatch(deleteJob(jobId)).unwrap();
+      await dispatch(deleteJob({queueName, jobId})).unwrap();
       setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
       toast({
         title: 'Job Deleted',
@@ -332,13 +339,17 @@ export default function JobsPage() {
   return (
     <div className="container p-6 mx-auto">
       <div className="flex flex-col items-start justify-between mb-6 md:flex-row md:items-center">
-        <h1 className="mb-4 text-3xl font-bold md:mb-0">Jobs</h1>
-        <Link
-          to="/jobs/new"
-          className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Create New Job
-        </Link>
+        <h1 className="mb-4 text-3xl font-bold md:mb-0">Jobs for {queueName}</h1>
+        <div className="flex items-center space-x-4">
+        {queueName !== 'webhooks' && (
+          <Link
+            to={`/queues/${queueName}/new`}
+            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Create New Job
+          </Link>
+        )}
+        </div>
       </div>
       
       {error && (
@@ -460,7 +471,7 @@ export default function JobsPage() {
                       <tr key={job.id} ref={index === jobs.length - 1 ? lastJobElementRef : null}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Link
-                            to={`/jobs/${job.id}`}
+                            to={`/queues/${queueName}/${job.id}`}
                             className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                           >
                             {job.name}
@@ -496,16 +507,6 @@ export default function JobsPage() {
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap">
                           <div className="flex justify-center space-x-2">
-                            <Link
-                              to={`/jobs/edit/${job.id}`}
-                              className="p-1 text-blue-600 bg-blue-100 rounded hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/50"
-                              title="Edit"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                              </svg>
-                            </Link>
-                            
                             <button
                               className="p-1 text-red-600 bg-red-100 rounded hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/50"
                               title="Delete"

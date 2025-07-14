@@ -10,7 +10,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useValidatedForm, getFieldError, hasFieldError } from '@/lib/form-validation';
 
 export default function EditSchedulePage() {
-  const { id } = useParams<{ id: string }>();
+  const { queueName, id } = useParams<{ queueName: string; id: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -30,7 +30,7 @@ export default function EditSchedulePage() {
     isSubmitting,
     setValue
   } = useValidatedForm(scheduleJobSchema, async (data: ScheduleJobFormValues) => {
-    if (!id) return;
+    if (!id || !queueName) return;
     
     try {
       // Parse JSON data if provided as string
@@ -81,6 +81,7 @@ export default function EditSchedulePage() {
 
       // Update scheduled job with transformed data
       const result = await dispatch(updateScheduledJob({
+        queueName,
         id,
         name: data.name,
         data: parsedData,
@@ -119,13 +120,13 @@ export default function EditSchedulePage() {
 
   // Fetch scheduled job data when component mounts
   useEffect(() => {
-    if (!id) return;
+    if (!id || !queueName) return;
     
     const fetchScheduledJob = async () => {
       setIsLoading(true);
       setLoadError(null);
       try {
-        await dispatch(fetchScheduledJobById(id)).unwrap();
+        await dispatch(fetchScheduledJobById({ queueName, schedulerId: id })).unwrap();
       } catch (err: any) {
         setLoadError(err.message || 'Failed to fetch scheduled job');
         toast({
@@ -139,7 +140,7 @@ export default function EditSchedulePage() {
     };
     
     fetchScheduledJob();
-  }, [dispatch, id, toast]);
+  }, [dispatch, queueName, id, toast]);
   
   // Populate form with fetched data
   useEffect(() => {
@@ -148,41 +149,29 @@ export default function EditSchedulePage() {
       setValue('name', selectedScheduledJob.name);
       
       // Set JSON data
-      setJsonData(JSON.stringify(selectedScheduledJob.data, null, 2));
+      setJsonData(JSON.stringify(selectedScheduledJob.template?.data || {}, null, 2));
       
       // Determine schedule type and value
-      if (selectedScheduledJob.schedule) {
-        if (selectedScheduledJob.schedule.cron) {
-          setValue('schedule.type', 'cron');
-          setValue('schedule.value', selectedScheduledJob.schedule.cron);
-        } else if (selectedScheduledJob.schedule.repeat) {
-          setValue('schedule.type', 'every');
-          // Convert milliseconds to a human-readable format
-          const ms = selectedScheduledJob.schedule.repeat.every;
-          let value = '';
-          
-          if (ms % (60 * 60 * 1000) === 0) {
-            value = `${ms / (60 * 60 * 1000)}h`;
-          } else if (ms % (60 * 1000) === 0) {
-            value = `${ms / (60 * 1000)}m`;
-          } else {
-            value = `${ms / 1000}s`;
-          }
-          
-          setValue('schedule.value', value);
-        } else if (selectedScheduledJob.schedule.startDate) {
-          setValue('schedule.type', 'once');
-          setValue('schedule.value', selectedScheduledJob.schedule.startDate);
-        }
-      } else {
-        // Default to cron if no schedule is defined
+      if (selectedScheduledJob.pattern) {
         setValue('schedule.type', 'cron');
-        setValue('schedule.value', '0 0 * * *');
+        setValue('schedule.value', selectedScheduledJob.pattern);
+      } else if (selectedScheduledJob.every) {
+        setValue('schedule.type', 'every');
+        const ms = parseInt(selectedScheduledJob.every);
+        let value = '';
+        if (ms % (60 * 60 * 1000) === 0) {
+          value = `${ms / (60 * 60 * 1000)}h`;
+        } else if (ms % (60 * 1000) === 0) {
+          value = `${ms / (60 * 1000)}m`;
+        } else {
+          value = `${ms / 1000}s`;
+        }
+        setValue('schedule.value', value);
       }
       
       // Set options
-      if (selectedScheduledJob.options?.removeOnComplete) {
-        setValue('options.attempts', selectedScheduledJob.options.removeOnComplete.count);
+      if (selectedScheduledJob.template?.opts?.removeOnComplete) {
+        setValue('options.attempts', selectedScheduledJob.template.opts.removeOnComplete.count);
       }
       
       // Priority is not directly mapped in the API, so we'll use a default
@@ -207,7 +196,7 @@ export default function EditSchedulePage() {
           {loadError}
         </div>
         <button
-          onClick={() => navigate('/scheduler')}
+          onClick={() => navigate(`/${queueName}/scheduler`)}
           className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Back to Scheduler
@@ -356,7 +345,7 @@ export default function EditSchedulePage() {
           <div className="flex justify-end gap-4 pt-6">
             <button
               type="button"
-              onClick={() => navigate('/scheduler')}
+              onClick={() => navigate(`/${queueName}/scheduler`)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
               disabled={isSubmitting}
             >

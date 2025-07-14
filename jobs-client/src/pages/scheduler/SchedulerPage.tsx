@@ -1,22 +1,27 @@
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   fetchScheduledJobs,
   toggleScheduledJob,
   runScheduledJobNow,
   deleteScheduledJob,
-  ScheduledJob
+  ScheduledJob,
+  setQueueName,
 } from '@/features/scheduler/schedulerSlice';
 
 export default function SchedulerPage() {
+  const { queueName } = useParams<{ queueName: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { scheduledJobs, isLoading, error } = useAppSelector((state) => state.scheduler);
 
   useEffect(() => {
-    dispatch(fetchScheduledJobs());
-  }, [dispatch]);
+    if (queueName) {
+      dispatch(setQueueName(queueName));
+      dispatch(fetchScheduledJobs(queueName));
+    }
+  }, [dispatch, queueName]);
 
   const formatDate = (timestamp?: number | null) => {
     if (!timestamp) return 'Never';
@@ -49,17 +54,19 @@ export default function SchedulerPage() {
   };
 
   const handleDelete = (key: string) => {
-    if (window.confirm('Are you sure you want to delete this scheduled job?')) {
-      dispatch(deleteScheduledJob(key));
+    if (queueName) {
+      dispatch(deleteScheduledJob({ queueName, schedulerId: key }));
     }
   };
 
   const handleEdit = (key: string) => {
-    navigate(`/scheduler/edit/${key}`);
+    navigate(`/${queueName}/scheduler/edit/${key}`);
   };
 
   const handleRunNow = (key: string) => {
-    dispatch(runScheduledJobNow(key));
+    if (queueName) {
+      dispatch(runScheduledJobNow({ queueName, schedulerId: key }));
+    }
   };
 
   // Helper function to determine if a job is enabled
@@ -75,12 +82,14 @@ export default function SchedulerPage() {
     <div className="container p-6 mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Scheduler</h1>
-        <Link
-          to="/scheduler/new"
-          className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Create New Schedule
-        </Link>
+        <div className="flex items-center space-x-4">
+            <Link
+              to={`/${queueName}/scheduler/new`}
+              className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Create New Schedule
+            </Link>
+        </div>
       </div>
 
       {error && (
@@ -128,15 +137,7 @@ export default function SchedulerPage() {
                       <td className="p-3">{job.endDate ? formatDate(job.endDate) : ''}</td>
                       <td className="p-3">
                         <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleEdit(job.key)}
-                            className="p-1 text-blue-600 bg-blue-100 rounded hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/50"
-                            title="Edit"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                          </button>
+                          
                           <button
                             onClick={() => handleDelete(job.key)}
                             className="p-1 text-red-600 bg-red-100 rounded hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/50"

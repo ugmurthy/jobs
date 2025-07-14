@@ -21,9 +21,38 @@ export interface RecentJob {
   duration?: number;
 }
 
+export interface QueueStats {
+  name: string;
+  total: number;
+  active: number;
+  completed: number;
+  failed: number;
+  delayed: number;
+  paused: number;
+  'waiting-children': number;
+}
+
+export interface SchedulerStats {
+    activeSchedules: number;
+    totalSchedules: number;
+    nextScheduledJob: string;
+}
+
+export interface WebhookStats {
+    totalWebhooks: number;
+    activeWebhooks: number;
+    deliveryRate: number;
+    totalDeliveries: number;
+    failedDeliveries: number;
+}
+
+
 export interface DashboardState {
   jobStats: JobStats | null;
   recentJobs: RecentJob[];
+  queueStats: QueueStats[];
+  schedulerStats: SchedulerStats | null;
+  webhookStats: WebhookStats | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -31,20 +60,35 @@ export interface DashboardState {
 const initialState: DashboardState = {
   jobStats: null,
   recentJobs: [],
+  queueStats: [],
+  schedulerStats: null,
+  webhookStats: null,
   isLoading: false,
   error: null,
 };
 
 export const fetchDashboardStats = createAsyncThunk<
-  { jobStats: JobStats; recentJobs: RecentJob[] },
+  {
+    jobStats: JobStats;
+    recentJobs: RecentJob[];
+    queueStats: QueueStats[];
+    schedulerStats: SchedulerStats;
+    webhookStats: WebhookStats;
+  },
   void,
   { rejectValue: string }
 >(
   'dashboard/fetchStats',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get<{ jobStats: JobStats; recentJobs: RecentJob[] }>('/dashboard/stats');
-      return response;
+      const response = await api.get<DashboardState>('/dashboard/stats');
+      return response as {
+        jobStats: JobStats;
+        recentJobs: RecentJob[];
+        queueStats: QueueStats[];
+        schedulerStats: SchedulerStats;
+        webhookStats: WebhookStats;
+      };
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch dashboard statistics');
     }
@@ -69,6 +113,9 @@ export const dashboardSlice = createSlice({
         state.isLoading = false;
         state.jobStats = action.payload.jobStats;
         state.recentJobs = action.payload.recentJobs;
+        state.queueStats = action.payload.queueStats;
+        state.schedulerStats = action.payload.schedulerStats;
+        state.webhookStats = action.payload.webhookStats;
       })
       .addCase(fetchDashboardStats.rejected, (state, action) => {
         state.isLoading = false;

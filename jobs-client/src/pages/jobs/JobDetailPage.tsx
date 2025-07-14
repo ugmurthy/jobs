@@ -47,7 +47,7 @@ const mapJobStatus = (apiStatus: string): 'active' | 'delayed' | 'completed' | '
 };
 
 export default function JobDetailPage() {
-  const { jobId } = useParams<{ jobId: string }>();
+  const { queueName, jobId } = useParams<{ queueName: string; jobId: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -60,13 +60,13 @@ export default function JobDetailPage() {
   
   useEffect(() => {
     const fetchJobDetails = async () => {
-      if (!jobId) return;
+      if (!jobId || !queueName) return;
       
       setIsLoading(true);
       setError(null);
       try {
         // Use the actual fetchJobById action
-        const result = await dispatch(fetchJobById(jobId)).unwrap();
+        const result = await dispatch(fetchJobById({ queueName, jobId })).unwrap();
         
         // Check if state exists, otherwise fall back to status for backward compatibility
         // Using type assertion since 'state' might not be in the interface but exists in the API response
@@ -100,14 +100,14 @@ export default function JobDetailPage() {
     };
     
     fetchJobDetails();
-  }, [dispatch, jobId]);
+  }, [dispatch, queueName, jobId]);
   
   const handleCancelJob = async () => {
-    if (!job) return;
+    if (!job || !queueName) return;
     
     try {
       // Use the actual cancelJob action
-      const result = await dispatch(cancelJob(job.id)).unwrap();
+      const result = await dispatch(cancelJob({ queueName, jobId: job.id })).unwrap();
       
       // Check if state exists, otherwise fall back to status for backward compatibility
       const apiState = (result as any).state || result.status;
@@ -133,14 +133,14 @@ export default function JobDetailPage() {
   };
   
   const handleRetryJob = async () => {
-    if (!job) return;
+    if (!job || !queueName) return;
     
     try {
       // Use the actual retryJob action
-      const result = await dispatch(retryJob(job.id)).unwrap();
+      const result = await dispatch(retryJob({ queueName, jobId: job.id })).unwrap();
       
       // Navigate to the new job
-      navigate(`/jobs/${result.id}`);
+      navigate(`/${queueName}/jobs/${result.id}`);
       
       toast({
         title: 'Job Retried',
@@ -156,19 +156,19 @@ export default function JobDetailPage() {
   };
   
   const handleDeleteJob = async () => {
-    if (!job) return;
+    if (!job || !queueName) return;
     
     try {
       // Use the actual deleteJob action
-      await dispatch(deleteJob(job.id)).unwrap();
+      await dispatch(deleteJob({ queueName, jobId: job.id })).unwrap();
       
       toast({
         title: 'Job Deleted',
         description: 'The job has been deleted successfully',
       });
       
-      // Navigate back to jobs list
-      navigate('/jobs');
+      // Navigate back to queue page
+      navigate(`/queues/${queueName}`);
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -399,7 +399,7 @@ export default function JobDetailPage() {
     <div className="container p-6 mx-auto">
       <div className="flex items-center mb-2">
         <Link
-          to="/jobs"
+          to={`/${queueName}/jobs`}
           className="flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
         >
           <svg

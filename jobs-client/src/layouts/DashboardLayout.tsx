@@ -1,28 +1,50 @@
-import { useState } from 'react';
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { logout } from '@/features/auth/authSlice';
+import { fetchDashboardStats } from '@/features/dashboard/dashboardSlice';
 import { cn } from '@/lib/utils';
 
 export default function DashboardLayout() {
-  const location = useLocation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const { queueStats } = useAppSelector((state) => state.dashboard);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
+  useEffect(() => {
+    dispatch(fetchDashboardStats());
+  }, [dispatch]);
+
   const handleLogout = () => {
     dispatch(logout());
   };
-  
-  const navigation = [
+
+  const baseNavigation = [
     { name: 'Dashboard', path: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { name: 'Jobs', path: '/jobs', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01' },
-    { name: 'Scheduler', path: '/scheduler', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
-    { name: 'Webhooks', path: '/webhooks', icon: 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14' },
+  ];
+
+  const queueNavigation = queueStats.map((queue) => {
+    if (queue.name === 'schedQueue') {
+      return {
+        name: 'Scheduler',
+        path: `/${queue.name}/scheduler`,
+        icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
+      };
+    }
+    return {
+      name: `Queue: ${queue.name}`,
+      path: `/queues/${queue.name}`,
+      icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
+    };
+  });
+
+  const bottomNavigation = [
     { name: 'API Keys', path: '/api-keys', icon: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z' },
     { name: 'WebSocket Events', path: '/websocket-events', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-  ];
-  
+  ]
+
+  const navigation = [...baseNavigation, ...queueNavigation, ...bottomNavigation];
+
   // Only show admin link if user has admin role
   if (user?.role === 'admin') {
     navigation.push({ 

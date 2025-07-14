@@ -47,6 +47,7 @@ export interface JobsState {
       end: string | null;
     };
   };
+  queueName: string | null;
 }
 
 const initialState: JobsState = {
@@ -70,16 +71,22 @@ const initialState: JobsState = {
       end: null,
     },
   },
+  queueName: null,
 };
 
 // Async thunks
 export const fetchJobs = createAsyncThunk<
   { jobs: Job[]; pagination: JobsState['pagination']; append: boolean },
-  { append?: boolean } | void,
+  { queueName: string; append?: boolean } | { append?: boolean },
   { state: { jobs: JobsState }, rejectValue: string }
 >(
   'jobs/fetchJobs',
   async (args, { getState, rejectWithValue }) => {
+    const queueName = 'queueName' in args ? args.queueName : getState().jobs.queueName;
+    if (!queueName) {
+      return rejectWithValue('Queue name is required to fetch jobs.');
+    }
+    
     const append = args?.append || false;
     try {
       const state = getState();
@@ -88,7 +95,7 @@ export const fetchJobs = createAsyncThunk<
       const params = {
         page: pagination.page,
         limit: pagination.limit,
-        status: filters.status,
+        status: filters.status === 'all' ? null : filters.status,
         search: filters.search,
         sortBy: filters.sortBy,
         sortDirection: filters.sortDirection,
@@ -96,15 +103,15 @@ export const fetchJobs = createAsyncThunk<
         endDate: filters.dateRange.end,
       };
       
-      const response = await api.get<{ jobs: Job[]; pagination: { total: number; pages: number; } }>('/jobs', { params });
+      const response = await api.get<{ jobs: Job[]; total: number; }>(`/jobs/${queueName}`, { params });
       
       // Transform the response to match the expected format
       return {
         jobs: response.jobs,
         pagination: {
           ...pagination,
-          totalItems: response.pagination.total,
-          totalPages: response.pagination.pages,
+          totalItems: response.total,
+          totalPages: Math.ceil(response.total / pagination.limit),
         },
         append,
       };
@@ -116,13 +123,13 @@ export const fetchJobs = createAsyncThunk<
 
 export const fetchJobById = createAsyncThunk<
   Job,
-  string,
+  { queueName: string; jobId: string },
   { rejectValue: string }
 >(
   'jobs/fetchJobById',
-  async (jobId: string, { rejectWithValue }) => {
+  async ({ queueName, jobId }, { rejectWithValue }) => {
     try {
-      const response = await api.get<Job>(`/jobs/${jobId}`);
+      const response = await api.get<Job>(`/jobs/${queueName}/job/${jobId}`);
       return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch job');
@@ -132,47 +139,23 @@ export const fetchJobById = createAsyncThunk<
 
 export const createJob = createAsyncThunk<
   Job,
-  { name: string; data?: Record<string, any>; options?: Record<string, any> },
+  { queueName: string; name: string; data?: Record<string, any>; options?: Record<string, any> },
   { rejectValue: string }
 >(
   'jobs/createJob',
   async (
-    { name, data, options }: { name: string; data?: Record<string, any>; options?: Record<string, any> },
+    { queueName, name, data, options }: { queueName: string; name: string; data?: Record<string, any>; options?: Record<string, any> },
     { rejectWithValue }
   ) => {
     try {
-      // Use the /jobs/submit endpoint as per the OpenAPI spec
-      const response = await api.post<{ id: string } | Job>('/jobs/submit', {
+      const response = await api.post<any>(`/jobs/${queueName}/submit`, {
         name,
-        data
+        data,
+        options,
       });
-      
-      // Check if the response has an id field directly
-      if ('id' in response) {
-        return response as Job;
-      }
-      
-      // If the response doesn't have an id field directly, it might be nested
-      // or we need to fetch the job details
-      if (typeof response === 'object' && response !== null) {
-        // Try to extract id from possible response formats
-        const jobId =
-          // It might be in a 'job' property
-          (response as any).job?.id ||
-          // Or it might be in a 'jobId' property
-          (response as any).jobId ||
-          // Or it might be in an 'id' property
-          (response as any).id;
-        
-        if (jobId) {
-          // Fetch the job details using the extracted id
-          const jobDetails = await api.get<Job>(`/jobs/${jobId}`);
-          return jobDetails;
-        }
-      }
-      
-      // If we couldn't extract an id, throw an error
-      throw new Error('Invalid response format from job submission');
+      // The backend returns a jobId, so we fetch the job by its ID.
+      const newJob = await api.get<Job>(`/jobs/${queueName}/job/${response.jobId}`);
+      return newJob;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to create job');
     }
@@ -181,17 +164,17 @@ export const createJob = createAsyncThunk<
 
 export const retryJob = createAsyncThunk<
   Job,
-  string,
+  { queueName: string; jobId: string },
   { rejectValue: string }
 >(
   'jobs/retryJob',
-  async (jobId: string, { rejectWithValue }) => {
+  async ({ queueName, jobId }, { rejectWithValue }) => {
     try {
-      // Resubmit the job by getting it first and then submitting it again
-      const job = await api.get<Job>(`/jobs/${jobId}`);
-      const response = await api.post<Job>('/jobs/submit', {
+      const job = await api.get<Job>(`/jobs/${queueName}/job/${jobId}`);
+      const response = await api.post<Job>(`/jobs/${queueName}/submit`, {
         name: job.name,
-        data: job.data
+        data: job.data,
+        options: job.options,
       });
       return response;
     } catch (error: any) {
@@ -200,18 +183,17 @@ export const retryJob = createAsyncThunk<
   }
 );
 
-// Note: The OpenAPI spec doesn't explicitly define a cancel endpoint
-// This is a placeholder implementation that might need to be adjusted
 export const cancelJob = createAsyncThunk<
   Job,
-  string,
+  { queueName: string; jobId: string },
   { rejectValue: string }
 >(
   'jobs/cancelJob',
-  async (jobId: string, { rejectWithValue }) => {
+  async ({ queueName, jobId }, { rejectWithValue }) => {
     try {
       // This endpoint might need to be adjusted based on the actual API implementation
-      const response = await api.post<Job>(`/jobs/${jobId}/cancel`);
+      // Assuming a POST to /jobs/{queueName}/job/{jobId}/cancel
+      const response = await api.post<Job>(`/jobs/${queueName}/job/${jobId}/cancel`);
       return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to cancel job');
@@ -219,18 +201,15 @@ export const cancelJob = createAsyncThunk<
   }
 );
 
-// Note: The OpenAPI spec doesn't explicitly define a delete endpoint
-// This is a placeholder implementation that might need to be adjusted
 export const deleteJob = createAsyncThunk<
-  string,
-  string,
+  string, // jobId
+  { queueName: string; jobId: string },
   { rejectValue: string }
 >(
   'jobs/deleteJob',
-  async (jobId: string, { rejectWithValue }) => {
+  async ({ queueName, jobId }, { rejectWithValue }) => {
     try {
-      // This endpoint might need to be adjusted based on the actual API implementation
-      await api.delete(`/jobs/${jobId}`);
+      await api.delete(`/jobs/${queueName}/job/${jobId}`);
       return jobId;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to delete job');
@@ -243,6 +222,9 @@ export const jobsSlice = createSlice({
   name: 'jobs',
   initialState,
   reducers: {
+    setQueueName: (state: JobsState, action: PayloadAction<string>) => {
+      state.queueName = action.payload;
+    },
     setPage: (state: JobsState, action: PayloadAction<number>) => {
       state.pagination.page = action.payload;
     },
@@ -517,6 +499,7 @@ export const jobsSlice = createSlice({
 });
 
 export const {
+  setQueueName,
   setPage,
   setLimit,
   setStatusFilter,

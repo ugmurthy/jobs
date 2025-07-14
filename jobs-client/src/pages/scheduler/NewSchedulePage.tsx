@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '@/app/hooks';
-import { createScheduledJob } from '@/features/scheduler/schedulerSlice';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { createScheduledJob, setQueueName } from '@/features/scheduler/schedulerSlice';
 import { scheduleJobSchema, ScheduleJobFormValues } from '@/lib/validation';
 import { useToast } from '@/components/ui/use-toast';
 import { useValidatedForm, getFieldError, hasFieldError } from '@/lib/form-validation';
 
 export default function NewSchedulePage() {
+  const { queueName } = useParams<{ queueName: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -69,7 +70,13 @@ export default function NewSchedulePage() {
       }
       
       // Create scheduled job with transformed data
+      if (!queueName) {
+        throw new Error('Queue name not found');
+      }
+      
+      // Create scheduled job with transformed data
       const result = await dispatch(createScheduledJob({
+        queueName,
         name: data.name,
         data: parsedData,
         schedule: apiSchedule,
@@ -82,7 +89,7 @@ export default function NewSchedulePage() {
       });
 
       // Navigate back to scheduler page
-      navigate('/scheduler');
+      navigate(`/${queueName}/scheduler`);
     } catch (err: any) {
       toast({
         title: 'Error',

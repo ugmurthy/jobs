@@ -2,18 +2,19 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchDashboardStats } from '@/features/dashboard/dashboardSlice';
-import type { JobStats, RecentJob } from '@/features/dashboard/dashboardSlice';
+import type { JobStats, RecentJob, QueueStats } from '@/features/dashboard/dashboardSlice';
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const { jobStats, recentJobs, isLoading, error } = useAppSelector((state) => state.dashboard);
+  const { jobStats, recentJobs, queueStats, schedulerStats, webhookStats, isLoading, error } = useAppSelector((state) => state.dashboard);
   
   useEffect(() => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
   
   const formatDate = (dateString: string) => {
+    if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleString();
   };
@@ -114,23 +115,82 @@ export default function DashboardPage() {
             </div>
           )}
           
-          {/* Completion Rate */}
-          {jobStats && (
-            <div className="p-6 mb-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Job Completion Rate</h2>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {jobStats.completionRate}%
-                </span>
-              </div>
-              <div className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
-                <div
-                  className="h-4 bg-green-600 rounded-full dark:bg-green-500"
-                  style={{ width: `${jobStats.completionRate}%` }}
-                ></div>
-              </div>
+          {/* Other Stats */}
+          <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2 lg:grid-cols-3">
+              {schedulerStats && (
+                  <div className="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                      <h2 className="mb-2 text-lg font-semibold">Scheduler</h2>
+                      <p>Total: {schedulerStats.totalSchedules}</p>
+                      <p>Active: {schedulerStats.activeSchedules}</p>
+                      <p>Next Run: {formatDate(schedulerStats.nextScheduledJob)}</p>
+                  </div>
+              )}
+              {webhookStats && (
+                  <div className="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                      <h2 className="mb-2 text-lg font-semibold">Webhooks</h2>
+                      <p>Total: {webhookStats.totalWebhooks}</p>
+                      <p>Active: {webhookStats.activeWebhooks}</p>
+                      <p>Delivery Rate: {webhookStats.deliveryRate}%</p>
+                  </div>
+              )}
+          </div>
+
+          {/* Queue Stats */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Queue Stats</h2>
             </div>
-          )}
+            
+            <div className="overflow-hidden bg-white rounded-lg shadow dark:bg-gray-800">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Queue Name
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Total
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Active
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Completed
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Failed
+                    </th>
+                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Delayed
+                    </th>
+                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Paused
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                  {Array.isArray(queueStats) && queueStats.map((queue) => (
+                    <tr key={queue.name}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Link
+                          to={`/${queue.name}/jobs`}
+                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                        >
+                          {queue.name}
+                        </Link>
+                      </td>
+                       <td className="px-6 py-4 whitespace-nowrap">{queue.total}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{queue.active}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{queue.completed}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{queue.failed}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{queue.delayed}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{queue.paused}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
           
           {/* Recent Jobs */}
           <div className="mb-6">
@@ -149,6 +209,9 @@ export default function DashboardPage() {
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Job Id
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                       Job Name
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
@@ -163,8 +226,16 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                  {recentJobs.map((job) => (
+                  {Array.isArray(recentJobs) && recentJobs.map((job) => (
                     <tr key={job.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Link
+                          to={`/jobs/${job.id}`}
+                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                        >
+                          {job.id}
+                        </Link>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link
                           to={`/jobs/${job.id}`}

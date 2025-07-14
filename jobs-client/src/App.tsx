@@ -56,13 +56,13 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/jobs" element={<JobsPage />} />
-                <Route path="/jobs/new" element={<NewJobPage />} />
-                <Route path="/jobs/edit/:jobId" element={<EditJobPage />} />
-                <Route path="/jobs/:jobId" element={<JobDetailPage />} />
-                <Route path="/scheduler" element={<SchedulerPage />} />
-                <Route path="/scheduler/new" element={<NewSchedulePage />} />
-                <Route path="/scheduler/edit/:id" element={<EditSchedulePage />} />
+                <Route path="/queues/:queueName" element={<JobsPage />} />
+                <Route path="/queues/:queueName/new" element={<NewJobPage />} />
+                <Route path="/queues/:queueName/edit/:jobId" element={<EditJobPage />} />
+                <Route path="/queues/:queueName/:jobId" element={<JobDetailPage />} />
+                <Route path="/:queueName/scheduler" element={<SchedulerPage />} />
+                <Route path="/:queueName/scheduler/new" element={<NewSchedulePage />} />
+                <Route path="/:queueName/scheduler/edit/:id" element={<EditSchedulePage />} />
                 <Route path="/webhooks" element={<WebhooksPage />} />
                 <Route path="/webhooks/new" element={<NewWebhookPage />} />
                 <Route path="/api-keys" element={<ApiKeysPage />} />
