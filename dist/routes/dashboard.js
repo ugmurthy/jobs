@@ -8,6 +8,7 @@ const router = Router();
 /**
  * Get dashboard statistics
  */
+import { allowedQueues } from '../config/queues.js';
 router.get('/stats', authenticate, async (req, res) => {
     try {
         const userId = req.user?.userId;
@@ -16,29 +17,42 @@ router.get('/stats', authenticate, async (req, res) => {
             return;
         }
         logger.info(`Fetching dashboard stats for user ${userId}`);
-        const jobQueue = getQueue('jobQueue');
-        // Get all jobs from the queue
-        const allJobs = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children']);
-        // Filter jobs by user ID
-        const userJobs = allJobs.filter((job) => job.data.userId === userId);
-        // Calculate job statistics using BullMQ status names
-        const total = userJobs.length;
-        const completed = userJobs.filter((job) => job.finishedOn && !job.failedReason).length;
-        const failed = userJobs.filter((job) => job.failedReason).length;
-        const active = userJobs.filter((job) => job.processedOn && !job.finishedOn).length;
-        const delayed = userJobs.filter((job) => {
-            const state = job.opts?.delay && job.opts.delay > Date.now();
-            return state;
-        }).length;
-        const paused = (await jobQueue.getJobs(['paused'])).filter((job) => job.data.userId === userId).length;
-        const waiting = (await jobQueue.getJobs(['waiting'])).filter((job) => job.data.userId === userId).length;
-        const waitingChildren = userJobs.filter((job) => {
-            // Check if job is waiting for children - this would need to be determined by job dependencies
-            return false; // Placeholder - would need actual waiting-children detection
-        }).length;
+        let allUserJobs = [];
+        const queueStats = [];
+        for (const queueName of allowedQueues) {
+            const queue = getQueue(queueName);
+            const allJobs = await queue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children']);
+            const userJobs = allJobs.filter((job) => job.data.userId === userId);
+            allUserJobs = allUserJobs.concat(userJobs);
+            const completed = userJobs.filter((job) => job.finishedOn && !job.failedReason).length;
+            const failed = userJobs.filter((job) => job.failedReason).length;
+            const active = userJobs.filter((job) => job.processedOn && !job.finishedOn).length;
+            const delayed = userJobs.filter((job) => job.opts?.delay && job.opts.delay > Date.now()).length;
+            const paused = (await queue.getJobs(['paused'])).filter((job) => job.data.userId === userId).length;
+            queueStats.push({
+                name: queueName,
+                total: userJobs.length,
+                completed,
+                failed,
+                active,
+                delayed,
+                paused,
+                'waiting-children': 0, // Placeholder
+            });
+        }
+        const total = allUserJobs.length;
+        const completed = allUserJobs.filter((job) => job.finishedOn && !job.failedReason).length;
+        const failed = allUserJobs.filter((job) => job.failedReason).length;
+        const active = allUserJobs.filter((job) => job.processedOn && !job.finishedOn).length;
+        const delayed = allUserJobs.filter((job) => job.opts?.delay && job.opts.delay > Date.now()).length;
+        const paused = allUserJobs.filter((job) => job.paused).length;
+        const waitingChildren = allUserJobs.filter((job) => false).length;
+        const waiting = allUserJobs.filter((job) => !job.processedOn && !job.finishedOn && !job.failedReason && !job.delay && !job.paused).length;
         const completionRate = total > 0 ? Math.round((completed / total) * 1000) / 10 : 0;
-        // Get recent jobs (last 5)
-        const recentJobs = await Promise.all(userJobs
+        const jobQueue = getQueue('jobQueue');
+        const recentJobsRaw = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children'], 0, 4);
+        const recentJobs = await Promise.all(recentJobsRaw
+            .filter((job) => job.data.userId === userId)
             .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
             .slice(0, 5)
             .map(async (job) => {
@@ -66,31 +80,17 @@ router.get('/stats', authenticate, async (req, res) => {
                 case 'waiting':
                     status = 'waiting';
                     break;
-                default:
-                    status = 'active'; // Default to active for unknown jobs
+                default: status = 'active';
             }
             const createdAt = new Date(job.timestamp).toISOString();
             const completedAt = job.finishedOn ? new Date(job.finishedOn).toISOString() : undefined;
-            const duration = job.finishedOn && job.processedOn
-                ? Math.round((job.finishedOn - job.processedOn) / 1000)
-                : undefined;
-            return {
-                id: job.id,
-                name: job.name,
-                status,
-                createdAt,
-                completedAt,
-                duration
-            };
+            const duration = job.finishedOn && job.processedOn ? Math.round((job.finishedOn - job.processedOn) / 1000) : undefined;
+            return { id: job.id, name: job.name, status, createdAt, completedAt, duration };
         }));
         // Get scheduler statistics
         const scheduledJobs = await schedulerService.getUserScheduledJobs('schedQueue', userId);
-        // Since we don't have direct access to 'active' property in JobSchedulerJson,
-        // we'll assume all returned jobs are active for now
         const activeSchedules = scheduledJobs.length;
         const totalSchedules = scheduledJobs.length;
-        // For the next scheduled job, we'll use the current time + 1 day as a placeholder
-        // In a real implementation, you would extract this from the job's repeat pattern
         let nextScheduledJob;
         if (scheduledJobs.length > 0) {
             const tomorrow = new Date();
@@ -98,17 +98,12 @@ router.get('/stats', authenticate, async (req, res) => {
             nextScheduledJob = tomorrow.toISOString();
         }
         // Get webhook statistics
-        const webhooks = await prisma.webhook.findMany({
-            where: { userId }
-        });
+        const webhooks = await prisma.webhook.findMany({ where: { userId } });
         const totalWebhooks = webhooks.length;
         const activeWebhooks = webhooks.filter(webhook => webhook.active).length;
-        // For webhook delivery stats, we would need a webhook delivery tracking table
-        // For now, we'll use mock data
         const deliveryRate = 98.5;
         const totalDeliveries = 1250;
         const failedDeliveries = Math.round(totalDeliveries * (1 - deliveryRate / 100));
-        // Construct the response
         const response = {
             jobStats: {
                 total,
@@ -122,6 +117,7 @@ router.get('/stats', authenticate, async (req, res) => {
                 completionRate
             },
             recentJobs,
+            queueStats,
             schedulerStats: {
                 activeSchedules,
                 totalSchedules,
