@@ -151,7 +151,7 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   return null;
 });
 
-export const fetchCurrentUser = createAsyncThunk('auth/fetchCurrentUser', async (_, { getState, rejectWithValue }) => {
+export const fetchCurrentUser = createAsyncThunk('auth/fetchCurrentUser', async (_, { rejectWithValue }) => {
   try {
     const response = await api.get<any>('/auth/me');
     console.log('Fetch current user response:', response);

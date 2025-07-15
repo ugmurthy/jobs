@@ -34,13 +34,13 @@ export const websocketSlice = createSlice({
       state.connecting = true;
       state.error = null;
     },
-    connected: (state: WebSocketState, action: PayloadAction<{ id: string | undefined }>) => {
+    connected: (state: WebSocketState, _action: PayloadAction<{ id: string | undefined }>) => {
       state.connected = true;
       state.connecting = false;
       state.error = null;
       state.reconnectAttempts = 0;
     },
-    disconnected: (state: WebSocketState, action: PayloadAction<{ reason: string }>) => {
+    disconnected: (state: WebSocketState, _action: PayloadAction<{ reason: string }>) => {
       state.connected = false;
       state.connecting = false;
     },

@@ -38,8 +38,17 @@ export default function EditJobPage() {
         }
       }
 
-      await dispatch(deleteJob(jobId!)).unwrap();
-      const newJob = await dispatch(createJob({ name: data.name, data: parsedData, options: data.options })).unwrap();
+      if (!selectedJob) {
+        toast({
+          title: 'Error',
+          description: 'Job details not loaded yet.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      await dispatch(deleteJob({ queueName: selectedJob.queueName, jobId: jobId! })).unwrap();
+      const newJob = await dispatch(createJob({ queueName: selectedJob.queueName, name: data.name, data: parsedData, options: data.options })).unwrap();
 
       toast({
         title: 'Job Updated',
@@ -58,10 +67,10 @@ export default function EditJobPage() {
   });
 
   useEffect(() => {
-    if (jobId) {
-      dispatch(fetchJobById(jobId));
+    if (jobId && selectedJob?.queueName) {
+      dispatch(fetchJobById({ queueName: selectedJob.queueName, jobId }));
     }
-  }, [dispatch, jobId]);
+  }, [dispatch, jobId, selectedJob?.queueName]);
 
   useEffect(() => {
     if (selectedJob) {

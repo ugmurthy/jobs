@@ -32,7 +32,7 @@ export default function NewWebhookPage() {
   } = useValidatedForm(webhookSchema, async (data: WebhookFormValues) => {
     try {
       // Create webhook with validated data
-      const result = await dispatch(createWebhook({
+      await dispatch(createWebhook({
         url: data.url,
         events: selectedEvents,
         active: data.active,

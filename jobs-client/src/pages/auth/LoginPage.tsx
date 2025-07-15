@@ -5,7 +5,7 @@ import { store } from '@/app/store';
 import { login } from '@/features/auth/authSlice';
 import { useToast } from '@/components/ui/use-toast';
 import { loginSchema } from '@/lib/validation';
-import { useValidatedForm, getFieldError, hasFieldError } from '@/lib/form-validation';
+import { useValidatedForm } from '@/lib/form-validation';
 
 interface LocationState {
   from?: {

@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   fetchScheduledJobs,
-  toggleScheduledJob,
   runScheduledJobNow,
   deleteScheduledJob,
   ScheduledJob,
@@ -13,7 +12,6 @@ import {
 export default function SchedulerPage() {
   const { queueName } = useParams<{ queueName: string }>();
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { scheduledJobs, isLoading, error } = useAppSelector((state) => state.scheduler);
 
   useEffect(() => {
@@ -59,23 +57,10 @@ export default function SchedulerPage() {
     }
   };
 
-  const handleEdit = (key: string) => {
-    navigate(`/${queueName}/scheduler/edit/${key}`);
-  };
-
   const handleRunNow = (key: string) => {
     if (queueName) {
       dispatch(runScheduledJobNow({ queueName, schedulerId: key }));
     }
-  };
-
-  // Helper function to determine if a job is enabled
-  const isJobEnabled = (job: ScheduledJob) => {
-    // If endDate exists and is in the past, the job is disabled
-    if (job.endDate && new Date(job.endDate) < new Date()) {
-      return false;
-    }
-    return true;
   };
 
   return (
@@ -124,7 +109,6 @@ export default function SchedulerPage() {
                 </tr>
               ) : (
                 scheduledJobs.map((job, index) => {
-                  const enabled = isJobEnabled(job);
                   return (
                     <tr
                       key={job.key || `job-${index}`}

@@ -79,10 +79,10 @@ export const fetchSystemStats = createAsyncThunk(
   'admin/fetchSystemStats',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/admin/stats');
-      return response.data;
+      const response = await api.get<SystemStats>('/admin/stats');
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch system stats');
+      return rejectWithValue(error.message || 'Failed to fetch system stats');
     }
   }
 );
@@ -103,10 +103,10 @@ export const fetchUsers = createAsyncThunk(
         sortDirection: usersFilters.sortDirection,
       };
       
-      const response = await api.get('/admin/users', { params });
-      return response.data;
+      const response = await api.get<{ users: User[], pagination: AdminState['usersPagination'] }>('/admin/users', { params });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
+      return rejectWithValue(error.message || 'Failed to fetch users');
     }
   }
 );
@@ -115,10 +115,10 @@ export const fetchUserById = createAsyncThunk(
   'admin/fetchUserById',
   async (userId: string, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/admin/users/${userId}`);
-      return response.data;
+      const response = await api.get<User>(`/admin/users/${userId}`);
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch user');
+      return rejectWithValue(error.message || 'Failed to fetch user');
     }
   }
 );
@@ -140,10 +140,10 @@ export const updateUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await api.put(`/admin/users/${id}`, { username, email, role });
-      return response.data;
+      const response = await api.put<User>(`/admin/users/${id}`, { username, email, role });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update user');
+      return rejectWithValue(error.message || 'Failed to update user');
     }
   }
 );
@@ -167,10 +167,10 @@ export const purgeJobs = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await api.post('/admin/purge-jobs', { status, olderThan });
-      return response.data;
+      const response = await api.post<{ message: string, purgedCount: number }>('/admin/purge-jobs', { status, olderThan });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to purge jobs');
+      return rejectWithValue(error.message || 'Failed to purge jobs');
     }
   }
 );

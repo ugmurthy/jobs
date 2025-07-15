@@ -220,7 +220,7 @@ export default function JobDetailPage() {
     }
   };
   
-  const getProgressColor = (status: string, progress: number) => {
+  const getProgressColor = (status: string, _progress: number) => {
     switch (status) {
       case 'completed':
         return 'bg-green-500 dark:bg-green-600';

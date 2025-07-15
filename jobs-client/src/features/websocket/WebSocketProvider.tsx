@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useCallback } from 'react';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { initializeSocket, closeSocket, getSocket } from '@/lib/socket';
+import { initializeSocket, closeSocket } from '@/lib/socket';
 import { connecting, clearError } from '@/features/websocket/websocketSlice';
 import { useToast } from '@/components/ui/use-toast';
 

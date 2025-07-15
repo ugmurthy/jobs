@@ -78,12 +78,12 @@ export default function EditSchedulePage() {
         apiOptions.removeOnComplete = { count: data.options.attempts };
         apiOptions.removeOnFail = { count: data.options.attempts };
       }
-
-      // Update scheduled job with transformed data
-      const result = await dispatch(updateScheduledJob({
-        queueName,
-        id,
-        name: data.name,
+ 
+       // Update scheduled job with transformed data
+      await dispatch(updateScheduledJob({
+         queueName,
+         id,
+         name: data.name,
         data: parsedData,
         schedule: apiSchedule,
         options: apiOptions,

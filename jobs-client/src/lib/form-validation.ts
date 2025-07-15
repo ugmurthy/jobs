@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { useState } from 'react';
-import { useForm, UseFormProps, FieldValues, SubmitHandler } from 'react-hook-form';
+import { useForm, UseFormProps, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 /**

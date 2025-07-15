@@ -50,14 +50,13 @@ export default function JobsPage() {
   const [jobs, setJobs] = useState<UIJob[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [totalJobs, setTotalJobs] = useState(0);
+  const [_totalJobs, setTotalJobs] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
   const observer = useRef<IntersectionObserver>();
   
   // Subscribe to the jobs state in Redux to get real-time updates
   const reduxJobs = useAppSelector((state) => state.jobs.jobs);
-  const pagination = useAppSelector((state) => state.jobs.pagination);
   const [filter, setFilter] = useState<JobsFilter>({
     status: 'all',
     search: '',
@@ -159,9 +158,6 @@ export default function JobsPage() {
   // Effect to update UI jobs when Redux jobs state changes (for real-time updates)
   useEffect(() => {
     if (reduxJobs.length > 0 && jobs.length > 0) {
-      // Create a map of existing UI jobs for quick lookup
-      const jobsMap = new Map(jobs.map(job => [job.id, job]));
-      
       // Check if any Redux jobs have updated progress or status
       let hasUpdates = false;
       
@@ -312,7 +308,7 @@ export default function JobsPage() {
     return JOB_STATUS_COLORS[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
   };
   
-  const getProgressColor = (status: JobType['status'], progress: number) => {
+  const getProgressColor = (status: JobType['status'], _progress: number) => {
     const colorKey = status.toLowerCase();
     switch (colorKey) {
       case 'completed':
@@ -333,8 +329,6 @@ export default function JobsPage() {
         return 'bg-gray-500 dark:bg-gray-600';
     }
   };
-  
-  const totalPages = Math.ceil(totalJobs / filter.limit);
   
   // Helper to get nested properties for sorting
   const getNested = (obj: any, path: string) => {

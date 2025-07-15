@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { createScheduledJob, setQueueName } from '@/features/scheduler/schedulerSlice';
+import { useAppDispatch } from '@/app/hooks';
+import { createScheduledJob } from '@/features/scheduler/schedulerSlice';
 import { scheduleJobSchema, ScheduleJobFormValues } from '@/lib/validation';
 import { useToast } from '@/components/ui/use-toast';
 import { useValidatedForm, getFieldError, hasFieldError } from '@/lib/form-validation';
@@ -75,7 +75,7 @@ export default function NewSchedulePage() {
       }
       
       // Create scheduled job with transformed data
-      const result = await dispatch(createScheduledJob({
+     await dispatch(createScheduledJob({
         queueName,
         name: data.name,
         data: parsedData,

@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchDashboardStats } from '@/features/dashboard/dashboardSlice';
-import type { JobStats, RecentJob, QueueStats } from '@/features/dashboard/dashboardSlice';
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();

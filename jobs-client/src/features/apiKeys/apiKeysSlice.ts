@@ -4,7 +4,7 @@ import { api } from '@/lib/api';
 export interface ApiKey {
   id: string;
   name: string;
-  key: string; // Only included when first created
+  key?: string; // Only included when first created
   prefix: string;
   permissions: string[];
   lastUsed: string | null;
@@ -65,10 +65,10 @@ export const fetchApiKeys = createAsyncThunk(
         expired: filters.expired,
       };
       
-      const response = await api.get('/api-keys', { params });
-      return response.data;
+      const response = await api.get<{ apiKeys: ApiKey[], pagination: ApiKeysState['pagination']}>('/api-keys', { params });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch API keys');
+      return rejectWithValue(error.message || 'Failed to fetch API keys');
     }
   }
 );
@@ -77,10 +77,10 @@ export const fetchApiKeyById = createAsyncThunk(
   'apiKeys/fetchApiKeyById',
   async (apiKeyId: string, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/api-keys/${apiKeyId}`);
-      return response.data;
+      const response = await api.get<ApiKey>(`/api-keys/${apiKeyId}`);
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch API key');
+      return rejectWithValue(error.message || 'Failed to fetch API key');
     }
   }
 );
@@ -100,10 +100,10 @@ export const createApiKey = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await api.post('/api-keys', { name, permissions, expiresAt });
-      return response.data;
+      const response = await api.post<ApiKey>('/api-keys', { name, permissions, expiresAt });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to create API key');
+      return rejectWithValue(error.message || 'Failed to create API key');
     }
   }
 );
@@ -125,10 +125,10 @@ export const updateApiKey = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await api.put(`/api-keys/${id}`, { name, permissions, expiresAt });
-      return response.data;
+      const response = await api.put<ApiKey>(`/api-keys/${id}`, { name, permissions, expiresAt });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update API key');
+      return rejectWithValue(error.message || 'Failed to update API key');
     }
   }
 );

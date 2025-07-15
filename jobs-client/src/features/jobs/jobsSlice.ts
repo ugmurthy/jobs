@@ -5,6 +5,7 @@ import { WebSocketEvent } from '@/features/websocket/websocketSlice';
 export interface Job {
   id: string;
   name: string;
+  queueName: string;
   data: Record<string, any>;
   status: 'completed' | 'failed' | 'delayed' | 'active' | 'waiting' | 'paused' | 'stuck';
   progress: number;

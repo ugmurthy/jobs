@@ -91,10 +91,10 @@ export const fetchWebhooks = createAsyncThunk(
         event: filters.event,
       };
       
-      const response = await api.get('/webhooks', { params });
-      return response.data;
+      const response = await api.get<{ webhooks: Webhook[], pagination: WebhooksState['pagination'] }>('/webhooks', { params });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch webhooks');
+      return rejectWithValue(error.message || 'Failed to fetch webhooks');
     }
   }
 );
@@ -103,10 +103,10 @@ export const fetchWebhookById = createAsyncThunk(
   'webhooks/fetchWebhookById',
   async (webhookId: string, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/webhooks/${webhookId}`);
-      return response.data;
+      const response = await api.get<Webhook>(`/webhooks/${webhookId}`);
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch webhook');
+      return rejectWithValue(error.message || 'Failed to fetch webhook');
     }
   }
 );
@@ -123,10 +123,10 @@ export const fetchWebhookDeliveries = createAsyncThunk(
         limit: deliveriesPagination.limit,
       };
       
-      const response = await api.get(`/webhooks/${webhookId}/deliveries`, { params });
-      return response.data;
+      const response = await api.get<{ deliveries: WebhookDelivery[], pagination: WebhooksState['deliveriesPagination'] }>(`/webhooks/${webhookId}/deliveries`, { params });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch webhook deliveries');
+      return rejectWithValue(error.message || 'Failed to fetch webhook deliveries');
     }
   }
 );
@@ -148,10 +148,10 @@ export const createWebhook = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await api.post('/webhooks', { url, events, active, description });
-      return response.data;
+      const response = await api.post<Webhook>('/webhooks', { url, events, active, description });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to create webhook');
+      return rejectWithValue(error.message || 'Failed to create webhook');
     }
   }
 );
@@ -175,10 +175,10 @@ export const updateWebhook = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await api.put(`/webhooks/${id}`, { url, events, active, description });
-      return response.data;
+      const response = await api.put<Webhook>(`/webhooks/${id}`, { url, events, active, description });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update webhook');
+      return rejectWithValue(error.message || 'Failed to update webhook');
     }
   }
 );
@@ -187,10 +187,10 @@ export const toggleWebhook = createAsyncThunk(
   'webhooks/toggleWebhook',
   async ({ id, active }: { id: string; active: boolean }, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`/webhooks/${id}/toggle`, { active });
-      return response.data;
+      const response = await api.patch<Webhook>(`/webhooks/${id}/toggle`, { active });
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to toggle webhook');
+      return rejectWithValue(error.message || 'Failed to toggle webhook');
     }
   }
 );
@@ -211,10 +211,10 @@ export const retryWebhookDelivery = createAsyncThunk(
   'webhooks/retryWebhookDelivery',
   async ({ webhookId, deliveryId }: { webhookId: string; deliveryId: string }, { rejectWithValue }) => {
     try {
-      const response = await api.post(`/webhooks/${webhookId}/deliveries/${deliveryId}/retry`);
-      return response.data;
+      const response = await api.post<WebhookDelivery>(`/webhooks/${webhookId}/deliveries/${deliveryId}/retry`);
+      return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to retry webhook delivery');
+      return rejectWithValue(error.message || 'Failed to retry webhook delivery');
     }
   }
 );
