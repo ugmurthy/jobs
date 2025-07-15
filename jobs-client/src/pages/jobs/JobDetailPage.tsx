@@ -399,7 +399,7 @@ export default function JobDetailPage() {
     <div className="container p-6 mx-auto">
       <div className="flex items-center mb-2">
         <Link
-          to={`/${queueName}/jobs`}
+          to={`/queues/${queueName}`}
           className="flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
         >
           <svg

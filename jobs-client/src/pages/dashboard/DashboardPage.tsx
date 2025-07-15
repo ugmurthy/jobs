@@ -172,7 +172,7 @@ export default function DashboardPage() {
                     <tr key={queue.name}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link
-                          to={`/${queue.name}/jobs`}
+                          to={`/queues/${queue.name}`}
                           className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                         >
                           {queue.name}
@@ -196,7 +196,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Recent Jobs</h2>
               <Link
-                to="/jobs"
+                to="/queues/jobQueue"
                 className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
               >
                 View all jobs
@@ -229,7 +229,7 @@ export default function DashboardPage() {
                     <tr key={job.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link
-                          to={`/jobs/${job.id}`}
+                          to={`/queues/jobQueue/${job.id}`}
                           className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                         >
                           {job.id}
@@ -237,7 +237,7 @@ export default function DashboardPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link
-                          to={`/jobs/${job.id}`}
+                          to={`/queues/jobQueue/${job.id}`}
                           className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                         >
                           {job.name}
@@ -266,7 +266,7 @@ export default function DashboardPage() {
             <h2 className="mb-4 text-xl font-semibold">Quick Actions</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <Link
-                to="/jobs/new"
+                to="/queues/jobQueue/new"
                 className="flex items-center p-4 bg-white rounded-lg shadow-md hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700"
               >
                 <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 text-blue-600 bg-blue-100 rounded-full dark:bg-blue-900/30">
@@ -294,7 +294,7 @@ export default function DashboardPage() {
               </Link>
               
               <Link
-                to="/scheduler/new"
+                to="/schedQueue/scheduler/new"
                 className="flex items-center p-4 bg-white rounded-lg shadow-md hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700"
               >
                 <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 text-purple-600 bg-purple-100 rounded-full dark:bg-purple-900/30">
