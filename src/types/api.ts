@@ -726,6 +726,193 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/flows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a list of all flows */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A list of flows. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FlowResponse"][];
+                    };
+                };
+                /** @description Internal server error. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        /** Create a new BullMQ flow */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateFlowRequest"];
+                };
+            };
+            responses: {
+                /** @description Flow created successfully. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FlowResponse"];
+                    };
+                };
+                /** @description Invalid request body. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/flows/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a single flow by its ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The ID of the flow. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The flow details. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FlowResponse"];
+                    };
+                };
+                /** @description Flow not found. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/flows/{id}/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all jobs associated with a flow */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The ID of the flow. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A list of jobs for the flow. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FlowJobResponse"][];
+                    };
+                };
+                /** @description Flow not found. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/jobs/{queueName}/submit": {
         parameters: {
             query?: never;
@@ -1633,6 +1820,81 @@ export interface components {
              * @example Operation completed successfully
              */
             message?: string;
+        };
+        FlowJobData: {
+            /** @description Name of the job. */
+            name: string;
+            /** @description The queue this job belongs to. */
+            queueName: string;
+            /** @description Data for the job. */
+            data?: {
+                [key: string]: unknown;
+            };
+            /** @description Job options. */
+            opts?: {
+                [key: string]: unknown;
+            };
+            /** @description Nested child jobs. */
+            children?: components["schemas"]["FlowJobData"][];
+        };
+        CreateFlowRequest: {
+            /** @description Name for the entire flow. */
+            name: string;
+            /** @description The queue for the root job of the flow. */
+            queueName: string;
+            /** @description Data for the root job. */
+            data?: {
+                [key: string]: unknown;
+            };
+            /** @description Options for the root job. */
+            opts?: {
+                [key: string]: unknown;
+            };
+            /** @description The tree of child jobs for the flow. */
+            children?: components["schemas"]["FlowJobData"][];
+        };
+        FlowResponse: {
+            /** @description The flow ID. */
+            id?: string;
+            /** @description The name of the flow. */
+            name?: string;
+            /**
+             * Format: date-time
+             * @description Creation timestamp.
+             */
+            createdAt?: string;
+        };
+        FlowJobResponse: {
+            /** @description The flow job ID from the database. */
+            id?: string;
+            /** @description The BullMQ job ID. */
+            jobId?: string;
+            /** @description The ID of the parent flow. */
+            flowId?: string;
+            /** @description The name of the queue. */
+            queueName?: string;
+            /** @description The job data. */
+            data?: {
+                [key: string]: unknown;
+            };
+            /** @description The job options. */
+            opts?: {
+                [key: string]: unknown;
+            };
+            /** @description The current status of the job. */
+            status?: string;
+            /** @description The result of the job. */
+            result?: {
+                [key: string]: unknown;
+            } | null;
+            /** @description Error information if the job failed. */
+            error?: {
+                [key: string]: unknown;
+            } | null;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
         Job: {
             /**

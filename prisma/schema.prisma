@@ -18,6 +18,7 @@ model User {
   webhookUrl        String?   // Legacy field
   webhooks          Webhook[]
   apiKeys           ApiKey[]  // New relation to API keys
+  flows             Flow[]
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   
@@ -57,4 +58,30 @@ model ApiKey {
   isActive    Boolean   @default(true)
   
   user        User      @relation(fields: [userId], references: [id])
+}
+
+model Flow {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  jobs      FlowJob[]
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+model FlowJob {
+  id        Int      @id @default(autoincrement())
+  jobId     String   @unique
+  flowId    Int
+  flow      Flow     @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  queueName String
+  data      Json
+  opts      Json
+  status    String   @default("waiting")
+  result    Json?
+  error     Json?
+  children  Json?    // Store children job keys
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

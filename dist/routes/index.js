@@ -12,6 +12,7 @@ import schedulerRoutes from './scheduler.js';
 import apiKeyRoutes from './apiKeys.js';
 import dashboardRoutes from './dashboard.js';
 import queueRoutes from './queues.js';
+import flowRoutes from './flow.js';
 /**
  * Register all application routes
  */
@@ -48,6 +49,7 @@ export const registerRoutes = (app) => {
     app.use('/admin', authenticate, adminRoutes);
     app.use('/api-keys', authenticate, apiKeyRoutes);
     app.use('/dashboard', authenticate, dashboardRoutes);
+    app.use('/flows', authenticate, flowRoutes);
     // Define legacy routes directly for backward compatibility
     // User registration route
     app.post('/register', async (req, res) => {

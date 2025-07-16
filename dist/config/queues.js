@@ -1,5 +1,6 @@
 export const allowedQueues = [
     'jobQueue',
     'webhooks',
-    'schedQueue'
+    'schedQueue',
+    'flowQueue'
 ];
