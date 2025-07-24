@@ -1,3 +1,14 @@
+/**
+ * JobsPage Component
+ *
+ * Displays a list of jobs with filtering and infinite scrolling.
+ *
+ * Features:
+ * - Filter jobs by status, search term, and sort order
+ * - Infinite scrolling to load more jobs as the user scrolls down
+ * - Real-time job status updates
+ */
+
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -54,17 +65,27 @@ export default function JobsPage() {
   const [hasMore, setHasMore] = useState(true);
 
   const observer = useRef<IntersectionObserver>();
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const [anchorJobId, setAnchorJobId] = useState<string | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   
   // Subscribe to the jobs state in Redux to get real-time updates
   const reduxJobs = useAppSelector((state) => state.jobs.jobs);
+  
+  // Initialize filter state
   const [filter, setFilter] = useState<JobsFilter>({
     status: 'all',
     search: '',
     page: 1,
     limit: 10,
-    sortBy: 'id',
+    sortBy: 'timestamp.created',
     sortOrder: 'desc',
   });
+  
+  // Log initial state for debugging
+  useEffect(() => {
+    console.log('JobsPage initialized with filter:', filter);
+  }, []);
   
   // Helper function to map API job to UI job
   const mapApiJobToUiJob = (apiJob: any): UIJob => {
@@ -100,61 +121,203 @@ export default function JobsPage() {
     };
   };
 
-  // Effect to fetch jobs when filter changes
+  // Effect to fetch jobs when filter changes (except page changes which are handled by the IntersectionObserver)
   useEffect(() => {
-    if (!queueName) return;
+    if (!queueName) {
+      console.log('No queue name provided, skipping fetch');
+      return;
+    }
+    
+    console.log('Filter changed, fetching jobs for queue:', queueName);
+    
+    // Set queue name in Redux
     dispatch(setQueueName(queueName));
+    
+    // Only fetch jobs when filters change (not when page changes)
+    // Page changes are handled by the IntersectionObserver
     const fetchJobsList = async () => {
+      console.log('Starting to fetch jobs');
       setIsLoading(true);
       setError(null);
+      
       try {
-        // Set Redux filter state based on component filter
-        dispatch(setStatusFilter(filter.status !== 'all' ? filter.status : null));
-        dispatch(setSearchFilter(filter.search || null));
-        dispatch(setSortBy(filter.sortBy));
-        dispatch(setSortDirection(filter.sortOrder as 'asc' | 'desc'));
-        dispatch(setLimit(filter.limit));
-        dispatch(setPage(filter.page));
+        console.log('Fetching initial jobs with filters:', {
+          status: filter.status,
+          search: filter.search,
+          sortBy: filter.sortBy,
+          sortOrder: filter.sortOrder,
+          page: 1
+        });
         
-        // Use the actual fetchJobs action for the initial load
-        if (filter.page === 1) {
-            const result = await dispatch(fetchJobs({queueName})).unwrap();
-            const mappedJobs = result.jobs.map(mapApiJobToUiJob);
-            setJobs(mappedJobs);
-            setTotalJobs(result.pagination.totalItems);
-            setHasMore(result.pagination.page < result.pagination.totalPages);
+        // Fetch jobs for page 1
+        const result = await dispatch(fetchJobs({queueName})).unwrap();
+        
+        console.log('Initial jobs fetch result:', {
+          jobsCount: result.jobs.length,
+          totalItems: result.pagination.totalItems,
+          totalPages: result.pagination.totalPages
+        });
+        
+        // Map API jobs to UI jobs
+        const mappedJobs = result.jobs.map(mapApiJobToUiJob);
+        console.log(`Mapped ${mappedJobs.length} jobs to UI format`);
+        
+        // Update state
+        setJobs(mappedJobs);
+        setTotalJobs(result.pagination.totalItems);
+        
+        // Check if there are more pages
+        const hasMorePages = result.pagination.page < result.pagination.totalPages;
+        console.log(`Has more pages: ${hasMorePages}`);
+        setHasMore(hasMorePages);
+        
+        // Reset page to 1 in filter state
+        if (filter.page !== 1) {
+          console.log('Resetting page to 1 in filter state');
+          setFilter(prev => ({ ...prev, page: 1 }));
         }
       } catch (err: any) {
+        console.error('Failed to fetch jobs', err);
         setError(err.message || 'Failed to fetch jobs');
       } finally {
+        console.log('Finished fetching initial jobs');
         setIsLoading(false);
       }
     };
     
     fetchJobsList();
-  }, [dispatch, filter.status, filter.search, filter.sortBy, filter.sortOrder, filter.limit, queueName]);
+  }, [dispatch, filter.status, filter.search, filter.sortBy, filter.sortOrder, queueName]);
 
+  // Simple callback ref for the last job element in the list
   const lastJobElementRef = useCallback((node: any) => {
-    if (isLoading) return;
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver(async (entries) => {
-      if (entries[0].isIntersecting && hasMore) {
-        handleFilterChange('page', filter.page + 1);
-        setIsLoading(true);
-        try {
-            const result = await dispatch(fetchJobs({ queueName: queueName!, append: true })).unwrap();
-            setJobs(prevJobs => [...prevJobs, ...result.jobs.map(mapApiJobToUiJob)]);
-            setHasMore(result.pagination.page < result.pagination.totalPages);
-        } catch (err: any) {
-            setError(err.message || 'Failed to load more jobs');
-        } finally {
-            setIsLoading(false);
+    // Skip if already loading or no more jobs
+    if (isLoading || !hasMore) {
+      console.log('Skipping observer setup:', { isLoading, hasMore });
+      return;
+    }
+    
+    // Clean up previous observer
+    if (observer.current) {
+      console.log('Disconnecting previous observer');
+      observer.current.disconnect();
+    }
+    
+    console.log('Setting up new IntersectionObserver');
+    
+    // Create new observer with simpler configuration
+    observer.current = new IntersectionObserver((entries) => {
+      console.log('IntersectionObserver callback triggered', {
+        isIntersecting: entries[0].isIntersecting,
+        hasMore,
+        isLoading,
+        currentPage: filter.page
+      });
+      
+      // Only proceed if the element is intersecting (visible)
+      if (entries[0].isIntersecting && hasMore && !isLoading) {
+        console.log('Last job element is visible, loading more jobs');
+        
+        // Set an anchor job ID (use a job that's a few positions above the last one)
+        const anchorIndex = Math.max(0, jobs.length - 5); // 5 jobs above the last one
+        const anchorJob = jobs[anchorIndex];
+        if (anchorJob) {
+          console.log('Setting anchor job ID:', anchorJob.id);
+          setAnchorJobId(anchorJob.id);
         }
+        
+        // Load more jobs
+        const nextPage = filter.page + 1;
+        console.log(`Loading page ${nextPage}`);
+        
+        // Update page in filter state
+        setFilter(prev => ({ ...prev, page: nextPage }));
+        
+        // Update Redux state
+        dispatch(setPage(nextPage));
+        
+        // Set loading states
+        setIsLoading(true);
+        setIsLoadingMore(true);
+        
+        // Fetch more jobs
+        dispatch(fetchJobs({ queueName: queueName!, append: true }))
+          .unwrap()
+          .then(result => {
+            console.log(`Loaded ${result.jobs.length} more jobs`, {
+              currentPage: result.pagination.page,
+              totalPages: result.pagination.totalPages,
+              totalItems: result.pagination.totalItems
+            });
+            
+            // Add new jobs to existing list
+            setJobs(prevJobs => {
+              const newJobs = [...prevJobs, ...result.jobs.map(mapApiJobToUiJob)];
+              console.log(`Total jobs in state: ${newJobs.length}`);
+              return newJobs;
+            });
+            
+            // Update hasMore flag
+            const hasMorePages = result.pagination.page < result.pagination.totalPages;
+            console.log(`Has more pages: ${hasMorePages}`);
+            setHasMore(hasMorePages);
+            
+            // Update total jobs count
+            setTotalJobs(result.pagination.totalItems);
+          })
+          .catch(err => {
+            console.error('Failed to load more jobs', err);
+            setError(err.message || 'Failed to load more jobs');
+          })
+          .finally(() => {
+            console.log('Finished loading more jobs');
+            setIsLoading(false);
+            // Keep isLoadingMore true until the effect scrolls to the anchor
+          });
       }
+    }, {
+      // Trigger earlier for better UX
+      rootMargin: '200px',
+      threshold: 0.1
     });
-    if (node) observer.current.observe(node);
-  }, [isLoading, hasMore, dispatch, filter, queueName]);
+    
+    // Start observing the node
+    if (node) {
+      console.log('Starting to observe last job element');
+      observer.current.observe(node);
+    } else {
+      console.warn('No node to observe');
+    }
+    
+    // Clean up on unmount
+    return () => {
+      if (observer.current) {
+        console.log('Cleaning up observer on unmount');
+        observer.current.disconnect();
+      }
+    };
+  }, [isLoading, hasMore, filter.page, dispatch, queueName]);
   
+  // Effect to scroll to anchor job after loading more jobs
+  useEffect(() => {
+    if (isLoadingMore && !isLoading && anchorJobId) {
+      console.log('Scrolling to anchor job:', anchorJobId);
+      
+      // Find the anchor job element
+      const anchorElement = document.getElementById(`job-row-${anchorJobId}`);
+      if (anchorElement) {
+        console.log('Found anchor element, scrolling to it');
+        anchorElement.scrollIntoView({ behavior: 'auto', block: 'center' });
+        
+        // Reset loading more state
+        setIsLoadingMore(false);
+        setAnchorJobId(null);
+      } else {
+        console.warn('Anchor element not found');
+        setIsLoadingMore(false);
+      }
+    }
+  }, [isLoadingMore, isLoading, anchorJobId]);
+
   // Effect to update UI jobs when Redux jobs state changes (for real-time updates)
   useEffect(() => {
     if (reduxJobs.length > 0 && jobs.length > 0) {
@@ -218,13 +381,34 @@ export default function JobsPage() {
     }
   }, [reduxJobs, jobs]);
   
+  /**
+   * Handle changes to filter values (status, search, sort, page)
+   *
+   * When changing any filter except page:
+   * - Reset to page 1
+   * - Clear the jobs list to start fresh
+   * - Update the filter state
+   *
+   * @param key - The filter property to change
+   * @param value - The new value for the filter
+   */
   const handleFilterChange = (key: keyof JobsFilter, value: any) => {
+    console.log(`Filter changed: ${key} = ${value}`);
+    
     if (key !== 'page') {
+      // When changing any filter except page, reset to page 1 and clear jobs
+      console.log('Resetting jobs list and setting page to 1');
+      
+      // Update Redux state
+      dispatch(setStatusFilter(key === 'status' ? (value !== 'all' ? value : null) : (filter.status !== 'all' ? filter.status : null)));
+      dispatch(setSearchFilter(key === 'search' ? value || null : filter.search || null));
+      dispatch(setSortBy(key === 'sortBy' ? value : filter.sortBy));
+      dispatch(setSortDirection(key === 'sortOrder' ? value as 'asc' | 'desc' : filter.sortOrder as 'asc' | 'desc'));
+      dispatch(setPage(1));
+      
+      // Reset jobs and update filter
       setJobs([]);
       setFilter({ ...filter, [key]: value, page: 1 });
-    } else {
-        dispatch(setPage(value));
-        setFilter({ ...filter, page: value });
     }
   };
   
@@ -337,15 +521,7 @@ export default function JobsPage() {
 
   const sortedJobs = useMemo(() => {
     return [...jobs].sort((a, b) => {
-      // Secondary sort: completed jobs go to the bottom
-      if (a.status === 'completed' && b.status !== 'completed') {
-        return 1;
-      }
-      if (a.status !== 'completed' && b.status === 'completed') {
-        return -1;
-      }
-
-      // Primary sort based on selected filter
+      // Sort based on selected filter
       const aValue = getNested(a, filter.sortBy);
       const bValue = getNested(b, filter.sortBy);
 
@@ -493,7 +669,11 @@ export default function JobsPage() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                     {sortedJobs.map((job, index) => (
-                      <tr key={job.id} ref={index === jobs.length - 1 ? lastJobElementRef : null}>
+                      <tr
+                        key={job.id}
+                        id={`job-row-${job.id}`}
+                        ref={index === jobs.length - 1 ? lastJobElementRef : null}
+                      >
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Link
                             to={`/queues/${queueName}/${job.id}`}

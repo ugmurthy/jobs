@@ -107,12 +107,16 @@ export const fetchJobs = createAsyncThunk<
       const response = await api.get<{ jobs: Job[]; total: number; }>(`/jobs/${queueName}`, { params });
       
       // Transform the response to match the expected format
+      // Handle both response formats:
+      // 1. { jobs: Job[]; total: number; }
+      // 2. { jobs: Job[]; pagination: { total: number; ... }; }
+      const totalItems = (response as any).pagination?.total || response.total;
       return {
         jobs: response.jobs,
         pagination: {
           ...pagination,
-          totalItems: response.total,
-          totalPages: Math.ceil(response.total / pagination.limit),
+          totalItems,
+          totalPages: Math.ceil(totalItems / pagination.limit),
         },
         append,
       };
