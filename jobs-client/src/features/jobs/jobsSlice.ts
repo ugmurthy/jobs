@@ -268,6 +268,12 @@ export const jobsSlice = createSlice({
       };
       state.pagination.page = 1; // Reset to first page when clearing filters
     },
+    clearJobs: (state: JobsState) => {
+      state.jobs = [];
+      state.pagination.page = 1;
+      state.pagination.totalItems = 0;
+      state.pagination.totalPages = 0;
+    },
     updateJobProgress: (state: JobsState, action: PayloadAction<{ id: string; progress: number }>) => {
       const { id, progress } = action.payload;
       const job = state.jobs.find(job => job.id === id);
@@ -397,7 +403,9 @@ export const jobsSlice = createSlice({
       .addCase(fetchJobs.fulfilled, (state, action: PayloadAction<{ jobs: Job[]; pagination: JobsState['pagination']; append: boolean }>) => {
         state.isLoading = false;
         if (action.payload.append) {
-          state.jobs.push(...action.payload.jobs);
+          const existingJobIds = new Set(state.jobs.map(job => job.id));
+          const newJobs = action.payload.jobs.filter(job => !existingJobIds.has(job.id));
+          state.jobs.push(...newJobs);
         } else {
           state.jobs = action.payload.jobs;
         }
@@ -513,6 +521,7 @@ export const {
   setSortDirection,
   setDateRange,
   clearFilters,
+  clearJobs,
   updateJobProgress,
   updateJobStatus,
   clearError,
