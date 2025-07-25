@@ -19,8 +19,6 @@ import {
   retryJob,
   setStatusFilter,
   setSearchFilter,
-  setSortBy,
-  setSortDirection,
   setPage,
   setQueueName,
   clearJobs,
@@ -51,8 +49,6 @@ interface JobsFilter {
   search: string;
   page: number;
   limit: number;
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
 }
 
 export default function JobsPage() {
@@ -206,8 +202,6 @@ export default function JobsPage() {
       // Update Redux state
       if (key === 'status') dispatch(setStatusFilter(value !== 'all' ? value : null));
       if (key === 'search') dispatch(setSearchFilter(value || null));
-      if (key === 'sortBy') dispatch(setSortBy(value));
-      if (key === 'sortOrder') dispatch(setSortDirection(value as 'asc' | 'desc'));
       dispatch(setPage(1));
   };
   
@@ -312,27 +306,22 @@ export default function JobsPage() {
     }
   };
   
-  // Helper to get nested properties for sorting
-  const getNested = (obj: any, path: string) => {
-    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-  };
-
   const sortedJobs = useMemo(() => {
     return [...jobs].sort((a, b) => {
-      // Sort based on selected filter
-      const aValue = getNested(a, reduxFilters.sortBy);
-      const bValue = getNested(b, reduxFilters.sortBy);
+      const aIsCompleted = a.status === 'completed';
+      const bIsCompleted = b.status === 'completed';
 
-      let comparison = 0;
-      if (aValue > bValue) {
-        comparison = 1;
-      } else if (aValue < bValue) {
-        comparison = -1;
+      if (aIsCompleted && !bIsCompleted) {
+        return 1;
+      }
+      if (!aIsCompleted && bIsCompleted) {
+        return -1;
       }
 
-      return reduxFilters.sortDirection === 'desc' ? comparison * -1 : comparison;
+      // Latest jobs on top
+      return b.timestamp.created - a.timestamp.created;
     });
-  }, [jobs, reduxFilters.sortBy, reduxFilters.sortDirection]);
+  }, [jobs]);
   
   return (
     <div className="container p-6 mx-auto">
@@ -358,7 +347,7 @@ export default function JobsPage() {
       
       {/* Filters */}
       <div className="p-4 mb-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <label htmlFor="status-filter" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
               Status
@@ -375,56 +364,21 @@ export default function JobsPage() {
               ))}
             </select>
           </div>
-          
           <div>
-            <label htmlFor="sort-by" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              Sort By
+            <label htmlFor="search" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              Search
             </label>
-            <select
-              id="sort-by"
-              value={reduxFilters.sortBy}
-              onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+            <input
+              id="search"
+              type="text"
+              value={reduxFilters.search || ''}
+              onChange={(e) => handleFilterChange('search', e.target.value)}
+              placeholder="Search by job name or ID"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            >
-              <option value="id">ID</option>
-              <option value="timestamp.created">Created Date</option>
-              <option value="name">Name</option>
-              <option value="status">Status</option>
-              <option value="duration">Duration</option>
-            </select>
+            />
           </div>
-          
-          <div>
-            <label htmlFor="sort-order" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              Sort Order
-            </label>
-            <select
-              id="sort-order"
-              value={reduxFilters.sortDirection}
-              onChange={(e) => handleFilterChange('sortOrder', e.target.value as 'asc' | 'desc')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            >
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
-            </select>
-          </div>
-        </div>
-        
-        <div className="mt-4">
-          <label htmlFor="search" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            Search
-          </label>
-          <input
-            id="search"
-            type="text"
-            value={reduxFilters.search || ''}
-            onChange={(e) => handleFilterChange('search', e.target.value)}
-            placeholder="Search by job name or ID"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          />
         </div>
       </div>
-      
       {/* Jobs List */}
       {isLoading && pagination.page === 1 ? (
         <div className="flex items-center justify-center h-64">

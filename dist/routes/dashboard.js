@@ -17,37 +17,38 @@ router.get('/stats', authenticate, async (req, res) => {
             return;
         }
         logger.info(`Fetching dashboard stats for user ${userId}`);
-        let allUserJobs = [];
         const queueStats = [];
+        const jobStatuses = ['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children'];
+        const totals = {
+            completed: 0,
+            failed: 0,
+            active: 0,
+            waiting: 0,
+            delayed: 0,
+            paused: 0,
+            'waiting-children': 0,
+            total: 0,
+        };
         for (const queueName of allowedQueues) {
             const queue = getQueue(queueName);
-            const allJobs = await queue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children']);
-            const userJobs = allJobs.filter((job) => job.data.userId === userId);
-            allUserJobs = allUserJobs.concat(userJobs);
-            const completed = userJobs.filter((job) => job.finishedOn && !job.failedReason).length;
-            const failed = userJobs.filter((job) => job.failedReason).length;
-            const active = userJobs.filter((job) => job.processedOn && !job.finishedOn).length;
-            const delayed = userJobs.filter((job) => job.opts?.delay && job.opts.delay > Date.now()).length;
-            const paused = (await queue.getJobs(['paused'])).filter((job) => job.data.userId === userId).length;
-            queueStats.push({
-                name: queueName,
-                total: userJobs.length,
-                completed,
-                failed,
-                active,
-                delayed,
-                paused,
-                'waiting-children': 0, // Placeholder
+            if (!queue)
+                continue;
+            const statsForQueue = { name: queueName, total: 0 };
+            const promises = jobStatuses.map(status => queue.getJobs([status]));
+            const jobsByStatus = await Promise.all(promises);
+            jobsByStatus.forEach((jobs, index) => {
+                const status = jobStatuses[index];
+                const userJobsInStatus = jobs.filter((job) => job.data.userId === userId);
+                const count = userJobsInStatus.length;
+                statsForQueue[status] = count;
+                statsForQueue.total += count;
+                totals[status] += count;
             });
+            totals.total += statsForQueue.total;
+            queueStats.push(statsForQueue);
         }
-        const total = allUserJobs.length;
-        const completed = allUserJobs.filter((job) => job.finishedOn && !job.failedReason).length;
-        const failed = allUserJobs.filter((job) => job.failedReason).length;
-        const active = allUserJobs.filter((job) => job.processedOn && !job.finishedOn).length;
-        const delayed = allUserJobs.filter((job) => job.opts?.delay && job.opts.delay > Date.now()).length;
-        const paused = allUserJobs.filter((job) => job.paused).length;
-        const waitingChildren = allUserJobs.filter((job) => false).length;
-        const waiting = allUserJobs.filter((job) => !job.processedOn && !job.finishedOn && !job.failedReason && !job.delay && !job.paused).length;
+        const { total, completed, failed, active, delayed, paused, waiting } = totals;
+        const waitingChildren = totals['waiting-children'];
         const completionRate = total > 0 ? Math.round((completed / total) * 1000) / 10 : 0;
         const jobQueue = getQueue('jobQueue');
         const recentJobsRaw = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children'], 0, 4);

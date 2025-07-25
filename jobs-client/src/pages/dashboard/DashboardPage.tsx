@@ -8,6 +8,8 @@ export default function DashboardPage() {
   const { user } = useAppSelector((state) => state.auth);
   const { jobStats, recentJobs, queueStats, schedulerStats, webhookStats, isLoading, error } = useAppSelector((state) => state.dashboard);
   
+  console.log("Dashboard jobStats ",jobStats);
+  console.log("Dashboard queueStats ",queueStats);
   useEffect(() => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
@@ -76,7 +78,7 @@ export default function DashboardPage() {
         <>
           {/* Job Statistics */}
           {jobStats && (
-            <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2 lg:grid-cols-7">
+            <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2 lg:grid-cols-7 text-center">
               <div className="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
                 <h2 className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Total Jobs</h2>
                 <p className="text-3xl font-bold">{jobStats.total}</p>
@@ -96,7 +98,10 @@ export default function DashboardPage() {
                 <h2 className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Completed</h2>
                 <p className="text-3xl font-bold text-green-600 dark:text-green-400">{jobStats.completed}</p>
               </div>
-              
+              <div className="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                <h2 className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Waiting</h2>
+                <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">{jobStats.waiting}</p>
+              </div>
               <div className="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
                 <h2 className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Failed</h2>
                 <p className="text-3xl font-bold text-red-600 dark:text-red-400">{jobStats.failed}</p>
@@ -115,6 +120,7 @@ export default function DashboardPage() {
           )}
           
           {/* Other Stats */}
+          {/*}
           <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2 lg:grid-cols-3">
               {schedulerStats && (
                   <div className="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
@@ -133,6 +139,7 @@ export default function DashboardPage() {
                   </div>
               )}
           </div>
+          */}
 
           {/* Queue Stats */}
           <div className="mb-6">
@@ -142,35 +149,38 @@ export default function DashboardPage() {
             
             <div className="overflow-hidden bg-white rounded-lg shadow dark:bg-gray-800">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700 text-right">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                       Queue Name
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                    <th scope="col" className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                       Total
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                    <th scope="col" className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                       Active
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                    <th scope="col" className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                       Completed
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                    <th scope="col" className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                      Waiting
+                    </th>
+                    <th scope="col" className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                       Failed
                     </th>
-                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                     <th scope="col" className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                       Delayed
                     </th>
-                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                     <th scope="col" className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                       Paused
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700 text-right">
                   {Array.isArray(queueStats) && queueStats.map((queue) => (
                     <tr key={queue.name}>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap text-left">
                         <Link
                           to={`/queues/${queue.name}`}
                           className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
@@ -181,6 +191,7 @@ export default function DashboardPage() {
                        <td className="px-6 py-4 whitespace-nowrap">{queue.total}</td>
                       <td className="px-6 py-4 whitespace-nowrap">{queue.active}</td>
                       <td className="px-6 py-4 whitespace-nowrap">{queue.completed}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{queue.waiting}</td>
                       <td className="px-6 py-4 whitespace-nowrap">{queue.failed}</td>
                       <td className="px-6 py-4 whitespace-nowrap">{queue.delayed}</td>
                       <td className="px-6 py-4 whitespace-nowrap">{queue.paused}</td>

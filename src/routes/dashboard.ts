@@ -4,7 +4,7 @@ import { getQueue } from '../config/bull.js';
 import prisma from '../lib/prisma.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 import schedulerService from '../services/schedulerService.js';
-import { JobSchedulerJson } from 'bullmq';
+import { JobSchedulerJson, JobType } from 'bullmq';
 
 // Define custom Request type with user property
 interface AuthenticatedRequest extends Request {
@@ -32,42 +32,46 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
     
     logger.info(`Fetching dashboard stats for user ${userId}`);
 
-    let allUserJobs: any[] = [];
-    const queueStats = [];
+    const queueStats: any[] = [];
+    const jobStatuses: JobType[] = ['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children'];
+    
+    const totals: { [key: string]: number } = {
+      completed: 0,
+      failed: 0,
+      active: 0,
+      waiting: 0,
+      delayed: 0,
+      paused: 0,
+      'waiting-children': 0,
+      total: 0,
+    };
 
     for (const queueName of allowedQueues) {
       const queue = getQueue(queueName);
-      const allJobs = await queue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children']);
-      const userJobs = allJobs.filter((job: any) => job.data.userId === userId);
+      if (!queue) continue;
+
+      const statsForQueue: { [key: string]: any } = { name: queueName, total: 0 };
       
-      allUserJobs = allUserJobs.concat(userJobs);
-      
-      const completed = userJobs.filter((job: any) => job.finishedOn && !job.failedReason).length;
-      const failed = userJobs.filter((job: any) => job.failedReason).length;
-      const active = userJobs.filter((job: any) => job.processedOn && !job.finishedOn).length;
-      const delayed = userJobs.filter((job: any) => job.opts?.delay && job.opts.delay > Date.now()).length;
-      const paused = (await queue.getJobs(['paused'])).filter((job: any) => job.data.userId === userId).length;
-      
-      queueStats.push({
-        name: queueName,
-        total: userJobs.length,
-        completed,
-        failed,
-        active,
-        delayed,
-        paused,
-        'waiting-children': 0, // Placeholder
+      const promises = jobStatuses.map(status => queue.getJobs([status]));
+      const jobsByStatus = await Promise.all(promises);
+
+      jobsByStatus.forEach((jobs, index) => {
+        const status = jobStatuses[index];
+        const userJobsInStatus = jobs.filter((job: any) => job.data.userId === userId);
+        const count = userJobsInStatus.length;
+        
+        statsForQueue[status] = count;
+        statsForQueue.total += count;
+        
+        totals[status] += count;
       });
+      totals.total += statsForQueue.total;
+
+      queueStats.push(statsForQueue);
     }
-    
-    const total = allUserJobs.length;
-    const completed = allUserJobs.filter((job: any) => job.finishedOn && !job.failedReason).length;
-    const failed = allUserJobs.filter((job: any) => job.failedReason).length;
-    const active = allUserJobs.filter((job: any) => job.processedOn && !job.finishedOn).length;
-    const delayed = allUserJobs.filter((job: any) => job.opts?.delay && job.opts.delay > Date.now()).length;
-    const paused = allUserJobs.filter((job: any) => job.paused).length;
-    const waitingChildren = allUserJobs.filter((job: any) => false).length;
-    const waiting = allUserJobs.filter((job: any) => !job.processedOn && !job.finishedOn && !job.failedReason && !job.delay && !job.paused).length;
+
+    const { total, completed, failed, active, delayed, paused, waiting } = totals;
+    const waitingChildren = totals['waiting-children'];
     const completionRate = total > 0 ? Math.round((completed / total) * 1000) / 10 : 0;
     
     const jobQueue = getQueue('jobQueue');
