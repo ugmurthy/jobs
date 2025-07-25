@@ -1,0 +1,22 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@ugm/bullmq-sample-plugin':
+        specifier: ^1.0.1
+        version: 1.0.1
+
+packages:
+
+  '@ugm/bullmq-sample-plugin@1.0.1':
+    resolution: {integrity: sha512-GyZCQEPzE6ETBDp9ylxy250dAg+B8uOGMoMHOC7rd2CPVjEXxo8fAyGrKgDEWNKDJBvcyxRiru0e7QfbkyZuFQ==}
+
+snapshots:
+
+  '@ugm/bullmq-sample-plugin@1.0.1': {}

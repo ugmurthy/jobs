@@ -1,0 +1,37 @@
+{
+  "name": "workers",
+  "version": "1.0.0",
+  "description": "workers : Handlers that process bullMQ queues",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/unit/registry.test.js && node tests/integration/worker-registry.test.js",
+    "test:unit": "node tests/unit/registry.test.js",
+    "test:integration": "node tests/integration/worker-registry.test.js",
+    "start": "node index.js",
+    "worker": "node run-worker.js",
+    "clearlogs":"rm -rf logs",
+    "redis-start": "exec brew services start redis",
+    "redis-info": "exec brew services info redis",
+    "redis-stop": "exec brew services stop redis"
+   
+  },
+  "keywords": ["jobRunner","bullMQ","Handlers Registry","Handler Plugin"],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@ugm/bullmq-sample-plugin": "^1.0.1",
+    "@ugm/logger": "^1.0.2",
+    "bullmq": "^4.16.0",
+    "chokidar": "^4.0.3",
+    "date-fns": "^3.0.5",
+    "express": "^5.1.0",
+    "got": "^14.4.7",
+    "ollama": "^0.5.16",
+    "winston": "^3.17.0",
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "uuid": "^9.0.0"
+  }
+}

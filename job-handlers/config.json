@@ -1,0 +1,20 @@
+{
+  "handlerDirectories": [
+    "./handlers/core",
+    "./handlers/custom"
+  ],
+  "queueNames": ["jobQueue","default","flowQueue"],
+  "queueConfigs": {
+    "jobQueue": {
+      "concurrency": 10,
+      "handlers": "*"
+    }
+  },
+  "disabledHandlers": [],
+  "handlerOptions": {
+    "dataExport": {
+      "maxConcurrent": 5,
+      "timeout": 30000
+    }
+  }
+}

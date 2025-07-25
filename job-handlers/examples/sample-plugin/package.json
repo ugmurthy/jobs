@@ -1,0 +1,22 @@
+{
+  "name": "@ugm/bullmq-sample-plugin",
+  "version": "1.0.1",
+  "private": false,
+  "description": "Sample plugin for BullMQ handler system",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "bullmq-handler-plugin"
+  ],
+  "author": "Sample Author",
+  "license": "MIT",
+  "bullmqHandlerPlugin": {
+    "handlers": [
+      "sampleHandler1",
+      "sampleHandler2"
+    ]
+  },
+  "dependencies": {
+    "@ugm/bullmq-sample-plugin": "^1.0.1"
+  }
+}
