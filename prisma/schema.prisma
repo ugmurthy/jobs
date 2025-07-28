@@ -61,27 +61,29 @@ model ApiKey {
 }
 
 model Flow {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  jobs      FlowJob[]
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id])
-}
+  id          String    @id @default(cuid())  // Changed to String for better flowId consistency
+  flowname    String                          // NEW: Human-readable flow identifier
+  name        String                          // EXISTING: Handler name for root job
+  queueName   String                          // Root job queue
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
 
-model FlowJob {
-  id        Int      @id @default(autoincrement())
-  jobId     String   @unique
-  flowId    Int
-  flow      Flow     @relation(fields: [flowId], references: [id], onDelete: Cascade)
-  queueName String
-  data      Json
-  opts      Json
-  status    String   @default("waiting")
-  result    Json?
-  error     Json?
-  children  Json?    // Store children job keys
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // Unified job structure stored as JSON
+  jobStructure Json                           // Complete hierarchical job tree
+  rootJobId    String?                        // BullMQ root job ID
+
+  // Flow-level status and metadata
+  status       String    @default("pending")  // pending, running, completed, failed, cancelled
+  progress     Json                           // Progress tracking for all jobs
+  result       Json?                          // Final flow result
+  error        Json?                          // Error information if failed
+
+  // Timestamps
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  startedAt    DateTime?
+  completedAt  DateTime?
+
+  @@index([userId, status])
+  @@index([flowname])
 }

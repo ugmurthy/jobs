@@ -3,6 +3,7 @@ import { logger } from '@ugm/logger';
 import { getQueue, defaultOptions } from '../config/bull.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 import { validateQueue } from '../middleware/validateQueue.js';
+import { BULLMQ_JOB_STATUSES, JobStatusUtils, } from '../types/bullmq-statuses.js';
 const router = Router();
 /**
  * Validates if the provided options is a valid JSON object
@@ -124,10 +125,9 @@ router.get('/:queueName', authenticate, validateQueue, async (req, res, next) =>
         const skip = (page - 1) * limit;
         const status = req.query.status;
         const jobQueue = getQueue(queueName);
-        const validStatuses = ['completed', 'failed', 'delayed', 'active', 'waiting', 'paused', 'stuck', 'waiting-children'];
         let jobs;
         if (status) {
-            if (validStatuses.includes(status)) {
+            if (JobStatusUtils.isValidStatus(status)) {
                 jobs = await jobQueue.getJobs([status]);
             }
             else {
@@ -136,7 +136,9 @@ router.get('/:queueName', authenticate, validateQueue, async (req, res, next) =>
             }
         }
         else {
-            jobs = await jobQueue.getJobs(validStatuses);
+            // Use all valid statuses (filter out 'stuck' as it's not a standard BullMQ JobType)
+            const validJobTypes = BULLMQ_JOB_STATUSES.filter(status => status !== 'stuck');
+            jobs = await jobQueue.getJobs(validJobTypes);
         }
         const filteredJobs = jobs.filter((job) => job.data.userId === userId);
         const paginatedJobs = filteredJobs.slice(skip, skip + limit);

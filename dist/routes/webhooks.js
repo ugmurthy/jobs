@@ -3,6 +3,7 @@ import { logger } from '@ugm/logger';
 import prisma from '../lib/prisma.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 import userService from '../services/userService.js';
+import { WEBHOOK_EVENT_TYPES, WebhookEventUtils, } from '../types/webhook-events.js';
 const router = Router();
 /**
  * Get all webhooks for the authenticated user
@@ -40,10 +41,9 @@ router.post('/', authenticate, async (req, res) => {
             return;
         }
         // Validate event type
-        const validEventTypes = ['progress', 'completed', 'failed', 'delta', 'all'];
-        if (!validEventTypes.includes(eventType)) {
+        if (!WebhookEventUtils.isValidEventType(eventType)) {
             res.status(400).json({
-                message: `Invalid event type. Must be one of: ${validEventTypes.join(', ')}`
+                message: `Invalid event type. Must be one of: ${WEBHOOK_EVENT_TYPES.join(', ')}`
             });
             return;
         }
@@ -99,14 +99,11 @@ router.put('/:id', authenticate, async (req, res) => {
         }
         const { url, eventType, description, active } = req.body;
         // Validate event type if provided
-        if (eventType) {
-            const validEventTypes = ['progress', 'completed', 'failed', 'delta', 'all'];
-            if (!validEventTypes.includes(eventType)) {
-                res.status(400).json({
-                    message: `Invalid event type. Must be one of: ${validEventTypes.join(', ')}`
-                });
-                return;
-            }
+        if (eventType && !WebhookEventUtils.isValidEventType(eventType)) {
+            res.status(400).json({
+                message: `Invalid event type. Must be one of: ${WEBHOOK_EVENT_TYPES.join(', ')}`
+            });
+            return;
         }
         // Update webhook
         const updatedWebhook = await prisma.webhook.update({

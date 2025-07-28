@@ -1,87 +1,260 @@
-import { FlowProducer } from 'bullmq';
 import prisma from '../lib/prisma.js';
 import redis from '../config/redis.js';
 import { logger } from '@ugm/logger';
-const flowProducer = new FlowProducer({ connection: redis });
-const createFlowInDb = async (name, userId) => {
-    return prisma.flow.create({
-        data: {
-            name,
-            userId,
-        },
-    });
-};
-const createFlowJobInDb = async (flowId, job, jobNode) => {
-    return prisma.flowJob.create({
-        data: {
-            jobId: jobNode.job.id,
-            flowId: flowId,
-            queueName: job.queueName,
-            data: job.data || {},
-            opts: job.opts || {},
-            status: 'waiting',
-            children: (job.children || []),
-        },
-    });
-};
-const processFlowJobs = async (jobs, userId) => {
-    const processedJobs = [];
-    logger.info(`flowService.ts : f(processFlowJobs) len(jobs): ${jobs.length}`);
-    for (const jobData of jobs) {
-        const children = jobData.children ? await processFlowJobs(jobData.children, userId) : undefined;
-        logger.info(`\t name.       : ${jobData.name}`);
-        logger.info(`\t Queue name. : ${jobData.queueName}`);
-        logger.info(`\t jobData.data: ${JSON.stringify(jobData.data)}`);
-        const bullJob = {
+import { EnhancedFlowProducer, generateFlowId } from './enhancedFlowProducer.js';
+import { FlowStatusMapper } from '../types/flow-statuses.js';
+import { getFlowWebSocketService } from './flowWebSocketService.js';
+export class FlowService {
+    constructor() {
+        this.enhancedFlowProducer = new EnhancedFlowProducer(redis);
+    }
+    async createFlow(flowData, userId) {
+        const flowId = generateFlowId(); // Generate unique string ID
+        logger.info(`Creating flow "${flowData.flowname}" (${flowId}) for user ${userId}`);
+        // Create single database record
+        const flow = await prisma.flow.create({
+            data: {
+                id: flowId,
+                flowname: flowData.flowname,
+                name: flowData.name,
+                queueName: flowData.queueName,
+                userId,
+                jobStructure: this.buildJobStructure(flowData),
+                status: "pending",
+                progress: this.initializeProgress(flowData),
+            },
+        });
+        // Add to BullMQ with flowId injection
+        const rootJob = this.buildBullMQJob(flowData, userId);
+        const jobNode = await this.enhancedFlowProducer.add(rootJob, flowId);
+        // Update with root job ID
+        await prisma.flow.update({
+            where: { id: flowId },
+            data: {
+                rootJobId: jobNode.job.id,
+                status: "running",
+                startedAt: new Date(),
+            },
+        });
+        logger.info(`Flow ${flowId} created and started with root job ${jobNode.job.id}`);
+        const createdFlow = this.formatFlowResponse(await prisma.flow.findUnique({ where: { id: flowId } }));
+        // Emit WebSocket event for flow creation
+        const webSocketService = getFlowWebSocketService();
+        if (webSocketService) {
+            webSocketService.emitFlowCreated(createdFlow);
+        }
+        return createdFlow;
+    }
+    async updateFlowProgress(flowId, update) {
+        const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+        if (!flow)
+            throw new Error("Flow not found");
+        const updatedProgress = this.calculateProgress(flow.progress, update);
+        const newStatus = this.determineFlowStatus(updatedProgress);
+        // Check if the jobId is the root job
+        const isRootJob = flow.rootJobId === update.jobId;
+        // Prepare update data
+        const updateData = {
+            progress: updatedProgress,
+            status: newStatus,
+            completedAt: newStatus === "completed" ? new Date() : undefined,
+        };
+        // If this is the root job, update flow result and error
+        if (isRootJob) {
+            if (update.result !== undefined) {
+                updateData.result = update.result;
+            }
+            if (update.error !== undefined) {
+                updateData.error = update.error;
+            }
+            logger.info(`Root job ${update.jobId} update - updating flow ${flowId} result and error`);
+        }
+        await prisma.flow.update({
+            where: { id: flowId },
+            data: updateData,
+        });
+        logger.info(`Flow ${flowId} progress updated: ${newStatus}${isRootJob ? ' (root job)' : ''}`);
+        // Emit WebSocket events for flow updates
+        const webSocketService = getFlowWebSocketService();
+        if (webSocketService) {
+            webSocketService.emitJobUpdate(flowId, update.jobId, update);
+            webSocketService.emitFlowUpdate(flowId, updatedProgress, newStatus);
+            // Check if flow is completed
+            if (newStatus === "completed") {
+                const updatedFlow = await prisma.flow.findUnique({ where: { id: flowId } });
+                if (updatedFlow) {
+                    webSocketService.emitFlowCompleted(flowId, updatedFlow.result, updatedFlow.completedAt?.toISOString() || new Date().toISOString());
+                }
+            }
+        }
+    }
+    async getFlowById(flowId) {
+        const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+        if (!flow)
+            return null;
+        return this.formatFlowResponse(flow);
+    }
+    async getFlows(userId) {
+        const flows = await prisma.flow.findMany({
+            where: userId ? { userId } : undefined,
+            orderBy: { createdAt: 'desc' }
+        });
+        return flows.map(flow => this.formatFlowResponse(flow));
+    }
+    buildJobStructure(flowData) {
+        // Build complete job hierarchy as JSON
+        return {
+            root: {
+                name: flowData.name,
+                queueName: flowData.queueName,
+                data: flowData.data,
+                opts: flowData.opts,
+                children: flowData.children || [],
+            },
+        };
+    }
+    buildBullMQJob(flowData, userId) {
+        const childJobs = flowData.children ? this.processFlowJobs(flowData.children, userId) : undefined;
+        return {
+            name: flowData.name,
+            queueName: flowData.queueName,
+            data: { ...flowData.data, userId },
+            opts: flowData.opts,
+            children: childJobs,
+        };
+    }
+    processFlowJobs(jobs, userId) {
+        return jobs.map(jobData => ({
             name: jobData.name,
             queueName: jobData.queueName,
             data: { ...jobData.data, userId },
             opts: jobData.opts,
-            children,
-        };
-        processedJobs.push(bullJob);
+            children: jobData.children ? this.processFlowJobs(jobData.children, userId) : undefined,
+        }));
     }
-    return processedJobs;
-};
-export const createFlow = async (flowData, userId) => {
-    const { name, queueName, data, opts, children } = flowData;
-    logger.info(`Creating flow "${name}" for user ${userId}`);
-    const dbFlow = await createFlowInDb(name, userId);
-    const flowId = dbFlow.id;
-    const childJobs = children ? await processFlowJobs(children, userId) : undefined;
-    const rootJob = {
-        name: name,
-        queueName: queueName,
-        data: { ...data, userId },
-        opts: opts,
-        children: childJobs,
-    };
-    const flowNode = await flowProducer.add(rootJob);
-    logger.info(`Added flow "${name}" (ID: ${flowNode.job.id}) to BullMQ.`);
-    // Now, save all the jobs to the database
-    // We need to traverse both the original job data and the resulting job node tree
-    const saveJobsRecursive = async (jobDefs, jobNodes) => {
-        for (let i = 0; i < jobDefs.length; i++) {
-            const jobDef = jobDefs[i];
-            const jobNode = jobNodes[i];
-            await createFlowJobInDb(flowId, jobDef, jobNode);
-            if (jobDef.children && jobNode.children) {
-                await saveJobsRecursive(jobDef.children, jobNode.children);
+    initializeProgress(flowData) {
+        const totalJobs = this.countTotalJobs(flowData);
+        return {
+            jobs: {},
+            summary: {
+                total: totalJobs,
+                completed: 0,
+                failed: 0,
+                delayed: 0,
+                active: 0,
+                waiting: totalJobs,
+                "waiting-children": 0,
+                paused: 0,
+                stuck: 0,
+                percentage: 0,
+            },
+        };
+    }
+    countTotalJobs(flowData) {
+        let count = 1; // Root job
+        if (flowData.children) {
+            count += this.countJobsInChildren(flowData.children);
+        }
+        return count;
+    }
+    countJobsInChildren(children) {
+        let count = children.length;
+        for (const child of children) {
+            if (child.children) {
+                count += this.countJobsInChildren(child.children);
             }
         }
-    };
-    await createFlowJobInDb(flowId, rootJob, flowNode);
-    if (rootJob.children && flowNode.children) {
-        await saveJobsRecursive(rootJob.children, flowNode.children);
+        return count;
     }
-    return dbFlow;
-};
-export const getFlows = async () => {
-    return prisma.flow.findMany();
-};
-export const getFlowById = async (id) => {
-    return prisma.flow.findUnique({ where: { id } });
-};
+    calculateProgress(currentProgress, update) {
+        // Update specific job status
+        const updatedJobs = { ...currentProgress.jobs };
+        updatedJobs[update.jobId] = {
+            ...updatedJobs[update.jobId],
+            status: update.status,
+            result: update.result,
+            error: update.error,
+            completedAt: update.status === "completed" || update.status === "failed"
+                ? new Date().toISOString()
+                : undefined,
+        };
+        // Recalculate summary
+        const jobStatuses = Object.values(updatedJobs).map(job => job.status);
+        const summary = {
+            total: currentProgress.summary.total,
+            completed: jobStatuses.filter(s => s === "completed").length,
+            failed: jobStatuses.filter(s => s === "failed").length,
+            delayed: jobStatuses.filter(s => s === "delayed").length,
+            active: jobStatuses.filter(s => s === "active").length,
+            waiting: jobStatuses.filter(s => s === "waiting").length,
+            "waiting-children": jobStatuses.filter(s => s === "waiting-children").length,
+            paused: jobStatuses.filter(s => s === "paused").length,
+            stuck: jobStatuses.filter(s => s === "stuck").length,
+            percentage: Math.round((jobStatuses.filter(s => s === "completed").length / currentProgress.summary.total) * 100),
+        };
+        return {
+            jobs: updatedJobs,
+            summary,
+        };
+    }
+    determineFlowStatus(progress) {
+        const jobStatuses = Object.values(progress.jobs).map((job) => job.status);
+        return FlowStatusMapper.determineFlowStatus(jobStatuses);
+    }
+    formatFlowResponse(flow) {
+        const progress = flow.progress;
+        return {
+            flowId: flow.id,
+            flowname: flow.flowname,
+            name: flow.name,
+            queueName: flow.queueName,
+            status: flow.status,
+            progress: progress?.summary || {
+                total: 0,
+                completed: 0,
+                failed: 0,
+                percentage: 0,
+            },
+            result: flow.result,
+            error: flow.error,
+            createdAt: flow.createdAt.toISOString(),
+            updatedAt: flow.updatedAt.toISOString(),
+            startedAt: flow.startedAt?.toISOString(),
+            completedAt: flow.completedAt?.toISOString(),
+        };
+    }
+    async close() {
+        await this.enhancedFlowProducer.close();
+    }
+}
+// Export singleton instance
+export const flowService = new FlowService();
+// Legacy exports for backward compatibility
+export const createFlow = (flowData, userId) => flowService.createFlow(flowData, userId);
+export const getFlows = () => flowService.getFlows();
+export const getFlowById = (id) => flowService.getFlowById(id);
 export const getFlowJobs = async (flowId) => {
-    return prisma.flowJob.findMany({ where: { flowId } });
+    // This method is deprecated in the new unified approach
+    // Flow jobs are now stored as JSON in the jobStructure field
+    const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+    return flow?.jobStructure || [];
+};
+// New method to return CreateFlowRequest-like response
+export const getFlowAsCreateRequest = async (flowId) => {
+    const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+    if (!flow)
+        return null;
+    // Extract the root job structure and convert it back to CreateFlowRequest format
+    const jobStructure = flow.jobStructure;
+    if (!jobStructure?.root)
+        return null;
+    const root = jobStructure.root;
+    return {
+        flowname: flow.flowname,
+        name: root.name,
+        queueName: root.queueName,
+        data: root.data,
+        opts: root.opts,
+        children: root.children || []
+    };
 };

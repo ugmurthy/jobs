@@ -807,7 +807,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/flows/{id}": {
+    "/flows/{flowId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -821,7 +821,7 @@ export interface paths {
                 header?: never;
                 path: {
                     /** @description The ID of the flow. */
-                    id: string;
+                    flowId: string;
                 };
                 cookie?: never;
             };
@@ -860,33 +860,171 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/flows/{id}/jobs": {
+    "/flows/{flowId}/jobs": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get all jobs associated with a flow */
+        /**
+         * Get flow definition in CreateFlowRequest format
+         * @description Returns the original flow definition that was used to create the flow, in the same format as CreateFlowRequest
+         */
         get: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
                     /** @description The ID of the flow. */
-                    id: string;
+                    flowId: string;
                 };
                 cookie?: never;
             };
             requestBody?: never;
             responses: {
-                /** @description A list of jobs for the flow. */
+                /** @description The original flow definition in CreateFlowRequest format. */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["FlowJobResponse"][];
+                        "application/json": components["schemas"]["CreateFlowRequest"];
+                    };
+                };
+                /** @description Flow not found. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/flows/{flowId}/jobs/{jobId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Update flow job status
+         * @description Update the status of a specific job within a flow
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The ID of the flow. */
+                    flowId: string;
+                    /** @description The BullMQ job ID. */
+                    jobId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["FlowUpdateRequest"];
+                };
+            };
+            responses: {
+                /** @description Flow job status updated successfully. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example Flow updated successfully */
+                            message?: string;
+                        };
+                    };
+                };
+                /** @description Invalid request body. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Flow or job not found. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/flows/{flowId}/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get detailed flow progress
+         * @description Get detailed progress information for all jobs in a flow
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The ID of the flow. */
+                    flowId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Detailed flow progress information. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FlowProgress"];
                     };
                 };
                 /** @description Flow not found. */
@@ -1838,7 +1976,9 @@ export interface components {
             children?: components["schemas"]["FlowJobData"][];
         };
         CreateFlowRequest: {
-            /** @description Name for the entire flow. */
+            /** @description Human-readable flow name. */
+            flowname: string;
+            /** @description Handler name for root job. */
             name: string;
             /** @description The queue for the root job of the flow. */
             queueName: string;
@@ -1855,14 +1995,57 @@ export interface components {
         };
         FlowResponse: {
             /** @description The flow ID. */
-            id?: string;
-            /** @description The name of the flow. */
-            name?: string;
+            flowId: string;
+            /** @description Human-readable flow name. */
+            flowname: string;
+            /** @description Handler name for root job. */
+            name: string;
+            /** @description The queue name. */
+            queueName: string;
+            /**
+             * @description Current flow status.
+             * @enum {string}
+             */
+            status: "pending" | "running" | "completed" | "failed" | "cancelled";
+            /** @description Flow progress information. */
+            progress: {
+                /** @description Total number of jobs in the flow. */
+                total: number;
+                /** @description Number of completed jobs. */
+                completed: number;
+                /** @description Number of failed jobs. */
+                failed: number;
+                /** @description Completion percentage. */
+                percentage: number;
+            };
+            /** @description Flow result data. */
+            result?: {
+                [key: string]: unknown;
+            } | null;
+            /** @description Error information if the flow failed. */
+            error?: {
+                [key: string]: unknown;
+            } | null;
             /**
              * Format: date-time
              * @description Creation timestamp.
              */
-            createdAt?: string;
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Last update timestamp.
+             */
+            updatedAt: string;
+            /**
+             * Format: date-time
+             * @description Flow start timestamp.
+             */
+            startedAt?: string | null;
+            /**
+             * Format: date-time
+             * @description Flow completion timestamp.
+             */
+            completedAt?: string | null;
         };
         FlowJobResponse: {
             /** @description The flow job ID from the database. */
@@ -1895,6 +2078,77 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+        };
+        FlowUpdateRequest: {
+            /** @description BullMQ job ID. */
+            jobId: string;
+            /**
+             * @description Updated job status.
+             * @enum {string}
+             */
+            status: "running" | "completed" | "failed";
+            /** @description Job result data. */
+            result?: {
+                [key: string]: unknown;
+            } | null;
+            /** @description Error information if the job failed. */
+            error?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        FlowProgress: {
+            /** @description Individual job progress by job ID. */
+            jobs: {
+                [key: string]: {
+                    /** @description Job handler name. */
+                    name: string;
+                    /** @description Queue name. */
+                    queueName: string;
+                    /** @description BullMQ job status. */
+                    status: string;
+                    /** @description Job result. */
+                    result?: {
+                        [key: string]: unknown;
+                    } | null;
+                    /** @description Job error. */
+                    error?: {
+                        [key: string]: unknown;
+                    } | null;
+                    /**
+                     * Format: date-time
+                     * @description Job start timestamp.
+                     */
+                    startedAt?: string | null;
+                    /**
+                     * Format: date-time
+                     * @description Job completion timestamp.
+                     */
+                    completedAt?: string | null;
+                };
+            };
+            /** @description Summary of job statuses. */
+            summary: {
+                /** @description Total jobs. */
+                total: number;
+                /** @description Completed jobs. */
+                completed: number;
+                /** @description Failed jobs. */
+                failed: number;
+                /** @description Delayed jobs. */
+                delayed: number;
+                /** @description Active jobs. */
+                active: number;
+                /** @description Waiting jobs. */
+                waiting: number;
+                /** @description Jobs waiting for children. */
+                "waiting-children": number;
+                /** @description Paused jobs. */
+                paused: number;
+                /** @description Stuck jobs. */
+                stuck: number;
+                /** @description Completion percentage. */
+                percentage: number;
+            };
         };
         Job: {
             /**

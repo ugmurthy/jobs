@@ -9,13 +9,17 @@
     "test:integration": "node tests/integration/worker-registry.test.js",
     "start": "node index.js",
     "worker": "node run-worker.js",
-    "clearlogs":"rm -rf logs",
+    "clearlogs": "rm -rf logs",
     "redis-start": "exec brew services start redis",
     "redis-info": "exec brew services info redis",
     "redis-stop": "exec brew services stop redis"
-   
   },
-  "keywords": ["jobRunner","bullMQ","Handlers Registry","Handler Plugin"],
+  "keywords": [
+    "jobRunner",
+    "bullMQ",
+    "Handlers Registry",
+    "Handler Plugin"
+  ],
   "author": "",
   "license": "ISC",
   "type": "module",
@@ -28,6 +32,7 @@
     "express": "^5.1.0",
     "got": "^14.4.7",
     "ollama": "^0.5.16",
+    "promptdb-storage": "link:/Users/ugmurthy/MODULES/promptdb-storage",
     "winston": "^3.17.0",
     "ws": "^8.18.1"
   },

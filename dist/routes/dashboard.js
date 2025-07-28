@@ -4,6 +4,7 @@ import { getQueue } from '../config/bull.js';
 import prisma from '../lib/prisma.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 import schedulerService from '../services/schedulerService.js';
+import { BULLMQ_JOB_STATUSES, } from '../types/bullmq-statuses.js';
 const router = Router();
 /**
  * Get dashboard statistics
@@ -18,7 +19,8 @@ router.get('/stats', authenticate, async (req, res) => {
         }
         logger.info(`Fetching dashboard stats for user ${userId}`);
         const queueStats = [];
-        const jobStatuses = ['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children'];
+        // Use centralized status definitions (filter out 'stuck' as it's not a standard BullMQ JobType)
+        const jobStatuses = BULLMQ_JOB_STATUSES.filter(status => status !== 'stuck');
         const totals = {
             completed: 0,
             failed: 0,
@@ -51,7 +53,9 @@ router.get('/stats', authenticate, async (req, res) => {
         const waitingChildren = totals['waiting-children'];
         const completionRate = total > 0 ? Math.round((completed / total) * 1000) / 10 : 0;
         const jobQueue = getQueue('jobQueue');
-        const recentJobsRaw = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children'], 0, 4);
+        // Use centralized status definitions (filter out 'stuck' as it's not a standard BullMQ JobType)
+        const validJobTypes = BULLMQ_JOB_STATUSES.filter(status => status !== 'stuck');
+        const recentJobsRaw = await jobQueue.getJobs(validJobTypes, 0, 4);
         const recentJobs = await Promise.all(recentJobsRaw
             .filter((job) => job.data.userId === userId)
             .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))

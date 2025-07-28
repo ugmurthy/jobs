@@ -32,6 +32,9 @@ importers:
       ollama:
         specifier: ^0.5.16
         version: 0.5.16
+      promptdb-storage:
+        specifier: link:/Users/ugmurthy/MODULES/promptdb-storage
+        version: link:../../MODULES/promptdb-storage
       winston:
         specifier: ^3.17.0
         version: 3.17.0

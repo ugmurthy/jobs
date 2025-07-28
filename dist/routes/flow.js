@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import * as flowService from '../services/flowService.js';
+import { flowService, getFlowAsCreateRequest } from '../services/flowService.js';
 import { logger } from '@ugm/logger';
 import { authenticate } from '../middleware/combinedAuth.js';
 const router = Router();
-//logger.level = 'debug'
 // Create a new flow
 router.post('/', authenticate, async (req, res) => {
     try {
@@ -13,8 +12,13 @@ router.post('/', authenticate, async (req, res) => {
             res.status(401).json({ message: 'User not authenticated' });
             return;
         }
-        const flow = await flowService.createFlow(req.body, userId);
-        res.status(201).json(flow);
+        const flowData = req.body;
+        const flow = await flowService.createFlow(flowData, userId);
+        res.status(201).json({
+            flowId: flow.flowId,
+            message: "Flow created successfully",
+            flow,
+        });
     }
     catch (error) {
         logger.error('Error creating flow:', error);
@@ -22,9 +26,11 @@ router.post('/', authenticate, async (req, res) => {
     }
 });
 // Get all flows
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
     try {
-        const flows = await flowService.getFlows();
+        // @ts-ignore
+        const userId = req.user?.userId;
+        const flows = await flowService.getFlows(userId);
         res.status(200).json(flows);
     }
     catch (error) {
@@ -33,10 +39,10 @@ router.get('/', async (req, res) => {
     }
 });
 // Get a single flow by ID
-router.get('/:id', async (req, res) => {
+router.get('/:flowId', async (req, res) => {
     try {
-        const id = parseInt(req.params.id, 10);
-        const flow = await flowService.getFlowById(id);
+        const flowId = req.params.flowId; // Use flowId parameter name
+        const flow = await flowService.getFlowById(flowId);
         if (flow) {
             res.status(200).json(flow);
         }
@@ -45,19 +51,36 @@ router.get('/:id', async (req, res) => {
         }
     }
     catch (error) {
-        logger.error(`Error getting flow ${req.params.id}:`, error);
+        logger.error(`Error getting flow ${req.params.flowId}:`, error);
         res.status(500).json({ message: 'Error getting flow', error: error.message });
     }
 });
-// Get all jobs for a flow
-router.get('/:id/jobs', async (req, res) => {
+// Update flow progress (new endpoint for external job updates)
+router.put('/:flowId/jobs/:jobId', authenticate, async (req, res) => {
     try {
-        const id = parseInt(req.params.id, 10);
-        const jobs = await flowService.getFlowJobs(id);
-        res.status(200).json(jobs);
+        const { flowId, jobId } = req.params;
+        const update = req.body;
+        await flowService.updateFlowProgress(flowId, { ...update, jobId });
+        res.status(200).json({ message: "Flow updated successfully" });
     }
     catch (error) {
-        logger.error(`Error getting jobs for flow ${req.params.id}:`, error);
+        logger.error("Error updating flow progress:", error);
+        res.status(500).json({ message: "Error updating flow", error: error.message });
+    }
+});
+// Get all jobs for a flow (refactored to return CreateFlowRequest-like response)
+router.get('/:flowId/jobs', async (req, res) => {
+    try {
+        const flowId = req.params.flowId;
+        const flowRequest = await getFlowAsCreateRequest(flowId);
+        if (!flowRequest) {
+            res.status(404).json({ message: 'Flow not found' });
+            return;
+        }
+        res.status(200).json(flowRequest);
+    }
+    catch (error) {
+        logger.error(`Error getting jobs for flow ${req.params.flowId}:`, error);
         res.status(500).json({ message: 'Error getting jobs for flow', error: error.message });
     }
 });

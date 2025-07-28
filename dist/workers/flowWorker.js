@@ -1,7 +1,7 @@
 import { Worker } from 'bullmq';
 import { logger } from '@ugm/logger';
 import redis from '../config/redis.js';
-import prisma from '../lib/prisma.js';
+import { updateFlowProgress } from '../utils/flowAwareWorker.js';
 export const flowWorker = new Worker('flowQueue', async (job) => {
     logger.info(`Processing job "${job.name}" (ID: ${job.id}) in flowQueue`);
     try {
@@ -45,29 +45,37 @@ export const flowWorker = new Worker('flowQueue', async (job) => {
 // Event listeners for logging and monitoring
 flowWorker.on('completed', async (job, returnValue) => {
     logger.info(`EVENT: Job "${job.name}" (ID: ${job.id}) completed.`);
-    if (job.id) {
+    if (job.id && job.data.flowId) {
         try {
-            await prisma.flowJob.update({
-                where: { jobId: job.id.toString() },
-                data: { status: 'completed', result: returnValue },
-            });
+            // Update flow progress using the new unified approach
+            await updateFlowProgress(job.data.flowId, job.id.toString(), "completed", returnValue);
         }
         catch (error) {
-            logger.error(`Failed to update job ${job.id} to completed: ${error.message}`);
+            logger.error(`Failed to update flow progress for job ${job.id}: ${error.message}`);
         }
     }
 });
 flowWorker.on('failed', async (job, err) => {
     logger.error(`EVENT: Job "${job?.id}" failed with error: ${err.message}`);
-    if (job?.id) {
+    if (job?.id && job.data.flowId) {
         try {
-            await prisma.flowJob.update({
-                where: { jobId: job.id.toString() },
-                data: { status: 'failed', error: { message: err.message } },
-            });
+            // Update flow progress using the new unified approach
+            await updateFlowProgress(job.data.flowId, job.id.toString(), "failed", undefined, { message: err.message });
         }
         catch (error) {
-            logger.error(`Failed to update job ${job.id} to failed: ${error.message}`);
+            logger.error(`Failed to update flow progress for job ${job.id}: ${error.message}`);
+        }
+    }
+});
+flowWorker.on('active', async (job) => {
+    logger.info(`EVENT: Job "${job.name}" (ID: ${job.id}) started processing.`);
+    if (job.id && job.data.flowId) {
+        try {
+            // Update flow progress to indicate job is running
+            await updateFlowProgress(job.data.flowId, job.id.toString(), "running");
+        }
+        catch (error) {
+            logger.error(`Failed to update flow progress for job ${job.id}: ${error.message}`);
         }
     }
 });

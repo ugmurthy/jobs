@@ -1,0 +1,11 @@
+{
+  "content": "This is the prompt content.",
+  "created": "2025-07-27T08:59:48.831Z",
+  "updated": "2025-07-27T08:59:48.831Z",
+  "version": "1.0",
+  "tags": [
+    "test",
+    "example"
+  ],
+  "description": "A test prompt."
+}
