@@ -157,8 +157,8 @@
  *         name: status
  *         schema:
  *           type: string
- *           enum: [active, delayed, completed, failed, paused, waiting-children]
- *         description: Filter jobs by status
+ *           enum: [completed, failed, delayed, active, waiting, waiting-children, paused]
+ *         description: Filter jobs by status (from BULLMQ_JOB_STATUSES, excluding 'stuck')
  *       - in: query
  *         name: limit
  *         schema:

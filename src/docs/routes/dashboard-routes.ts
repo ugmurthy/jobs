@@ -73,8 +73,8 @@
  *                         example: "Data Export"
  *                       status:
  *                         type: string
- *                         description: Job status
- *                         enum: [active, delayed, completed, failed, paused, waiting-children]
+ *                         description: Job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')
+ *                         enum: [completed, failed, delayed, active, waiting, waiting-children, paused]
  *                         example: "completed"
  *                       createdAt:
  *                         type: string

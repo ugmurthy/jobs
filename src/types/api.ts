@@ -636,11 +636,11 @@ export interface paths {
                                  */
                                 name?: string;
                                 /**
-                                 * @description Job status
+                                 * @description Job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')
                                  * @example completed
                                  * @enum {string}
                                  */
-                                status?: "active" | "delayed" | "completed" | "failed" | "paused" | "waiting-children";
+                                status?: "completed" | "failed" | "delayed" | "active" | "waiting" | "waiting-children" | "paused";
                                 /**
                                  * Format: date-time
                                  * @description Job creation timestamp
@@ -1104,8 +1104,8 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
-                    /** @description Filter jobs by status */
-                    status?: "active" | "delayed" | "completed" | "failed" | "paused" | "waiting-children";
+                    /** @description Filter jobs by status (from BULLMQ_JOB_STATUSES, excluding 'stuck') */
+                    status?: "completed" | "failed" | "delayed" | "active" | "waiting" | "waiting-children" | "paused";
                     /** @description Maximum number of jobs to return */
                     limit?: number;
                     /** @description Number of jobs to skip */
@@ -1918,11 +1918,11 @@ export interface components {
              */
             data?: Record<string, never>;
             /**
-             * @description Current job status
+             * @description Current job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')
              * @example active
              * @enum {string}
              */
-            status?: "active" | "delayed" | "completed" | "failed" | "paused" | "waiting-children";
+            status?: "completed" | "failed" | "delayed" | "active" | "waiting" | "waiting-children" | "paused";
             /**
              * @description Job progress percentage (0-100)
              * @example 75
@@ -1972,11 +1972,11 @@ export interface components {
              */
             name?: string;
             /**
-             * @description Current job status
+             * @description Current job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')
              * @example active
              * @enum {string}
              */
-            status?: "active" | "delayed" | "completed" | "failed" | "paused" | "waiting-children";
+            status?: "completed" | "failed" | "delayed" | "active" | "waiting" | "waiting-children" | "paused";
             /**
              * @description Job progress percentage (0-100)
              * @example 75

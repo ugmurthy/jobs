@@ -399,14 +399,15 @@
           "status": {
             "type": "string",
             "enum": [
-              "active",
-              "delayed",
               "completed",
               "failed",
-              "paused",
-              "waiting-children"
+              "delayed",
+              "active",
+              "waiting",
+              "waiting-children",
+              "paused"
             ],
-            "description": "Current job status",
+            "description": "Current job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')",
             "example": "active"
           },
           "progress": {
@@ -469,14 +470,15 @@
           "status": {
             "type": "string",
             "enum": [
-              "active",
-              "delayed",
               "completed",
               "failed",
-              "paused",
-              "waiting-children"
+              "delayed",
+              "active",
+              "waiting",
+              "waiting-children",
+              "paused"
             ],
-            "description": "Current job status",
+            "description": "Current job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')",
             "example": "active"
           },
           "progress": {
@@ -1517,14 +1519,15 @@
                           },
                           "status": {
                             "type": "string",
-                            "description": "Job status",
+                            "description": "Job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')",
                             "enum": [
-                              "active",
-                              "delayed",
                               "completed",
                               "failed",
-                              "paused",
-                              "waiting-children"
+                              "delayed",
+                              "active",
+                              "waiting",
+                              "waiting-children",
+                              "paused"
                             ],
                             "example": "completed"
                           },
@@ -2008,15 +2011,16 @@
             "schema": {
               "type": "string",
               "enum": [
-                "active",
-                "delayed",
                 "completed",
                 "failed",
-                "paused",
-                "waiting-children"
+                "delayed",
+                "active",
+                "waiting",
+                "waiting-children",
+                "paused"
               ]
             },
-            "description": "Filter jobs by status"
+            "description": "Filter jobs by status (from BULLMQ_JOB_STATUSES, excluding 'stuck')"
           },
           {
             "in": "query",

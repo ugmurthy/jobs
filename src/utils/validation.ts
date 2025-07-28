@@ -1,4 +1,5 @@
 import { logger } from '@ugm/logger';
+import { WebhookEventUtils } from '../types/webhook-events.js';
 
 /**
  * Validates if the provided options is a valid JSON object
@@ -63,8 +64,7 @@ export function isValidPassword(password: string): boolean {
  * Validates webhook event type
  */
 export function isValidWebhookEventType(eventType: string): boolean {
-  const validEventTypes = ['progress', 'completed', 'failed', 'delta', 'all'];
-  return validEventTypes.includes(eventType);
+  return WebhookEventUtils.isValidEventType(eventType);
 }
 
 export default {

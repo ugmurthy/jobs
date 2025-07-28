@@ -1,5 +1,10 @@
 import { logger } from '@ugm/logger';
-import { jobQueue, defaultOptions } from '../config/bull';
+import { getQueue, defaultOptions } from '../config/bull.js';
+import {
+  BULLMQ_JOB_STATUSES,
+  BullMQJobStatus,
+  JobStatusUtils,
+} from '../types/bullmq-statuses.js';
 
 /**
  * Interface for job data
@@ -48,7 +53,8 @@ class JobService {
     // Use provided options or default options
     const options = submission.options || defaultOptions;
     
-    // Add job to queue
+    // Add job to queue (using default jobQueue)
+    const jobQueue = getQueue('jobQueue');
     const job = await jobQueue.add(submission.name, submission.data, options);
     
     logger.info(`Job scheduled: ${job.id}/${submission.name}`);
@@ -61,6 +67,7 @@ class JobService {
   async getJobStatus(jobId: string, userId: number): Promise<JobStatus | null> {
     logger.info(`Getting status for job ${jobId}`);
     
+    const jobQueue = getQueue('jobQueue');
     const job = await jobQueue.getJob(jobId);
     
     if (!job) {
@@ -103,18 +110,19 @@ class JobService {
     const skip = (page - 1) * limit;
     
     // Get jobs from the queue
+    const jobQueue = getQueue('jobQueue');
     let jobs;
     if (options.status) {
-      // Map string status to JobType
-      const validStatuses = ['completed', 'failed', 'active', 'waiting', 'delayed'] as const;
-      if (validStatuses.includes(options.status as any)) {
+      if (JobStatusUtils.isValidStatus(options.status)) {
         jobs = await jobQueue.getJobs([options.status as any]);
       } else {
         logger.warn(`Invalid status parameter: ${options.status}`);
         jobs = [];
       }
     } else {
-      jobs = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed']);
+      // Use all valid statuses (filter out 'stuck' as it's not a standard BullMQ JobType)
+      const validJobTypes = BULLMQ_JOB_STATUSES.filter(status => status !== 'stuck');
+      jobs = await jobQueue.getJobs(validJobTypes as any);
     }
     
     // Filter jobs by user ID

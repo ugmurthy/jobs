@@ -2,12 +2,15 @@ import { logger } from '@ugm/logger';
 import prisma from '../lib/prisma.js';
 import userService from './userService.js';
 import got from 'got';
+import {
+  WEBHOOK_EVENT_TYPES,
+  WebhookEventType,
+  WebhookEventUtils,
+} from '../types/webhook-events.js';
 
-/**
- * Valid webhook event types
- */
-export const validEventTypes = ['progress', 'completed', 'failed', 'delta', 'all'] as const;
-export type WebhookEventType = typeof validEventTypes[number];
+// Re-export for backward compatibility
+export const validEventTypes = WEBHOOK_EVENT_TYPES;
+export type { WebhookEventType };
 
 /**
  * Interface for webhook data
@@ -58,8 +61,8 @@ class WebhookService {
     logger.info(`Creating webhook for user ${webhookData.userId}`);
     
     // Validate event type
-    if (!validEventTypes.includes(webhookData.eventType)) {
-      throw new Error(`Invalid event type. Must be one of: ${validEventTypes.join(', ')}`);
+    if (!WebhookEventUtils.isValidEventType(webhookData.eventType)) {
+      throw new Error(`Invalid event type. Must be one of: ${WEBHOOK_EVENT_TYPES.join(', ')}`);
     }
     
     // Check if webhook already exists
@@ -108,8 +111,8 @@ class WebhookService {
     }
     
     // Validate event type if provided
-    if (updates.eventType && !validEventTypes.includes(updates.eventType)) {
-      throw new Error(`Invalid event type. Must be one of: ${validEventTypes.join(', ')}`);
+    if (updates.eventType && !WebhookEventUtils.isValidEventType(updates.eventType)) {
+      throw new Error(`Invalid event type. Must be one of: ${WEBHOOK_EVENT_TYPES.join(', ')}`);
     }
     
     // Update webhook

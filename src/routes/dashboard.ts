@@ -5,6 +5,10 @@ import prisma from '../lib/prisma.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 import schedulerService from '../services/schedulerService.js';
 import { JobSchedulerJson, JobType } from 'bullmq';
+import {
+  BULLMQ_JOB_STATUSES,
+  BullMQJobStatus,
+} from '../types/bullmq-statuses.js';
 
 // Define custom Request type with user property
 interface AuthenticatedRequest extends Request {
@@ -33,7 +37,8 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
     logger.info(`Fetching dashboard stats for user ${userId}`);
 
     const queueStats: any[] = [];
-    const jobStatuses: JobType[] = ['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children'];
+    // Use centralized status definitions (filter out 'stuck' as it's not a standard BullMQ JobType)
+    const jobStatuses: BullMQJobStatus[] = BULLMQ_JOB_STATUSES.filter(status => status !== 'stuck') as BullMQJobStatus[];
     
     const totals: { [key: string]: number } = {
       completed: 0,
@@ -52,7 +57,7 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
 
       const statsForQueue: { [key: string]: any } = { name: queueName, total: 0 };
       
-      const promises = jobStatuses.map(status => queue.getJobs([status]));
+      const promises = jobStatuses.map(status => queue.getJobs([status as any]));
       const jobsByStatus = await Promise.all(promises);
 
       jobsByStatus.forEach((jobs, index) => {
@@ -75,7 +80,9 @@ router.get('/stats', authenticate, async (req: AuthenticatedRequest, res: Respon
     const completionRate = total > 0 ? Math.round((completed / total) * 1000) / 10 : 0;
     
     const jobQueue = getQueue('jobQueue');
-    const recentJobsRaw = await jobQueue.getJobs(['completed', 'failed', 'active', 'waiting', 'delayed', 'paused', 'waiting-children'], 0, 4);
+    // Use centralized status definitions (filter out 'stuck' as it's not a standard BullMQ JobType)
+    const validJobTypes = BULLMQ_JOB_STATUSES.filter(status => status !== 'stuck');
+    const recentJobsRaw = await jobQueue.getJobs(validJobTypes as any, 0, 4);
     
     const recentJobs = await Promise.all(
       recentJobsRaw

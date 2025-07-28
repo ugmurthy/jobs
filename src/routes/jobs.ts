@@ -3,6 +3,10 @@ import { logger } from '@ugm/logger';
 import { getQueue, defaultOptions } from '../config/bull.js';
 import { authenticate } from '../middleware/combinedAuth.js';
 import { validateQueue } from '../middleware/validateQueue.js';
+import {
+  BULLMQ_JOB_STATUSES,
+  JobStatusUtils,
+} from '../types/bullmq-statuses.js';
 const router = Router();
 
 /**
@@ -139,17 +143,18 @@ router.get('/:queueName', authenticate, validateQueue, async (req: Request, res:
 
         const status = req.query.status as string;
         const jobQueue = getQueue(queueName);
-        const validStatuses = ['completed', 'failed', 'delayed', 'active', 'waiting', 'paused', 'stuck', 'waiting-children'];
         let jobs;
         if (status) {
-            if (validStatuses.includes(status as any)) {
+            if (JobStatusUtils.isValidStatus(status)) {
                 jobs = await jobQueue.getJobs([status as any]);
             } else {
                 res.status(400).json({ message: 'Invalid status parameter' });
                 return;
             }
         } else {
-            jobs = await jobQueue.getJobs(validStatuses as any);
+            // Use all valid statuses (filter out 'stuck' as it's not a standard BullMQ JobType)
+            const validJobTypes = BULLMQ_JOB_STATUSES.filter(status => status !== 'stuck');
+            jobs = await jobQueue.getJobs(validJobTypes as any);
         }
 
         const filteredJobs = jobs.filter((job: any) => job.data.userId === userId);

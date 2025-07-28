@@ -24,8 +24,8 @@
  *               date: "2025-06-28"
  *         status:
  *           type: string
- *           enum: [active, delayed, completed, failed, paused, waiting-children]
- *           description: Current job status
+ *           enum: [completed, failed, delayed, active, waiting, waiting-children, paused]
+ *           description: Current job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')
  *           example: "active"
  *         progress:
  *           type: number
@@ -73,8 +73,8 @@
  *           example: "dataExport"
  *         status:
  *           type: string
- *           enum: [active, delayed, completed, failed, paused, waiting-children]
- *           description: Current job status
+ *           enum: [completed, failed, delayed, active, waiting, waiting-children, paused]
+ *           description: Current job status (from BULLMQ_JOB_STATUSES, excluding 'stuck')
  *           example: "active"
  *         progress:
  *           type: number
