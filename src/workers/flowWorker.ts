@@ -79,7 +79,7 @@ flowWorker.on('active', async (job) => {
   if (job.id && job.data.flowId) {
     try {
       // Update flow progress to indicate job is running
-      await updateFlowProgress(job.data.flowId, job.id.toString(), "running");
+      await updateFlowProgress(job.data.flowId, job.id.toString(), "active");
     } catch (error: any) {
       logger.error(`Failed to update flow progress for job ${job.id}: ${error.message}`);
     }

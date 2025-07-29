@@ -40,26 +40,36 @@ export interface FlowResponse {
   completedAt?: string;
 }
 
-// Flow Update Request (for external job updates)
+// Flow Update Request (for external job updates) - ENHANCED
 export interface FlowUpdateRequest {
   jobId: string; // BullMQ job ID
-  status: "running" | "completed" | "failed";
+  status: BullMQJobStatus; // Support all 8 BullMQ statuses
   result?: Record<string, any>;
   error?: Record<string, any>;
+  progress?: number; // Job-level progress tracking
+  startedAt?: string; // Timing information
+  jobName?: string;    // NEW: Job metadata for better tracking
+  queueName?: string;  // NEW: Queue metadata for better tracking
 }
 
-// Progress tracking structure
+// Enhanced job progress interface
+export interface FlowJobProgress {
+  name: string;
+  queueName: string;
+  status: BullMQJobStatus;
+  result?: any;
+  error?: any;
+  progress?: number; // Job-level progress
+  startedAt?: string;
+  completedAt?: string;
+  attempts?: number; // Retry tracking
+  delay?: number; // Delay information
+}
+
+// Progress tracking structure - ENHANCED
 export interface FlowProgress {
   jobs: {
-    [jobId: string]: {
-      name: string;
-      queueName: string;
-      status: BullMQJobStatus;
-      result?: any;
-      error?: any;
-      startedAt?: string;
-      completedAt?: string;
-    };
+    [jobId: string]: FlowJobProgress;
   };
   summary: {
     total: number;
@@ -73,6 +83,24 @@ export interface FlowProgress {
     stuck: number;
     percentage: number;
   };
+}
+
+// Job metadata for initialization
+export interface JobMetadata {
+  tempId: string;        // Predictable ID for initialization
+  name: string;
+  queueName: string;
+  level: number;         // Depth in flow hierarchy
+  parentTempId?: string; // Parent job temp ID
+  data?: Record<string, any>;
+  opts?: Record<string, any>;
+}
+
+// Job tracking with multiple ID strategies
+export interface JobTracker extends JobMetadata {
+  actualJobId?: string;  // BullMQ job ID when available
+  status: BullMQJobStatus;
+  createdAt: string;
 }
 
 // Enhanced Job Data with flowId injection

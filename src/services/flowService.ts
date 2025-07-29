@@ -189,8 +189,8 @@ export class FlowService {
         completed: 0,
         failed: 0,
         delayed: 0,
-        active: 0,
-        waiting: totalJobs,
+        active: 1, // Root job starts as active
+        waiting: totalJobs - 1, // All other jobs are waiting
         "waiting-children": 0,
         paused: 0,
         stuck: 0,
@@ -223,30 +223,52 @@ export class FlowService {
   ): FlowProgress {
     // Update specific job status
     const updatedJobs = { ...currentProgress.jobs };
+    
+    // Track if this is a new job (not previously tracked)
+    const isNewJob = !updatedJobs[update.jobId];
+    
+    // Update/add job with metadata
     updatedJobs[update.jobId] = {
-      ...updatedJobs[update.jobId],
+      name: update.jobName || updatedJobs[update.jobId]?.name || 'Unknown',
+      queueName: update.queueName || updatedJobs[update.jobId]?.queueName || 'Unknown',
       status: update.status as BullMQJobStatus,
       result: update.result,
       error: update.error,
-      completedAt: update.status === "completed" || update.status === "failed" 
-        ? new Date().toISOString() 
+      progress: update.progress,
+      startedAt: update.startedAt || updatedJobs[update.jobId]?.startedAt,
+      completedAt: update.status === "completed" || update.status === "failed"
+        ? new Date().toISOString()
         : undefined,
     };
 
-    // Recalculate summary
-    const jobStatuses = Object.values(updatedJobs).map(job => job.status);
+    // Calculate status counts from tracked jobs
+    const trackedJobStatuses = Object.values(updatedJobs).map(job => job.status);
+    const trackedCounts = {
+      completed: trackedJobStatuses.filter(s => s === "completed").length,
+      failed: trackedJobStatuses.filter(s => s === "failed").length,
+      delayed: trackedJobStatuses.filter(s => s === "delayed").length,
+      active: trackedJobStatuses.filter(s => s === "active").length,
+      "waiting-children": trackedJobStatuses.filter(s => s === "waiting-children").length,
+      paused: trackedJobStatuses.filter(s => s === "paused").length,
+      stuck: trackedJobStatuses.filter(s => s === "stuck").length,
+    };
+
+    // KEY FIX: Calculate waiting jobs correctly
+    const trackedJobsCount = Object.keys(updatedJobs).length;
+    const waitingJobs = Math.max(0, currentProgress.summary.total - trackedJobsCount);
+
     const summary = {
       total: currentProgress.summary.total,
-      completed: jobStatuses.filter(s => s === "completed").length,
-      failed: jobStatuses.filter(s => s === "failed").length,
-      delayed: jobStatuses.filter(s => s === "delayed").length,
-      active: jobStatuses.filter(s => s === "active").length,
-      waiting: jobStatuses.filter(s => s === "waiting").length,
-      "waiting-children": jobStatuses.filter(s => s === "waiting-children").length,
-      paused: jobStatuses.filter(s => s === "paused").length,
-      stuck: jobStatuses.filter(s => s === "stuck").length,
-      percentage: Math.round((jobStatuses.filter(s => s === "completed").length / currentProgress.summary.total) * 100),
+      ...trackedCounts,
+      waiting: waitingJobs, // FIXED: Proper waiting calculation
+      percentage: Math.round((trackedCounts.completed / currentProgress.summary.total) * 100),
     };
+
+    // VALIDATION: Ensure counts add up
+    const totalCounted = Object.values(trackedCounts).reduce((sum, count) => sum + count, 0) + waitingJobs;
+    if (totalCounted !== summary.total) {
+      logger.warn(`Progress count mismatch for flow: counted ${totalCounted}, expected ${summary.total}. Tracked jobs: ${trackedJobsCount}`);
+    }
 
     return {
       jobs: updatedJobs,
@@ -255,10 +277,29 @@ export class FlowService {
   }
 
   private determineFlowStatus(progress: FlowProgress): FlowStatus {
-    const jobStatuses = Object.values(progress.jobs).map(
+    const trackedJobStatuses = Object.values(progress.jobs).map(
       (job) => job.status as BullMQJobStatus
     );
-    return FlowStatusMapper.determineFlowStatus(jobStatuses);
+    const totalJobs = progress.summary.total;
+    const trackedJobsCount = trackedJobStatuses.length;
+    
+    // KEY FIX: Account for untracked jobs (still waiting)
+    const hasWaitingJobs = progress.summary.waiting > 0;
+    const hasActiveJobs = trackedJobStatuses.some(status =>
+      ["active", "delayed", "waiting-children", "paused"].includes(status)
+    );
+    const hasFailed = trackedJobStatuses.some(status => status === "failed");
+    const hasStuck = trackedJobStatuses.some(status => status === "stuck");
+    
+    // CRITICAL FIX: Flow completed only when ALL jobs are completed
+    const completedCount = trackedJobStatuses.filter(s => s === "completed").length;
+    const allJobsCompleted = completedCount === totalJobs && !hasWaitingJobs;
+
+    if (hasFailed || hasStuck) return "failed";
+    if (allJobsCompleted) return "completed"; // Only when ALL jobs done
+    if (hasActiveJobs || trackedJobsCount > 0) return "running";
+    
+    return "pending";
   }
 
   private formatFlowResponse(flow: any): FlowResponse {

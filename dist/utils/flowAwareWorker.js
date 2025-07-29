@@ -12,8 +12,8 @@ export function createFlowAwareWorker(queueName, processor) {
             // Check if job is part of a flow
             if (job.data.flowId) {
                 logger.info(`Processing flow-aware job ${job.id} for flow ${job.data.flowId}`);
-                // Update job status to running
-                await updateFlowProgress(job.data.flowId, job.id, "running");
+                // Update job status to active
+                await updateFlowProgress(job.data.flowId, job.id, "active");
             }
             // Execute the actual job processor
             const result = await processor(job);

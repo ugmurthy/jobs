@@ -196,7 +196,7 @@ export default {
     }
 
     logger.debug(`Executing Job : ${job.id} : ${job.name} for ${userId} qQualifiedName : ${queueName}`);
-
+    
     /// check for data from children if any expecting only one child to return some data as part of context
     /// if more than one child returns data we will ignore for now of just concatenate all data
     const childrenValues = await job.getChildrenValues(); // get it first {} implies no children
@@ -237,6 +237,9 @@ export default {
       // Use non-streaming mode
       job.updateProgress(10);
       logger.debug(`Using non-streaming mode for job ${job.id}`);
+      if (job.data.flowId) {
+        logger.info(`\t part of flow with id :${job.data.flowId}`)
+      }
       response = await sendChat(messages, model, max_tokens);
       content = response.message.content
       delete response.message;
@@ -245,7 +248,7 @@ export default {
     job.updateProgress(100)
     // Send the final completed event
     if (num_children) {
-      return {success:true,name:job.name,id:job.id, input:job.data,children:children,result:content, usage}
+      return {success:true,name:job.name,id:job.id,flowId:job.data.flowId, input:job.data,children:children,result:content, usage}
     }
     return {success:true,name:job.name,id:job.id,input:job.data,result:content,usage}
     /* return webHookQueue.add(job.name, {
