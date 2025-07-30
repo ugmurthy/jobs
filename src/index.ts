@@ -8,6 +8,11 @@ import { registerRoutes } from './routes/index.js';
 import { initializeEvents } from './events/index.js';
 import { initializeWorkers } from './workers/index.js';
 
+
+// Set logger level to debug for detailed job tracking
+logger.level = process.env.LOGGER_LEVEL || 'info';
+logger.info(`Logger level is ${logger.level}`)
+
 /**
  * Main application entry point
  */

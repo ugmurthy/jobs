@@ -23,6 +23,11 @@ export interface FlowWebSocketEvents {
     result: any;
     completedAt: string;
   };
+  "flow:deleted": {
+    flowId: string;
+    timestamp: string;
+    message: string;
+  };
 }
 
 export class FlowWebSocketService {
@@ -103,6 +108,25 @@ export class FlowWebSocketService {
     this.io.to(`flow:${flowId}`).emit("flow:finished", completionEvent);
 
     logger.info(`Emitted flow:completed for ${flowId}`);
+  }
+
+  /**
+   * Emit flow deletion event
+   */
+  emitFlowDeleted(flowId: string, userId: number): void {
+    const deletionEvent = {
+      flowId,
+      timestamp: new Date().toISOString(),
+      message: 'Flow has been deleted'
+    };
+
+    logger.info(`Emitting flow deleted event for flow ${flowId}`);
+    
+    // Emit to user's room
+    this.io.to(`user:${userId}`).emit('flow:deleted', deletionEvent);
+    
+    // Emit to flow-specific room (if anyone is subscribed)
+    this.io.to(`flow:${flowId}`).emit('flow:deleted', deletionEvent);
   }
 
   /**

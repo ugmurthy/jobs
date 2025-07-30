@@ -612,6 +612,124 @@
           "summary"
         ]
       },
+      "FlowDeletionJobResult": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "description": "The BullMQ job ID that was deleted."
+          },
+          "queueName": {
+            "type": "string",
+            "description": "The queue name where the job was located."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "failed",
+              "not_found"
+            ],
+            "description": "The result of the job deletion attempt."
+          },
+          "error": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error message if the deletion failed."
+          }
+        },
+        "required": [
+          "jobId",
+          "queueName",
+          "status"
+        ]
+      },
+      "FlowDeletionResult": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "Total number of jobs that were attempted to be deleted."
+          },
+          "successful": {
+            "type": "integer",
+            "description": "Number of jobs successfully deleted."
+          },
+          "failed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of job IDs that failed to be deleted."
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlowDeletionJobResult"
+            },
+            "description": "Detailed results for each job deletion attempt."
+          }
+        },
+        "required": [
+          "total",
+          "successful",
+          "failed",
+          "details"
+        ]
+      },
+      "FlowDeletionResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message.",
+            "example": "Flow deleted successfully"
+          },
+          "flowId": {
+            "type": "string",
+            "description": "The ID of the deleted flow.",
+            "example": "flow_1234567890_abc123def"
+          },
+          "deletedJobs": {
+            "$ref": "#/components/schemas/FlowDeletionResult",
+            "description": "Detailed information about the job deletion results."
+          }
+        },
+        "required": [
+          "message",
+          "flowId",
+          "deletedJobs"
+        ],
+        "example": {
+          "message": "Flow deleted successfully",
+          "flowId": "flow_1234567890_abc123def",
+          "deletedJobs": {
+            "total": 5,
+            "successful": 4,
+            "failed": [
+              "job_xyz789"
+            ],
+            "details": [
+              {
+                "jobId": "job_123",
+                "queueName": "default",
+                "status": "success"
+              },
+              {
+                "jobId": "job_456",
+                "queueName": "flowQueue",
+                "status": "success"
+              },
+              {
+                "jobId": "job_xyz789",
+                "queueName": "webhooks",
+                "status": "failed",
+                "error": "Job not found in queue"
+              }
+            ]
+          }
+        }
+      },
       "Job": {
         "type": "object",
         "required": [
@@ -1955,6 +2073,124 @@
           },
           "500": {
             "description": "Internal server error."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a flow and all its associated jobs",
+        "description": "Removes a flow from the database and deletes all associated jobs from Redis queues. Only the flow owner can delete their flows.",
+        "tags": [
+          "Flows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "flowId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the flow to delete."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Flow deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowDeletionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized to delete this flow.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized to delete this flow"
+                    },
+                    "flowId": {
+                      "type": "string",
+                      "example": "flow_1234567890_abc123def"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flow not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Flow not found"
+                    },
+                    "flowId": {
+                      "type": "string",
+                      "example": "flow_1234567890_abc123def"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error deleting flow"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Detailed error message"
+                    },
+                    "flowId": {
+                      "type": "string",
+                      "example": "flow_1234567890_abc123def"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

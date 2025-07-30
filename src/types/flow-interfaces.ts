@@ -113,3 +113,24 @@ export interface EnhancedJobData {
   };
   [key: string]: any;
 }
+
+// Flow deletion result interfaces
+export interface FlowDeletionJobResult {
+  jobId: string;
+  queueName: string;
+  status: 'success' | 'failed' | 'not_found';
+  error?: string;
+}
+
+export interface FlowDeletionResult {
+  total: number;
+  successful: number;
+  failed: string[];
+  details: FlowDeletionJobResult[];
+}
+
+export interface FlowDeletionResponse {
+  message: string;
+  flowId: string;
+  deletedJobs: FlowDeletionResult;
+}

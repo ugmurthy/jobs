@@ -1,6 +1,7 @@
 import prisma from '../lib/prisma.js';
 import redis from '../config/redis.js';
 import { logger } from '@ugm/logger';
+import { getQueue } from '../config/bull.js';
 import { EnhancedFlowProducer, generateFlowId } from './enhancedFlowProducer.js';
 import { getFlowWebSocketService } from './flowWebSocketService.js';
 export class FlowService {
@@ -140,8 +141,8 @@ export class FlowService {
                 completed: 0,
                 failed: 0,
                 delayed: 0,
-                active: 0,
-                waiting: totalJobs,
+                active: 1,
+                waiting: totalJobs - 1,
                 "waiting-children": 0,
                 paused: 0,
                 stuck: 0,
@@ -254,6 +255,95 @@ export class FlowService {
             startedAt: flow.startedAt?.toISOString(),
             completedAt: flow.completedAt?.toISOString(),
         };
+    }
+    async deleteFlow(flowId, userId) {
+        logger.info(`Starting deletion of flow ${flowId} for user ${userId}`);
+        // Step 1: Validate flow exists and user has permission
+        // Note: Using type assertion due to Prisma client type mismatch
+        const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+        if (!flow) {
+            throw new Error('Flow not found');
+        }
+        if (flow.userId !== userId) {
+            throw new Error('Unauthorized');
+        }
+        // Step 2: Collect all job IDs that need to be deleted
+        const jobIdsToDelete = this.collectJobIds(flow);
+        logger.info(`Found ${jobIdsToDelete.size} jobs to delete for flow ${flowId}`);
+        // Step 3: Delete jobs from Redis queues
+        const jobDeletionResults = await this.deleteFlowJobs(Array.from(jobIdsToDelete), flow);
+        // Step 4: Delete flow from database
+        await prisma.flow.delete({ where: { id: flowId } });
+        logger.info(`Flow ${flowId} deleted from database`);
+        // Step 5: Emit WebSocket events
+        const webSocketService = getFlowWebSocketService();
+        if (webSocketService) {
+            webSocketService.emitFlowDeleted(flowId, userId);
+        }
+        // Step 6: Return deletion summary
+        const successful = jobDeletionResults.filter(r => r.status === 'success').length;
+        const failed = jobDeletionResults.filter(r => r.status === 'failed').map(r => r.jobId);
+        logger.info(`Flow ${flowId} deletion completed: ${successful}/${jobIdsToDelete.size} jobs deleted successfully`);
+        return {
+            total: jobIdsToDelete.size,
+            successful,
+            failed,
+            details: jobDeletionResults
+        };
+    }
+    // Helper method to collect root job ID only
+    collectJobIds(flow) {
+        const jobIds = new Set();
+        // Only add root job ID - child jobs will be deleted automatically
+        if (flow.rootJobId) {
+            jobIds.add(flow.rootJobId);
+            logger.debug(`Added root job ID: ${flow.rootJobId}`);
+        }
+        return jobIds;
+    }
+    // Helper method to delete jobs from Redis
+    async deleteFlowJobs(jobIds, flow) {
+        const results = [];
+        // Only delete the root job - BullMQ will cascade delete all children
+        if (!flow.rootJobId) {
+            logger.warn(`No root job ID found for flow ${flow.id}`);
+            return results;
+        }
+        try {
+            // Use the flow's queue name for the root job
+            const queueName = flow.queueName;
+            logger.debug(`Attempting to delete root job ${flow.rootJobId} from queue ${queueName}`);
+            // Get the queue and root job
+            const queue = getQueue(queueName);
+            const job = await queue.getJob(flow.rootJobId);
+            if (!job) {
+                logger.warn(`Root job ${flow.rootJobId} not found in queue ${queueName}`);
+                results.push({
+                    jobId: flow.rootJobId,
+                    queueName,
+                    status: 'not_found'
+                });
+                return results;
+            }
+            // Remove the root job - this will cascade delete all child jobs
+            await job.remove();
+            logger.info(`Successfully deleted root job ${flow.rootJobId} from queue ${queueName} - all child jobs will be automatically deleted`);
+            results.push({
+                jobId: flow.rootJobId,
+                queueName,
+                status: 'success'
+            });
+        }
+        catch (error) {
+            logger.error(`Failed to delete root job ${flow.rootJobId}:`, error);
+            results.push({
+                jobId: flow.rootJobId,
+                queueName: flow.queueName,
+                status: 'failed',
+                error: error.message
+            });
+        }
+        return results;
     }
     async close() {
         await this.enhancedFlowProducer.close();

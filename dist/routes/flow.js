@@ -84,4 +84,39 @@ router.get('/:flowId/jobs', async (req, res) => {
         res.status(500).json({ message: 'Error getting jobs for flow', error: error.message });
     }
 });
+// Delete a flow and all its associated jobs
+router.delete('/:flowId', authenticate, async (req, res) => {
+    try {
+        const { flowId } = req.params;
+        // @ts-ignore
+        const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json({ message: 'User not authenticated' });
+            return;
+        }
+        logger.info(`Deleting flow ${flowId} for user ${userId}`);
+        const deletionResult = await flowService.deleteFlow(flowId, userId);
+        res.status(200).json({
+            message: 'Flow deleted successfully',
+            flowId,
+            deletedJobs: deletionResult
+        });
+    }
+    catch (error) {
+        logger.error(`Error deleting flow ${req.params.flowId}:`, error);
+        if (error.message === 'Flow not found') {
+            res.status(404).json({ message: 'Flow not found', flowId: req.params.flowId });
+        }
+        else if (error.message === 'Unauthorized') {
+            res.status(403).json({ message: 'Unauthorized to delete this flow', flowId: req.params.flowId });
+        }
+        else {
+            res.status(500).json({
+                message: 'Error deleting flow',
+                error: error.message,
+                flowId: req.params.flowId
+            });
+        }
+    }
+});
 export default router;

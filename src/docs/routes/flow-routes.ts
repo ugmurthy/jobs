@@ -68,6 +68,79 @@
  *         description: Flow not found.
  *       '500':
  *         description: Internal server error.
+ *   delete:
+ *     summary: Delete a flow and all its associated jobs
+ *     description: Removes a flow from the database and deletes all associated jobs from Redis queues. Only the flow owner can delete their flows.
+ *     tags: [Flows]
+ *     security:
+ *       - bearerAuth: []
+ *       - apiKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: flowId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the flow to delete.
+ *     responses:
+ *       '200':
+ *         description: Flow deleted successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FlowDeletionResponse'
+ *       '401':
+ *         description: User not authenticated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User not authenticated"
+ *       '403':
+ *         description: Unauthorized to delete this flow.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized to delete this flow"
+ *                 flowId:
+ *                   type: string
+ *                   example: "flow_1234567890_abc123def"
+ *       '404':
+ *         description: Flow not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Flow not found"
+ *                 flowId:
+ *                   type: string
+ *                   example: "flow_1234567890_abc123def"
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error deleting flow"
+ *                 error:
+ *                   type: string
+ *                   example: "Detailed error message"
+ *                 flowId:
+ *                   type: string
+ *                   example: "flow_1234567890_abc123def"
  */
 
 /**

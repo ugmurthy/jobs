@@ -2,13 +2,17 @@ import { FlowJob as BullMQFlowJob, JobNode } from 'bullmq';
 import prisma from '../lib/prisma.js';
 import redis from '../config/redis.js';
 import { logger } from '@ugm/logger';
+
+import { getQueue } from '../config/bull.js';
 import { EnhancedFlowProducer, generateFlowId } from './enhancedFlowProducer.js';
 import {
   CreateFlowRequest,
   FlowResponse,
   FlowUpdateRequest,
   FlowProgress,
-  FlowJobData
+  FlowJobData,
+  FlowDeletionResult,
+  FlowDeletionJobResult
 } from '../types/flow-interfaces.js';
 import { BullMQJobStatus } from '../types/bullmq-statuses.js';
 import { FlowStatus, FlowStatusMapper } from '../types/flow-statuses.js';
@@ -32,7 +36,7 @@ export class FlowService {
     // Create single database record
     const flow = await prisma.flow.create({
       data: {
-        id: flowId,
+        id: flowId as any,
         flowname: flowData.flowname,
         name: flowData.name,
         queueName: flowData.queueName,
@@ -40,7 +44,7 @@ export class FlowService {
         jobStructure: this.buildJobStructure(flowData),
         status: "pending",
         progress: this.initializeProgress(flowData) as any,
-      },
+      } as any,
     });
 
     // Add to BullMQ with flowId injection
@@ -49,17 +53,17 @@ export class FlowService {
 
     // Update with root job ID
     await prisma.flow.update({
-      where: { id: flowId },
+      where: { id: flowId as any },
       data: {
         rootJobId: jobNode.job.id!,
         status: "running",
         startedAt: new Date(),
-      },
+      } as any,
     });
 
     logger.info(`Flow ${flowId} created and started with root job ${jobNode.job.id}`);
 
-    const createdFlow = this.formatFlowResponse(await prisma.flow.findUnique({ where: { id: flowId } })!);
+    const createdFlow = this.formatFlowResponse(await prisma.flow.findUnique({ where: { id: flowId as any } })! as any);
     
     // Emit WebSocket event for flow creation
     const webSocketService = getFlowWebSocketService();
@@ -74,7 +78,7 @@ export class FlowService {
     flowId: string,
     update: FlowUpdateRequest
   ): Promise<void> {
-    const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+    const flow = await prisma.flow.findUnique({ where: { id: flowId as any } }) as any;
     if (!flow) throw new Error("Flow not found");
 
     const updatedProgress = this.calculateProgress(
@@ -105,7 +109,7 @@ export class FlowService {
     }
 
     await prisma.flow.update({
-      where: { id: flowId },
+      where: { id: flowId as any },
       data: updateData,
     });
 
@@ -119,7 +123,7 @@ export class FlowService {
       
       // Check if flow is completed
       if (newStatus === "completed") {
-        const updatedFlow = await prisma.flow.findUnique({ where: { id: flowId } });
+        const updatedFlow = await prisma.flow.findUnique({ where: { id: flowId as any } }) as any;
         if (updatedFlow) {
           webSocketService.emitFlowCompleted(
             flowId,
@@ -132,7 +136,7 @@ export class FlowService {
   }
 
   async getFlowById(flowId: string): Promise<FlowResponse | null> {
-    const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+    const flow = await prisma.flow.findUnique({ where: { id: flowId as any } }) as any;
     if (!flow) return null;
     return this.formatFlowResponse(flow);
   }
@@ -325,6 +329,119 @@ export class FlowService {
     };
   }
 
+  async deleteFlow(flowId: string, userId: number): Promise<FlowDeletionResult> {
+    logger.info(`Starting deletion of flow ${flowId} for user ${userId}`);
+    
+    // Step 1: Validate flow exists and user has permission
+    // Note: Using type assertion due to Prisma client type mismatch
+    const flow = await prisma.flow.findUnique({ where: { id: flowId as any } }) as any;
+    
+    if (!flow) {
+      throw new Error('Flow not found');
+    }
+    
+    if (flow.userId !== userId) {
+      throw new Error('Unauthorized');
+    }
+    
+    // Step 2: Collect all job IDs that need to be deleted
+    const jobIdsToDelete = this.collectJobIds(flow);
+    logger.info(`Found ${jobIdsToDelete.size} jobs to delete for flow ${flowId}`);
+    
+    // Step 3: Delete jobs from Redis queues
+    const jobDeletionResults = await this.deleteFlowJobs(Array.from(jobIdsToDelete), flow);
+    
+    // Step 4: Delete flow from database
+    await prisma.flow.delete({ where: { id: flowId as any } });
+    logger.info(`Flow ${flowId} deleted from database`);
+    
+    // Step 5: Emit WebSocket events
+    const webSocketService = getFlowWebSocketService();
+    if (webSocketService) {
+      webSocketService.emitFlowDeleted(flowId, userId);
+    }
+    
+    // Step 6: Return deletion summary
+    const successful = jobDeletionResults.filter(r => r.status === 'success').length;
+    const failed = jobDeletionResults.filter(r => r.status === 'failed').map(r => r.jobId);
+    
+    logger.info(`Flow ${flowId} deletion completed: ${successful}/${jobIdsToDelete.size} jobs deleted successfully`);
+    
+    return {
+      total: jobIdsToDelete.size,
+      successful,
+      failed,
+      details: jobDeletionResults
+    };
+  }
+
+  // Helper method to collect root job ID only
+  private collectJobIds(flow: any): Set<string> {
+    const jobIds = new Set<string>();
+    
+    // Only add root job ID - child jobs will be deleted automatically
+    if (flow.rootJobId) {
+      jobIds.add(flow.rootJobId);
+      logger.debug(`Added root job ID: ${flow.rootJobId}`);
+    }
+    
+    return jobIds;
+  }
+
+  // Helper method to delete jobs from Redis
+  private async deleteFlowJobs(jobIds: string[], flow: any): Promise<FlowDeletionJobResult[]> {
+    const results: FlowDeletionJobResult[] = [];
+    
+    // Only delete the root job - BullMQ will cascade delete all children
+    if (!flow.rootJobId) {
+      logger.warn(`No root job ID found for flow ${flow.id}`);
+      return results;
+    }
+    
+    try {
+      // Use the flow's queue name for the root job
+      const queueName = flow.queueName;
+      
+      logger.debug(`Attempting to delete root job ${flow.rootJobId} from queue ${queueName}`);
+      
+      // Get the queue and root job
+      const queue = getQueue(queueName);
+      const job = await queue.getJob(flow.rootJobId);
+      
+      if (!job) {
+        logger.warn(`Root job ${flow.rootJobId} not found in queue ${queueName}`);
+        results.push({
+          jobId: flow.rootJobId,
+          queueName,
+          status: 'not_found'
+        });
+        return results;
+      }
+      
+      // Remove the root job - this will cascade delete all child jobs
+      await job.remove();
+      logger.info(`Successfully deleted root job ${flow.rootJobId} from queue ${queueName} - all child jobs will be automatically deleted`);
+      
+      results.push({
+        jobId: flow.rootJobId,
+        queueName,
+        status: 'success'
+      });
+      
+    } catch (error: any) {
+      logger.error(`Failed to delete root job ${flow.rootJobId}:`, error);
+      results.push({
+        jobId: flow.rootJobId,
+        queueName: flow.queueName,
+        status: 'failed',
+        error: error.message
+      });
+    }
+    
+    return results;
+  }
+
+
   async close(): Promise<void> {
     await this.enhancedFlowProducer.close();
   }
@@ -344,13 +461,13 @@ export const getFlowById = (id: string) => flowService.getFlowById(id);
 export const getFlowJobs = async (flowId: string) => {
   // This method is deprecated in the new unified approach
   // Flow jobs are now stored as JSON in the jobStructure field
-  const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+  const flow = await prisma.flow.findUnique({ where: { id: flowId as any } }) as any;
   return flow?.jobStructure || [];
 };
 
 // New method to return CreateFlowRequest-like response
 export const getFlowAsCreateRequest = async (flowId: string): Promise<CreateFlowRequest | null> => {
-  const flow = await prisma.flow.findUnique({ where: { id: flowId } });
+  const flow = await prisma.flow.findUnique({ where: { id: flowId as any } }) as any;
   if (!flow) return null;
 
   // Extract the root job structure and convert it back to CreateFlowRequest format

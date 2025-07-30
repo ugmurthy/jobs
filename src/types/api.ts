@@ -854,7 +854,89 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete a flow and all its associated jobs
+         * @description Removes a flow from the database and deletes all associated jobs from Redis queues. Only the flow owner can delete their flows.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The ID of the flow to delete. */
+                    flowId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Flow deleted successfully. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FlowDeletionResponse"];
+                    };
+                };
+                /** @description User not authenticated. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example User not authenticated */
+                            message?: string;
+                        };
+                    };
+                };
+                /** @description Unauthorized to delete this flow. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example Unauthorized to delete this flow */
+                            message?: string;
+                            /** @example flow_1234567890_abc123def */
+                            flowId?: string;
+                        };
+                    };
+                };
+                /** @description Flow not found. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example Flow not found */
+                            message?: string;
+                            /** @example flow_1234567890_abc123def */
+                            flowId?: string;
+                        };
+                    };
+                };
+                /** @description Internal server error. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example Error deleting flow */
+                            message?: string;
+                            /** @example Detailed error message */
+                            error?: string;
+                            /** @example flow_1234567890_abc123def */
+                            flowId?: string;
+                        };
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -2149,6 +2231,72 @@ export interface components {
                 /** @description Completion percentage. */
                 percentage: number;
             };
+        };
+        FlowDeletionJobResult: {
+            /** @description The BullMQ job ID that was deleted. */
+            jobId: string;
+            /** @description The queue name where the job was located. */
+            queueName: string;
+            /**
+             * @description The result of the job deletion attempt.
+             * @enum {string}
+             */
+            status: "success" | "failed" | "not_found";
+            /** @description Error message if the deletion failed. */
+            error?: string | null;
+        };
+        FlowDeletionResult: {
+            /** @description Total number of jobs that were attempted to be deleted. */
+            total: number;
+            /** @description Number of jobs successfully deleted. */
+            successful: number;
+            /** @description Array of job IDs that failed to be deleted. */
+            failed: string[];
+            /** @description Detailed results for each job deletion attempt. */
+            details: components["schemas"]["FlowDeletionJobResult"][];
+        };
+        /** @example {
+         *       "message": "Flow deleted successfully",
+         *       "flowId": "flow_1234567890_abc123def",
+         *       "deletedJobs": {
+         *         "total": 5,
+         *         "successful": 4,
+         *         "failed": [
+         *           "job_xyz789"
+         *         ],
+         *         "details": [
+         *           {
+         *             "jobId": "job_123",
+         *             "queueName": "default",
+         *             "status": "success"
+         *           },
+         *           {
+         *             "jobId": "job_456",
+         *             "queueName": "flowQueue",
+         *             "status": "success"
+         *           },
+         *           {
+         *             "jobId": "job_xyz789",
+         *             "queueName": "webhooks",
+         *             "status": "failed",
+         *             "error": "Job not found in queue"
+         *           }
+         *         ]
+         *       }
+         *     } */
+        FlowDeletionResponse: {
+            /**
+             * @description Success message.
+             * @example Flow deleted successfully
+             */
+            message: string;
+            /**
+             * @description The ID of the deleted flow.
+             * @example flow_1234567890_abc123def
+             */
+            flowId: string;
+            /** @description Detailed information about the job deletion results. */
+            deletedJobs: components["schemas"]["FlowDeletionResult"];
         };
         Job: {
             /**

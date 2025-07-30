@@ -293,5 +293,89 @@
  *       required:
  *         - jobs
  *         - summary
+ *
+ *     FlowDeletionJobResult:
+ *       type: object
+ *       properties:
+ *         jobId:
+ *           type: string
+ *           description: 'The BullMQ job ID that was deleted.'
+ *         queueName:
+ *           type: string
+ *           description: 'The queue name where the job was located.'
+ *         status:
+ *           type: string
+ *           enum: [success, failed, not_found]
+ *           description: 'The result of the job deletion attempt.'
+ *         error:
+ *           type: string
+ *           nullable: true
+ *           description: 'Error message if the deletion failed.'
+ *       required:
+ *         - jobId
+ *         - queueName
+ *         - status
+ *
+ *     FlowDeletionResult:
+ *       type: object
+ *       properties:
+ *         total:
+ *           type: integer
+ *           description: 'Total number of jobs that were attempted to be deleted.'
+ *         successful:
+ *           type: integer
+ *           description: 'Number of jobs successfully deleted.'
+ *         failed:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: 'Array of job IDs that failed to be deleted.'
+ *         details:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/FlowDeletionJobResult'
+ *           description: 'Detailed results for each job deletion attempt.'
+ *       required:
+ *         - total
+ *         - successful
+ *         - failed
+ *         - details
+ *
+ *     FlowDeletionResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           description: 'Success message.'
+ *           example: 'Flow deleted successfully'
+ *         flowId:
+ *           type: string
+ *           description: 'The ID of the deleted flow.'
+ *           example: 'flow_1234567890_abc123def'
+ *         deletedJobs:
+ *           $ref: '#/components/schemas/FlowDeletionResult'
+ *           description: 'Detailed information about the job deletion results.'
+ *       required:
+ *         - message
+ *         - flowId
+ *         - deletedJobs
+ *       example:
+ *         message: 'Flow deleted successfully'
+ *         flowId: 'flow_1234567890_abc123def'
+ *         deletedJobs:
+ *           total: 5
+ *           successful: 4
+ *           failed: ['job_xyz789']
+ *           details:
+ *             - jobId: 'job_123'
+ *               queueName: 'default'
+ *               status: 'success'
+ *             - jobId: 'job_456'
+ *               queueName: 'flowQueue'
+ *               status: 'success'
+ *             - jobId: 'job_xyz789'
+ *               queueName: 'webhooks'
+ *               status: 'failed'
+ *               error: 'Job not found in queue'
  */
 export {};

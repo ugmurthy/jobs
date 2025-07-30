@@ -93,7 +93,7 @@ class ApiKeyService {
   async validateApiKey(key: string): Promise<{ userId: number; permissions: string[] } | null> {
     // Extract prefix from the key
     const prefix = key.substring(0, 8);
-    logger.debug(`apiKeyService.validateApiKey: Extracted prefix: ${prefix}`);
+    //logger.debug(`apiKeyService.validateApiKey: Extracted prefix: ${prefix}`);
     
     // Find API keys with matching prefix
     const apiKeys = await prisma.apiKey.findMany({
@@ -109,11 +109,11 @@ class ApiKeyService {
     
     // If no keys found with this prefix, return null
     if (apiKeys.length === 0) {
-      logger.debug(`apiKeyService.validateApiKey: No API keys found with prefix: ${prefix}`);
+      logger.error(`apiKeyService.validateApiKey: No API keys found with prefix: ${prefix}`);
       return null;
     }
     
-    logger.debug(`apiKeyService.validateApiKey: Found ${apiKeys.length} API keys with matching prefix`);
+    //logger.debug(`apiKeyService.validateApiKey: Found ${apiKeys.length} API keys with matching prefix`);
     
     // Check each key with matching prefix
     for (const apiKey of apiKeys) {
@@ -127,7 +127,7 @@ class ApiKeyService {
           data: { lastUsed: new Date() }
         });
         
-        logger.debug(`apiKeyService.validateApiKey: API key validated successfully for user ${apiKey.userId}`);
+        //logger.debug(`apiKeyService.validateApiKey: API key validated successfully for user ${apiKey.userId}`);
         
         // Return user ID and permissions (parse JSON string to array)
         return {
